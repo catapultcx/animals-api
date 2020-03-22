@@ -13,15 +13,15 @@ First install:
 
 ### Commands
 
-Run the service at http://localhost:8080
+Run the service:
 
     mvn spring-boot:run
     
-Tests with coverage
+Tests with coverage:
 
     mvn clean test
     
-Build the `.jar`
+Build the `.jar`:
 
     mvn clean package    
 
@@ -31,9 +31,23 @@ Run with Docker (build jar first)
     docker-compose up
 
 
+### URLs
+
+Once started the API will be available at:
+
+ * http://localhost:8080
+ 
+ 
+API docs can be found at:
+
+* http://localhost:8080/api-docs
+* http://localhost:8080/swagger-ui.html
+ 
+
 ### Reference Documentation
 For further reference, please consider the following sections:
 
+* [Swagger](https://www.baeldung.com/spring-rest-openapi-documentation)
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
 * [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/maven-plugin/)
 * [JaCoCo and maven](https://www.baeldung.com/jacoco)

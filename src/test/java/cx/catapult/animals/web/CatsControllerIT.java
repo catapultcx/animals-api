@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,8 +47,8 @@ public class CatsControllerIT {
 
     @Test
     public void allShouldWork() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
-        assertThat(response.getBody()).isNotEmpty();
+        Collection items = template.getForObject(base.toString(), Collection.class);
+        assertThat(items.size()).isGreaterThanOrEqualTo(7);
     }
 
     @Test
@@ -63,5 +64,4 @@ public class CatsControllerIT {
         assertThat(created.getName()).isEqualTo(name);
         return created;
     }
-
 }
