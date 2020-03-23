@@ -54,3 +54,4 @@ For further reference, please consider the following sections:
 * [JaCoCo and maven](https://automationrhapsody.com/automated-code-coverage-of-unit-tests-with-jacoco-and-maven)
 * [Spring Boot guide](https://spring.io/guides/gs/spring-boot)
 * [Spring Boot and Docker](https://spring.io/guides/gs/spring-boot-docker/)
+* [MySql](https://spring.io/guides/gs/accessing-data-mysql/)
