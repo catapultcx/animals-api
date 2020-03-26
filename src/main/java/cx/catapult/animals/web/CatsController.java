@@ -35,4 +35,5 @@ public class CatsController {
     create(@RequestBody Cat cat) {
         return service.create(cat);
     }
+
 }
