@@ -8,7 +8,9 @@ public interface Service<T extends Animal> {
 
     public Collection<T> all();
 
-    T create(T animal);
+    public T create(T animal);
+
+    public T update(T animal);
 
     public T get(String id);
 

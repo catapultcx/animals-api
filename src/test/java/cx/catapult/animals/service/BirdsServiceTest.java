@@ -52,4 +52,16 @@ public class BirdsServiceTest {
         assertThat(actual).isEqualTo(null);
 
     }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        service.create(bird);
+        Bird actual = service.get(bird.getId());
+        assertThat(actual).isEqualTo(bird);
+        bird.setName("TEST");
+        service.update(bird);
+        actual = service.get(bird.getId());
+        assertThat(actual).isEqualTo(bird);
+    }
+
 }
