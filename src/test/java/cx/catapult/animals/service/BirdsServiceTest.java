@@ -37,4 +37,19 @@ public class BirdsServiceTest {
         assertThat(actual.getDescription()).isEqualTo(bird.getDescription());
         assertThat(actual.getGroup()).isEqualTo(bird.getGroup());
     }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        // create bird
+        service.create(bird);
+        // confirm bird was created
+        Bird actual = service.get(bird.getId());
+        assertThat(actual).isEqualTo(bird);
+        // delete bird
+        service.delete(actual.getId());
+        // confirm bird was deleted
+        actual = service.get(bird.getId());
+        assertThat(actual).isEqualTo(null);
+
+    }
 }
