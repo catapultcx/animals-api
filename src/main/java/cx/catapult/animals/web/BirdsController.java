@@ -42,4 +42,12 @@ public class BirdsController {
         service.delete(id);
     }
 
+    @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    Bird
+    update(@RequestBody Bird bird) {
+        return service.update(bird);
+    }
+
 }

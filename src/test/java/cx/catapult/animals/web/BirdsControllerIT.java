@@ -25,7 +25,7 @@ public class BirdsControllerIT {
 
     private URL base;
 
-    private Bird bird = new Bird("Egghead", "Chicken");
+    private Bird bird = new Bird("Egghead", "icken");
 
     @Autowired
     private TestRestTemplate template;
