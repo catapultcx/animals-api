@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
 
-    CatsService service = new CatsService();
+    CatsServiceInMem service = new CatsServiceInMem();
     Cat cat = new Cat("Tom", "Bob cat");
 
     @Test

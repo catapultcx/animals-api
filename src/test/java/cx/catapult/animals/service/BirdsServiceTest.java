@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BirdsServiceTest {
 
-    BirdsService service = new BirdsService();
+    BirdsServiceInMem service = new BirdsServiceInMem();
     Bird bird = new Bird("Tom", "Bob bird");
 
     @Test

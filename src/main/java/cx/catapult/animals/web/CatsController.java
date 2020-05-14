@@ -1,7 +1,7 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.service.CatsService;
+import cx.catapult.animals.service.CatsServiceInMem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.util.Collection;
 public class CatsController {
 
     @Autowired
-    private CatsService service;
+    private CatsServiceInMem service;
 
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody

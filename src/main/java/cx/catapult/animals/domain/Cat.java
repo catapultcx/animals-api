@@ -8,4 +8,8 @@ public class Cat extends BaseAnimal {
     public Cat(String name, String description) {
         super(name, description, Group.MAMMALS);
     }
+
+    public Cat(String ID, String name, String description) {
+        super(ID, name, description, Group.MAMMALS);
+    }
 }

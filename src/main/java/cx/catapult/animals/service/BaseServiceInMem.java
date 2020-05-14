@@ -1,10 +1,12 @@
 package cx.catapult.animals.service;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
+
 import cx.catapult.animals.domain.Animal;
 
-import java.util.*;
-
-public abstract class BaseService<T extends Animal> implements Service<T> {
+public abstract class BaseServiceInMem<T extends Animal> implements Service<T> {
 
     private HashMap<String, T> items = new HashMap<>();
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
-public class BirdsService extends BaseService<Bird> {
+public class BirdsServiceInMem extends BaseServiceInMem<Bird> {
 
     @PostConstruct
     public void initialize() {
