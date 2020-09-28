@@ -1,8 +1,18 @@
 version: "3"
 
 services:
+  builder:
+    image: maven:3.6.3-jdk-13
+    command: ["/usr/src/api/run.sh", "build"]
+    volumes:
+      - ./:/usr/src/api
   api:
     build:
       context: .
+    depends_on: 
+      - "builder"
+    command: ["/usr/src/api/run.sh"]
+    volumes:
+      - ./:/usr/src/api
     ports:
       - "8080:8080"
