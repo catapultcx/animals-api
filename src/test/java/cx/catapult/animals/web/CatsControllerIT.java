@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,6 +28,7 @@ public class CatsControllerIT {
     private URL base;
 
     private Cat cat = new Cat("Tom", "Bob cat");
+    private String createdCatId;
 
     @Autowired
     private TestRestTemplate template;
@@ -43,6 +46,8 @@ public class CatsControllerIT {
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
+
+        this.createdCatId = response.getBody().getId();
     }
 
     @Test
@@ -56,6 +61,20 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        Map < String, String > params = new HashMap < String, String > ();
+        Cat cat = new Cat("Test 1 updated", "Test 1 updated");
+        params.put("id", this.createdCatId);
+        template.put(base.toString(), cat, params);
+        ResponseEntity<Cat> response = template.getForEntity(base.toString() + "/" + this.createdCatId, Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getId()).isEqualTo(this.createdCatId);
+        assertThat(response.getBody().getName()).isEqualTo(cat.getName());
+        assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
+        assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
     }
 
     Cat create(String name) {
