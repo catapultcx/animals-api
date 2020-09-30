@@ -43,4 +43,10 @@ public class CatsController {
     update(@PathVariable String id, @RequestBody Cat cat) {
         return service.update(id, cat);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public
+    void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 }

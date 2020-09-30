@@ -28,7 +28,6 @@ public class CatsControllerIT {
     private URL base;
 
     private Cat cat = new Cat("Tom", "Bob cat");
-    private String createdCatId;
 
     @Autowired
     private TestRestTemplate template;
@@ -46,8 +45,6 @@ public class CatsControllerIT {
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
-
-        this.createdCatId = response.getBody().getId();
     }
 
     @Test
@@ -65,16 +62,26 @@ public class CatsControllerIT {
 
     @Test
     public void updateShouldWork() throws Exception {
+        ResponseEntity<Cat> responsePre = template.postForEntity(base.toString(), cat, Cat.class);
         Map < String, String > params = new HashMap < String, String > ();
-        Cat cat = new Cat("Test 1 updated", "Test 1 updated");
-        params.put("id", this.createdCatId);
-        template.put(base.toString(), cat, params);
-        ResponseEntity<Cat> response = template.getForEntity(base.toString() + "/" + this.createdCatId, Cat.class);
+        Cat cat = new Cat("Tom updated", "Bob cat");
+        template.put(base.toString() + "/" + responsePre.getBody().getId(), cat, params);
+        ResponseEntity<Cat> response = template.getForEntity(base.toString() + "/" + responsePre.getBody().getId(), Cat.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getId()).isEqualTo(this.createdCatId);
+        assertThat(response.getBody().getId()).isEqualTo(responsePre.getBody().getId());
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        ResponseEntity<Cat> responsePre = template.postForEntity(base.toString(), cat, Cat.class);
+        Map < String, String > params = new HashMap < String, String > ();
+        template.delete(base.toString() + "/" + responsePre.getBody().getId(), params);
+        ResponseEntity<Cat> response = template.getForEntity(base.toString() + "/" + responsePre.getBody().getId(), Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNull();
     }
 
     Cat create(String name) {

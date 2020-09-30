@@ -37,4 +37,24 @@ public class CatsServiceTest {
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
     }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        service.create(cat);
+        cat.setName("Jerry updated");
+        cat.setDescription("Mouse Cat update");
+        Cat updated = service.update(cat.getId(), cat);
+        assertThat(updated).isEqualTo(cat);
+        assertThat(updated.getName()).isEqualTo(cat.getName());
+        assertThat(updated.getDescription()).isEqualTo(cat.getDescription());
+        assertThat(updated.getGroup()).isEqualTo(cat.getGroup());
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        service.create(cat);
+        service.delete(cat.getId());
+        Cat actual = service.get(cat.getId());
+        assertThat(actual).isNull();
+    }
 }
