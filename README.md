@@ -26,9 +26,9 @@ Build the `.jar`:
     mvn clean package    
 
 
-Run with Docker (build jar first)
+Run with Docker
 
-    docker-compose up
+    ./run.sh start    
 
 
 ### URLs

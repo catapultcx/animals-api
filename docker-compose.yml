@@ -6,11 +6,22 @@ services:
     command: ["/usr/src/api/run.sh", "build"]
     volumes:
       - ./:/usr/src/api
+  db:
+    container_name: "animalsdb"
+    image: mysql/mysql-server
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: animalsdb
+      MYSQL_HOST: db
+    volumes:
+      - ./:/usr/src/db
   api:
     build:
       context: .
     depends_on: 
       - "builder"
+      - "db"
     command: ["/usr/src/api/run.sh"]
     volumes:
       - ./:/usr/src/api
