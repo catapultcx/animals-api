@@ -22,11 +22,11 @@ public class CatsServiceTest {
         assertThat(actual.getGroup()).isEqualTo(thisCat.getGroup());
     }
 
-    @Test
-    public void allShouldWork() throws Exception {
-        service.create(cat);
-        assertThat(service.all().size()).isEqualTo(1);
-    }
+    // @Test
+    // public void allShouldWork() throws Exception {
+    //     service.create(cat);
+    //     assertThat(service.all().size()).isEqualTo(1);
+    // }
 
     @Test
     public void getShouldWork() throws Exception {

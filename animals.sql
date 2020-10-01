@@ -1,12 +1,10 @@
-CREATE USER 'username' @ 'localhost' IDENTIFIED BY
-  'password';
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
 
-GRANT ALL PRIVILEGES ON *.* TO 'username' @ 'localhost' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost' WITH GRANT OPTION;
 
-CREATE USER 'username' @ '%' IDENTIFIED BY
-  'password';
+CREATE USER 'username'@'%' IDENTIFIED BY 'password';
 
-GRANT ALL PRIVILEGES ON *.* TO 'username' @ '%' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'username'@'%' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
 
@@ -33,31 +31,19 @@ INSERT IGNORE INTO animaltype SET `id` = 'fish', `name` = 'fish', `group` = 'fis
 
 -- cats
 INSERT IGNORE INTO animal SET `id` = 'tom', `name` = 'Tom', `description` = 'Friend of Jerry', `type` = 'cat';
-
 INSERT IGNORE INTO animal SET `id` = 'jerry', `name` = 'Jerry', `description` = 'Not really a cat', `type` = 'cat';
-
 INSERT IGNORE INTO animal SET `id` = 'bili', `name` = 'Bili', `description` = 'Furry cat', `type` = 'cat';
-
 INSERT IGNORE INTO animal SET `id` = 'smelly', `name` = 'Smelly', `description` = 'Cat with friends', `type` = 'cat';
-
 INSERT IGNORE INTO animal SET `id` = 'tiger', `name` = 'Tiger', `description` = 'Large cat', `type` = 'cat';
-
 INSERT IGNORE INTO animal SET `id` = 'tigger', `name` = 'Tigger', `description` = 'Not a scary cat', `type` = 'cat';
-
 INSERT IGNORE INTO animal SET `id` = 'garfield', `name` = 'Garfield', `description` = 'Lazy cat', `type` = 'cat';
 
 -- fishes
 INSERT IGNORE INTO animal SET `id` = 'nemo', `name` = 'Nemo', `description` = 'Friend of Dory', `type` = 'fish';
-
 INSERT IGNORE INTO animal SET `id` = 'dory', `name` = 'Dory', `description` = 'I dont remember', `type` = 'fish';
-
 INSERT IGNORE INTO animal SET `id` = 'marlin', `name` = 'Marlin', `description` = 'Father of Nemo', `type` = 'fish';
-
 INSERT IGNORE INTO animal SET `id` = 'gill', `name` = 'Gill', `description` = 'A nice fish afterall', `type` = 'fish';
-
 INSERT IGNORE INTO animal SET `id` = 'bloat', `name` = 'Bloat', `description` = 'Puff fish', `type` = 'fish';
-
 INSERT IGNORE INTO animal SET `id` = 'crush', `name` = 'Crush', `description` = 'His a turtle', `type` = 'fish';
-
 INSERT IGNORE INTO animal SET `id` = 'bruce', `name` = 'Bruce', `description` = 'Evil shark', `type` = 'fish';
 

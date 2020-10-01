@@ -10,6 +10,8 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     @Override
     public Collection<T> all() {
+        query("select a.id, a.name, a.description, t.name as type, t.group"
+                + " from animal a left join animaltype t on a.type = t.id where a.type = ?");
         return items.values();
     }
 
