@@ -12,7 +12,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: animalsdb
+      MYSQL_DATABASE: animals
       MYSQL_HOST: db
     volumes:
       - ./:/usr/src/db

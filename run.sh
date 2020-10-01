@@ -1,5 +1,5 @@
 #!/bin/sh
-dev=true
+dev=false
 JAR_PATH=/usr/src/api/
 JAR_FILE="$JAR_PATH"app.jar
 
@@ -18,7 +18,7 @@ buildFn() {
 
 startFn() {
   docker-compose up -d db
-  MYSQL="mysql -h localhost -u root -ppassword animalsdb"
+  MYSQL="mysql -h localhost -u root -ppassword animals"
   echo "Waiting for MySQL service to start..."
   while ! docker exec animalsdb bash -c "$MYSQL"' -e "select 1"' >/dev/null 2>&1; do
     sleep 1
