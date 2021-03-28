@@ -1,5 +1,7 @@
 package cx.catapult.animals.domain;
 
+import java.util.Objects;
+
 /**
  * Amphibians are more generic that 'cat', this is a base implementation of an Amphibian that can be extended for more specific
  * purposes.

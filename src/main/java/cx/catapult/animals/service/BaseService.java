@@ -6,37 +6,35 @@ import java.util.*;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
-    private HashMap<String, T> items = new HashMap<>();
+    private final StorageService<T> service;
+
+    protected BaseService(final StorageService service) {
+        this.service = service;
+    }
 
     @Override
     public Collection<T> all() {
-        return items.values();
+        return service.all();
     }
 
     @Override
     public T create(T animal) {
-        String id = UUID.randomUUID()
-                        .toString();
-        animal.setId(id);
-        items.put(id, animal);
-        return animal;
+        return (T) service.create(animal);
     }
 
     @Override
     public T get(String id) {
-        return items.get(id);
+        return (T) service.get(id);
     }
 
     @Override
     public void delete(final String id) {
-        items.remove(id);
+        service.delete(id);
     }
 
     @Override
     public T update(final String id,
                     final T newAnimal) {
-        newAnimal.setId(id);
-        items.replace(id, newAnimal);
-        return items.get(id);
+        return (T) service.update(id, newAnimal);
     }
 }

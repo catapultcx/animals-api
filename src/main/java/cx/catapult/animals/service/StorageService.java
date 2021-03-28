@@ -1,9 +1,11 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+
+import cx.catapult.animals.domain.Group;
 import java.util.Collection;
 
-public interface Service<T extends Animal> {
+public interface StorageService<T extends Animal> {
 
     public Collection<T> all();
 
@@ -14,5 +16,6 @@ public interface Service<T extends Animal> {
     void delete(final String id);
 
     T update(final String id, final T newAnimal);
-}
 
+    void setGroup(final Group group);
+}

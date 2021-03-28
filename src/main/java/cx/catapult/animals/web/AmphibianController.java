@@ -1,8 +1,8 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.BaseAmphibian;
-import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.service.Service;
+import cx.catapult.animals.service.StorageService;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
