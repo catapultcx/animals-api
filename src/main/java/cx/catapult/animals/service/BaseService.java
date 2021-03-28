@@ -35,6 +35,7 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     @Override
     public T update(final String id,
                     final T newAnimal) {
+        newAnimal.setId(id);
         items.replace(id, newAnimal);
         return items.get(id);
     }

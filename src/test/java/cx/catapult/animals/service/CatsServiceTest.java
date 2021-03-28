@@ -1,6 +1,8 @@
 package cx.catapult.animals.service;
 
+import cx.catapult.animals.domain.BaseAmphibian;
 import cx.catapult.animals.domain.Cat;
+import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,5 +38,15 @@ public class CatsServiceTest {
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+    }
+
+    @Test
+    public void updateShouldWork() {
+        service.create(cat);
+        final Cat updateCat = new Cat("Jerry", "Sneaky Lizard");
+        service.update(cat.getId(), updateCat);
+        final Collection<Cat> all = service.all();
+        assertThat(all).contains(updateCat);
+        assertThat(all).doesNotContain(cat);
     }
 }

@@ -1,14 +1,18 @@
 package cx.catapult.animals.web;
 
 
+import cx.catapult.animals.domain.BaseAmphibian;
 import cx.catapult.animals.domain.Cat;
+import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
@@ -56,6 +60,20 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        final Cat created = create("Test 2");
+        final URI uri = new URI(base.toString() + "/" + created.getId());
+        final RequestEntity<Cat> request =
+                new RequestEntity(new BaseAmphibian("mega moggy", "moggy"), HttpMethod.PUT, uri);
+        final ResponseEntity<Cat> response = template.exchange(request, Cat.class);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getDescription()).isEqualTo("moggy");
+        assertThat(response.getBody().getName()).isEqualTo("mega moggy");
     }
 
     Cat create(String name) {

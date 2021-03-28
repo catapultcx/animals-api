@@ -22,6 +22,7 @@ public class CatsControllerTest {
 
     private Cat cat = new Cat("Tom", "Bob cat");
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
+    private final String newJson = "{ \"name\": \"Super Moggy\", \"description\": \"An mega Moggy Cat\" }";
 
     @Test
     public void all() throws Exception {
@@ -39,5 +40,14 @@ public class CatsControllerTest {
     public void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/cats/456")
+                                          .content(newJson)
+                                          .contentType(MediaType.APPLICATION_JSON)
+                                          .accept(MediaType.APPLICATION_JSON))
+           .andExpect(status().isOk());
     }
 }

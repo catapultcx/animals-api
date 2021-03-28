@@ -1,5 +1,6 @@
 package cx.catapult.animals.web;
 
+import cx.catapult.animals.domain.BaseAmphibian;
 import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.service.CatsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,13 @@ public class CatsController {
     Cat
     create(@RequestBody Cat cat) {
         return service.create(cat);
+    }
+
+    @PutMapping(value = "/{id}")
+    public Cat update(@PathVariable final String id,
+                      @RequestBody final Cat cat) {
+        System.out.println(id);
+        System.out.println(cat);
+        return service.update(id, cat);
     }
 }
