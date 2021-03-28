@@ -46,4 +46,14 @@ public class AmphibianServiceTest {
         assertThat(all).doesNotContain(amphibian);
     }
 
+    @Test
+    public void updateShouldWork() {
+        underTest.create(amphibian);
+        final BaseAmphibian updateAmphibian = new BaseAmphibian("Jerry", "Sneaky Lizard");
+        underTest.update(amphibian.getId(), updateAmphibian);
+        final Collection<BaseAmphibian> all = underTest.all();
+        assertThat(all).contains(updateAmphibian);
+        assertThat(all).doesNotContain(amphibian);
+    }
+
 }

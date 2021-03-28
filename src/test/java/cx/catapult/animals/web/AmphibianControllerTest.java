@@ -15,32 +15,46 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class AmphibianControllerTest {
 
     private final String json = "{ \"name\": \"Test Amphib\", \"description\": \"An amphib that likes to be tested\" }";
+    private final String newJson = "{ \"name\": \"Super Lizzy\", \"description\": \"An mega Lizzy Lizard\" }";
 
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void create() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/api/1/amphibians").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(MockMvcRequestBuilders.post("/api/1/amphibians")
+                                          .content(json)
+                                          .contentType(MediaType.APPLICATION_JSON_VALUE))
            .andExpect(status().isCreated());
     }
 
     @Test
     public void all() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/amphibians").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/amphibians")
+                                          .accept(MediaType.APPLICATION_JSON))
            .andExpect(status().isOk());
     }
 
     @Test
     public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/amphibians/456").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/amphibians/456")
+                                          .accept(MediaType.APPLICATION_JSON))
            .andExpect(status().isOk());
     }
 
     @Test
     public void delete() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.delete("/api/1/amphibians/456").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/amphibians/456")
+                                          .accept(MediaType.APPLICATION_JSON))
            .andExpect(status().isNoContent());
     }
 
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/amphibians/456")
+                                          .content(newJson)
+                                          .contentType(MediaType.APPLICATION_JSON)
+                                          .accept(MediaType.APPLICATION_JSON))
+           .andExpect(status().isOk());
+    }
 }

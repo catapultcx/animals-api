@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cx.catapult.animals.domain.BaseAmphibian;
 import cx.catapult.animals.domain.Cat;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -36,10 +39,14 @@ public class AmphibianControllerIT {
     public void createShouldWork() throws Exception {
         ResponseEntity<BaseAmphibian> response = template.postForEntity(base.toString(), amphibian, BaseAmphibian.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody().getId()).isNotEmpty();
-        assertThat(response.getBody().getName()).isEqualTo(amphibian.getName());
-        assertThat(response.getBody().getDescription()).isEqualTo(amphibian.getDescription());
-        assertThat(response.getBody().getGroup()).isEqualTo(amphibian.getGroup());
+        assertThat(response.getBody()
+                           .getId()).isNotEmpty();
+        assertThat(response.getBody()
+                           .getName()).isEqualTo(amphibian.getName());
+        assertThat(response.getBody()
+                           .getDescription()).isEqualTo(amphibian.getDescription());
+        assertThat(response.getBody()
+                           .getGroup()).isEqualTo(amphibian.getGroup());
     }
 
     @Test
@@ -59,8 +66,23 @@ public class AmphibianControllerIT {
     public void deleteShouldWork() throws Exception {
         final BaseAmphibian created = create("Test 1");
         template.delete(base.toString() + "/" + created.getId());
-        final Collection<BaseAmphibian> items = (Collection<BaseAmphibian>) template.getForObject(base.toString(), Collection.class);
+        final Collection<BaseAmphibian> items = (Collection<BaseAmphibian>) template.getForObject(base.toString(),
+                                                                                                  Collection.class);
         assertThat(items).doesNotContain(created);
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        final BaseAmphibian created = create("Test 2");
+        final URI uri = new URI(base.toString() + "/" + created.getId());
+        final RequestEntity<BaseAmphibian> request =
+                new RequestEntity(new BaseAmphibian("mega lizzy", "lizzy"), HttpMethod.PUT, uri);
+        final ResponseEntity<BaseAmphibian> response = template.exchange(request, BaseAmphibian.class);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getDescription()).isEqualTo("lizzy");
+        assertThat(response.getBody().getName()).isEqualTo("mega lizzy");
     }
 
     private BaseAmphibian create(String name) {
