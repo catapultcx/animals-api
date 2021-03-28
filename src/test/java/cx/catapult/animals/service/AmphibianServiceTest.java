@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cx.catapult.animals.domain.BaseAmphibian;
 import cx.catapult.animals.domain.Cat;
+import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 public class AmphibianServiceTest {
@@ -36,4 +37,13 @@ public class AmphibianServiceTest {
         assertThat(actual.getDescription()).isEqualTo(amphibian.getDescription());
         assertThat(actual.getGroup()).isEqualTo(amphibian.getGroup());
     }
+
+    @Test
+    public void deleteShouldWork() {
+        underTest.create(amphibian);
+        underTest.delete(amphibian.getId());
+        final Collection<BaseAmphibian> all = underTest.all();
+        assertThat(all).doesNotContain(amphibian);
+    }
+
 }

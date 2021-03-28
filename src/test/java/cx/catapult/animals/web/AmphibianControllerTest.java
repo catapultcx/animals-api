@@ -36,4 +36,11 @@ public class AmphibianControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/api/1/amphibians/456").accept(MediaType.APPLICATION_JSON))
            .andExpect(status().isOk());
     }
+
+    @Test
+    public void delete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/amphibians/456").accept(MediaType.APPLICATION_JSON))
+           .andExpect(status().isNoContent());
+    }
+
 }

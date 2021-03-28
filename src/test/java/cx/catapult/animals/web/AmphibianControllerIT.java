@@ -55,6 +55,14 @@ public class AmphibianControllerIT {
         assertThat(response.getBody()).isNotEmpty();
     }
 
+    @Test
+    public void deleteShouldWork() throws Exception {
+        final BaseAmphibian created = create("Test 1");
+        template.delete(base.toString() + "/" + created.getId());
+        final Collection<BaseAmphibian> items = (Collection<BaseAmphibian>) template.getForObject(base.toString(), Collection.class);
+        assertThat(items).doesNotContain(created);
+    }
+
     private BaseAmphibian create(String name) {
         BaseAmphibian created = template.postForObject(base.toString(), new BaseAmphibian(name, name), BaseAmphibian.class);
         assertThat(created.getId()).isNotEmpty();
