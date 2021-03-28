@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cx.catapult.animals.domain.BaseAmphibian;
 import cx.catapult.animals.domain.Cat;
 import java.net.URL;
+import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,25 @@ public class AmphibianControllerIT {
         assertThat(response.getBody().getName()).isEqualTo(amphibian.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(amphibian.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(amphibian.getGroup());
+    }
+
+    @Test
+    public void allShouldWork() throws Exception {
+        Collection items = template.getForObject(base.toString(), Collection.class);
+        assertThat(items.size()).isGreaterThanOrEqualTo(1);
+    }
+
+    @Test
+    public void getShouldWork() throws Exception {
+        BaseAmphibian created = create("Test 1");
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+    }
+
+    private BaseAmphibian create(String name) {
+        BaseAmphibian created = template.postForObject(base.toString(), new BaseAmphibian(name, name), BaseAmphibian.class);
+        assertThat(created.getId()).isNotEmpty();
+        assertThat(created.getName()).isEqualTo(name);
+        return created;
     }
 }

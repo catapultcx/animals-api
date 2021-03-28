@@ -24,4 +24,16 @@ public class AmphibianControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/amphibians").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
            .andExpect(status().isCreated());
     }
+
+    @Test
+    public void all() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/amphibians").accept(MediaType.APPLICATION_JSON))
+           .andExpect(status().isOk());
+    }
+
+    @Test
+    public void get() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/amphibians/456").accept(MediaType.APPLICATION_JSON))
+           .andExpect(status().isOk());
+    }
 }

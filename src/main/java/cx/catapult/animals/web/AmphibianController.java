@@ -3,8 +3,12 @@ package cx.catapult.animals.web;
 import cx.catapult.animals.domain.BaseAmphibian;
 import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.service.Service;
+import java.util.Collection;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +22,7 @@ public class AmphibianController {
 
     private final Service<BaseAmphibian> amphibianService;
 
-    public AmphibianController(final Service amphibianService) {
+    public AmphibianController(@Qualifier("amphibianService") final Service<BaseAmphibian> amphibianService) {
         this.amphibianService = amphibianService;
     }
 
@@ -27,5 +31,17 @@ public class AmphibianController {
     public @ResponseBody
     BaseAmphibian create(@RequestBody BaseAmphibian amphibian) {
         return amphibianService.create(amphibian);
+    }
+
+    @GetMapping(value = "", produces = "application/json")
+    public @ResponseBody
+    Collection<BaseAmphibian> all() {
+        return amphibianService.all();
+    }
+
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    BaseAmphibian get(@PathVariable String id) {
+        return amphibianService.get(id);
     }
 }
