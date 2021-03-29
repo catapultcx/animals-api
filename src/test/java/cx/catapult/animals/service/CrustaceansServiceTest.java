@@ -52,4 +52,10 @@ public class CrustaceansServiceTest {
         assertThrows(AnimalNotFoundException.class,
                      () -> service.remove("invalid animal"));
     }
+
+    @Test
+    public void updateKeyNotFoundShouldWork() {
+        assertThrows(AnimalNotFoundException.class,
+                     () -> service.update("404", crustacean));
+    }
 }

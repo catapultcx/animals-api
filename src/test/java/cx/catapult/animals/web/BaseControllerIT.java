@@ -50,5 +50,25 @@ public abstract class BaseControllerIT<T extends Animal> {
         assertThat(response.getBody()).isNotEmpty();
     }
 
+    @Test
+    public void deleteShouldWork() {
+        T created = create("Test 2");
+        template.delete(base.toString() + "/" + created.getId());
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).isNull();
+    }
+
+    @Test
+    public void patchShouldWork() {
+        T created = create("Test 2");
+        created.setName("Something new");
+        T updatedAnimal = update(created);
+
+        assertThat(updatedAnimal.getId()).isEqualTo(created.getId());
+        assertThat(updatedAnimal.getName()).isEqualTo("Something new");
+    }
+
      abstract T create(String name);
+
+    abstract T update(T animal);
 }

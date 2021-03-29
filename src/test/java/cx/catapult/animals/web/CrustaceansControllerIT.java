@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CrustaceansControllerIT extends BaseControllerIT<Crustacean> {
@@ -26,5 +27,10 @@ public class CrustaceansControllerIT extends BaseControllerIT<Crustacean> {
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;
+    }
+
+    @Override
+    Crustacean update(final Crustacean crustacean) {
+        return template.postForObject(base.toString() + "/" + crustacean.getId(), crustacean, Crustacean.class);
     }
 }

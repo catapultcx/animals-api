@@ -1,9 +1,7 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Animal;
-import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.exceptions.AnimalException;
-import cx.catapult.animals.service.CatsService;
 import cx.catapult.animals.service.Service;
 import java.util.Collection;
 import org.springframework.http.HttpStatus;
@@ -49,5 +47,12 @@ public abstract class BaseController<T extends Animal> {
     public @ResponseBody
     void delete(@PathVariable String id) throws AnimalException {
        service.remove(id);
+    }
+
+    @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody
+    T update(@PathVariable String id, @RequestBody T animal) throws AnimalException {
+        return service.update(id, animal);
     }
 }

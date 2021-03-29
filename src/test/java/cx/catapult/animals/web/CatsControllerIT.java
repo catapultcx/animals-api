@@ -30,4 +30,9 @@ public class CatsControllerIT extends BaseControllerIT<Cat> {
         assertThat(created.getName()).isEqualTo(name);
         return created;
     }
+
+    @Override
+    Cat update(final Cat cat) {
+        return template.postForObject(base.toString() + "/" + cat.getId(), cat, Cat.class);
+    }
 }

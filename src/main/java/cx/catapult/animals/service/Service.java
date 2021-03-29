@@ -7,12 +7,14 @@ import java.util.Collection;
 
 public interface Service<T extends Animal> {
 
-    public Collection<T> all();
+    Collection<T> all();
 
     T create(T animal);
 
-    public T get(String id);
+    T get(String id);
 
     void remove(String key) throws AnimalException;
+
+    T update(String key, T animal) throws AnimalException;
 
 }

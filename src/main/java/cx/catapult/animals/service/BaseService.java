@@ -2,10 +2,13 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 
+import cx.catapult.animals.exceptions.AnimalException;
 import cx.catapult.animals.exceptions.AnimalNotFoundException;
 import java.util.*;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
+
+    private static final String ANIMAL_NOT_FOUND = "Animal not found %s";
 
     private HashMap<String, T> items = new HashMap<>();
 
@@ -32,7 +35,18 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
         if (items.containsKey(key)) {
             items.remove(key);
         } else {
-            throw new AnimalNotFoundException(String.format("Animal not found %s", key));
+            throw new AnimalNotFoundException(String.format(ANIMAL_NOT_FOUND, key));
+        }
+    }
+
+    @Override
+    public T update(final String key, final T animal) throws AnimalException {
+        if (items.containsKey(key)) {
+            animal.setId(key);
+            items.put(key, animal);
+            return animal;
+        } else {
+            throw new AnimalNotFoundException(String.format(ANIMAL_NOT_FOUND, key));
         }
     }
 }

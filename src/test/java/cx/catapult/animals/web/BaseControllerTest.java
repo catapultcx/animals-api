@@ -43,4 +43,12 @@ public abstract class BaseControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete(url + "/" + id))
            .andExpect(status().isNoContent());
     }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post(url + "/" + id)
+                                          .content(json)
+                                          .contentType(MediaType.APPLICATION_JSON_VALUE))
+           .andExpect(status().isCreated());
+    }
 }
