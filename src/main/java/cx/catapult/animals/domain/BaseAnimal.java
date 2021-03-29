@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class BaseAnimal implements Animal, Serializable {
 
+    // TODO It would be better to use UUID type than String
     private String id;
     private String name;
     private String description;
