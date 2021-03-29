@@ -2,11 +2,13 @@ package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.exceptions.AnimalException;
 import cx.catapult.animals.service.CatsService;
 import cx.catapult.animals.service.Service;
 import java.util.Collection;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,5 +42,12 @@ public abstract class BaseController<T extends Animal> {
     T
     create(@RequestBody T animal) {
         return service.create(animal);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public @ResponseBody
+    void delete(@PathVariable String id) throws AnimalException {
+       service.remove(id);
     }
 }

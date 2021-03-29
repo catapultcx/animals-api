@@ -1,9 +1,13 @@
 package cx.catapult.animals.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cx.catapult.animals.domain.Crustacean;
+import cx.catapult.animals.exceptions.AnimalNotFoundException;
+
 import org.junit.jupiter.api.Test;
+
 
 public class CrustaceansServiceTest {
     private CrustaceansService service = new CrustaceansService();
@@ -20,18 +24,32 @@ public class CrustaceansServiceTest {
     }
 
     @Test
-    public void allShouldWork() throws Exception {
+    public void allShouldWork() {
         service.create(crustacean);
         assertThat(service.all().size()).isEqualTo(1);
     }
 
     @Test
-    public void getShouldWork() throws Exception {
+    public void getShouldWork() {
         service.create(crustacean);
         Crustacean actual = service.get(crustacean.getId());
         assertThat(actual).isEqualTo(crustacean);
         assertThat(actual.getName()).isEqualTo(crustacean.getName());
         assertThat(actual.getDescription()).isEqualTo(crustacean.getDescription());
         assertThat(actual.getGroup()).isEqualTo(crustacean.getGroup());
+    }
+
+    @Test
+    public void deleteShouldWork() throws AnimalNotFoundException {
+        Crustacean thisCrustacean = new Crustacean("james", " A crab");
+        Crustacean toDelete = service.create(thisCrustacean);
+        service.remove(toDelete.getId());
+        assertThat(service.all().size()).isEqualTo(0);
+    }
+
+    @Test
+    public void deleteKeyNotFoundShouldWork() {
+        assertThrows(AnimalNotFoundException.class,
+                     () -> service.remove("invalid animal"));
     }
 }

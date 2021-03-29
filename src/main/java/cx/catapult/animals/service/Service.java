@@ -2,6 +2,7 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 
+import cx.catapult.animals.exceptions.AnimalException;
 import java.util.Collection;
 
 public interface Service<T extends Animal> {
@@ -11,5 +12,7 @@ public interface Service<T extends Animal> {
     T create(T animal);
 
     public T get(String id);
+
+    void remove(String key) throws AnimalException;
 
 }

@@ -3,7 +3,6 @@ package cx.catapult.animals.web;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cx.catapult.animals.domain.Animal;
-import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +13,8 @@ public abstract class BaseControllerTest {
 
     @Autowired
     protected MockMvc mvc;
+
+    protected String id;
 
     protected Animal animal;
     protected String json;
@@ -27,7 +28,7 @@ public abstract class BaseControllerTest {
 
     @Test
     public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get(url).accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get(url + "/" + id))
            .andExpect(status().isOk());
     }
 
@@ -35,5 +36,11 @@ public abstract class BaseControllerTest {
     public void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post(url).content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
            .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete(url + "/" + id))
+           .andExpect(status().isNoContent());
     }
 }
