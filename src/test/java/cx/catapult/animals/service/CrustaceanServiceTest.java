@@ -2,11 +2,11 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Crustacean;
 import cx.catapult.animals.domain.Group;
-import cx.catapult.animals.repo.AnimalRepository;
+import cx.catapult.animals.repo.CrustaceanRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,11 +16,12 @@ import static org.mockito.Mockito.*;
 @SpringJUnitConfig
 public class CrustaceanServiceTest {
 
+    @Spy
     @InjectMocks
     private CrustaceanService crustaceanService;
 
     @Mock
-    private AnimalRepository animalRepository;
+    private CrustaceanRepository crustaceanRepository;
 
     @Test
     public void shouldAddCrustacean() {
@@ -29,15 +30,14 @@ public class CrustaceanServiceTest {
         Crustacean expected = new Crustacean("Portunidae", " Portunid crabs are characterised by the " +
                 "flattening of the fifth pair of legs into broad paddles, which are used for swimming");
         expected.setId("1");
-
-        when(animalRepository.save(any())).thenReturn(expected);
+        when(crustaceanRepository.save(any(Crustacean.class))).thenReturn(expected);
         Crustacean expectedCrustacean = crustaceanService.create(actual);
         assertNotNull(expected);
-        assertEquals(expectedCrustacean.getId(), 1);
+        assertEquals(expectedCrustacean.getId(), "1");
         assertEquals(expectedCrustacean.getName(), actual.getName());
         assertEquals(expectedCrustacean.getDescription(), actual.getDescription());
         assertEquals(expectedCrustacean.getGroup(), Group.INVERTEBRATE);
-        verify(animalRepository, times(1)).save(any());
+        verify(crustaceanRepository, times(1)).save(any(Crustacean.class));
     }
 
 }

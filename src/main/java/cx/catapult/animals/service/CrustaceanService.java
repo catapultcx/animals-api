@@ -1,22 +1,28 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Crustacean;
-import cx.catapult.animals.repo.AnimalRepository;
+import cx.catapult.animals.repo.CrustaceanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class CrustaceanService {
+import javax.transaction.Transactional;
 
-    private AnimalRepository animalRepository;
+@Service
+public class CrustaceanService extends BaseService<Crustacean> {
+
+    private final CrustaceanRepository crustaceanRepository;
 
     @Autowired
-    private CrustaceanService(AnimalRepository animalRepository){
-        this.animalRepository = animalRepository;
+    private CrustaceanService(CrustaceanRepository crustaceanRepository){
+        this.crustaceanRepository = crustaceanRepository;
     }
 
+    @Transactional
     public Crustacean create(Crustacean crustacean) {
-        animalRepository.save(crustacean);
-        return crustacean;
+//        4.6 6 Persist data in DB
+//            2. Must be keep existing memory back end (BaseService)
+        super.create(crustacean); // Design issue you can have separate memory storage class, cant test in unit test
+        Crustacean crustaceanStored = crustaceanRepository.save(crustacean);
+        return crustaceanStored;
     }
 }
