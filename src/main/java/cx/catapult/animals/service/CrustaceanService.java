@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class CrustaceanService extends BaseService<Crustacean> {
@@ -24,5 +25,10 @@ public class CrustaceanService extends BaseService<Crustacean> {
         super.create(crustacean); // Design issue you can have separate memory storage class, cant test in unit test
         Crustacean crustaceanStored = crustaceanRepository.save(crustacean);
         return crustaceanStored;
+    }
+
+    public List<Crustacean> all() {
+        List<Crustacean> crustaceans = crustaceanRepository.findAll();
+        return crustaceans;
     }
 }
