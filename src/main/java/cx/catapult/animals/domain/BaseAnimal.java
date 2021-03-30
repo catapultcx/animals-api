@@ -1,9 +1,6 @@
 package cx.catapult.animals.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -14,6 +11,8 @@ public class BaseAnimal implements Animal, Serializable {
     private String id;
     private String name;
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private Group group;
 
     public BaseAnimal(String name, String description, Group group) {
