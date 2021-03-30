@@ -1,12 +1,18 @@
 package cx.catapult.animals.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BaseAnimal implements Animal, Serializable {
 
+    @Id
     private String id;
     private String name;
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private Group group;
 
     public BaseAnimal(String name, String description, Group group) {
@@ -19,6 +25,8 @@ public class BaseAnimal implements Animal, Serializable {
         this.description = description;
         this.group = group;
     }
+
+    public BaseAnimal() {}
 
     @Override
     public String getId() {
