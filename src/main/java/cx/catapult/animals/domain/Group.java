@@ -7,6 +7,7 @@ public enum Group {
     FISH,
     INVERTEBRATE,
     MAMMALS,
-    REPTILES
+    REPTILES,
+    ARTHROPODS
 
 }
