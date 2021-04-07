@@ -35,4 +35,16 @@ public class CrustaceansController {
     create(@RequestBody Crustacean crustacean) {
         return service.create(crustacean);
     }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable String id) {
+        service.delete(id);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@PathVariable String id, @RequestBody Crustacean crustacean) {
+        service.update(id, crustacean);
+    }
 }

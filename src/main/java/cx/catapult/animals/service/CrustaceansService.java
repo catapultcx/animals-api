@@ -13,4 +13,8 @@ public class CrustaceansService extends BaseService<Crustacean> {
 
     }
 
+    public void delete(String id) {
+        remove(id);
+    }
+
 }
