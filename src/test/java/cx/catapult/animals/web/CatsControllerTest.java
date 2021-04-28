@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
-import cx.catapult.animals.domain.Cat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,10 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+/**
+ * A {@link SpringBootTest} for the {@link CrustaceansController}.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CatsControllerTest {
@@ -20,7 +20,6 @@ public class CatsControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private Cat cat = new Cat("Tom", "Bob cat");
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
     @Test

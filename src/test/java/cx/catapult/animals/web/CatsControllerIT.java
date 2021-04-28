@@ -1,7 +1,10 @@
 package cx.catapult.animals.web;
 
 
-import cx.catapult.animals.domain.Cat;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.net.URL;
+import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +14,12 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.net.URL;
-import java.util.Collection;
+import cx.catapult.animals.domain.Cat;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-
+/**
+ * A Spring Boot integration test for the {@link CatsController}.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
 public class CatsControllerIT {
     @LocalServerPort
     private int port;
@@ -36,7 +37,7 @@ public class CatsControllerIT {
     }
 
     @Test
-    public void createShouldWork() throws Exception {
+    public void createShouldWork() {
         ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
@@ -46,13 +47,13 @@ public class CatsControllerIT {
     }
 
     @Test
-    public void allShouldWork() throws Exception {
+    public void allShouldWork() {
         Collection items = template.getForObject(base.toString(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(7);
     }
 
     @Test
-    public void getShouldWork() throws Exception {
+    public void getShouldWork() {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
