@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="Gary" id="create_crustaceans_table">
+        <createTable tableName="crustaceans">
+            <column name="ID" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="NAME" type="VARCHAR(25)"/>
+            <column name="DESCRIPTION" type="VARCHAR(50)"/>
+            <column name="ANIMAL_GROUP" type="VARCHAR(25)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="crustaceans"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
