@@ -17,6 +17,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import cx.catapult.animals.domain.Cat;
 
@@ -24,6 +25,7 @@ import cx.catapult.animals.domain.Cat;
  * A Spring Boot integration test for the {@link CatsController}.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class CatsControllerIT {
     @LocalServerPort
     private int port;

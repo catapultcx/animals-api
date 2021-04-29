@@ -2,13 +2,28 @@ package cx.catapult.animals.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "Animal")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "discriminator")
 public class BaseAnimal implements Animal, Serializable {
-
+	@Id
     private String id;
-    private String name;
-    private String description;
-    private Group group;
+	private String name;
+	private String description;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "group_name")
+	private Group group;
 
     public BaseAnimal(String name, String description, Group group) {
         this(null, name, description, group);

@@ -1,5 +1,10 @@
 package cx.catapult.animals.domain;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue(value = "MAMMALS")
 public class Cat extends BaseAnimal {
     public Cat() {
         this("", "");

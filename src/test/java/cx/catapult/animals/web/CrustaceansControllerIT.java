@@ -18,6 +18,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import cx.catapult.animals.domain.Crustacean;
 
@@ -25,6 +26,7 @@ import cx.catapult.animals.domain.Crustacean;
  * A Spring Boot integration test for the {@link CrustaceansController}.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class CrustaceansControllerIT {
     @LocalServerPort
     private int port;

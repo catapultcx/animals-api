@@ -1,14 +1,19 @@
 package cx.catapult.animals;
 
+import java.util.Arrays;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-
-import java.util.Arrays;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
+@EnableAutoConfiguration
+@EnableJpaRepositories(basePackages = "cx.catapult.animals.repository")
+@EnableTransactionManagement
 public class AnimalsApiApplication {
 
 	public static void main(String[] args) {

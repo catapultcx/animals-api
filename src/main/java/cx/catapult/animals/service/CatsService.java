@@ -1,14 +1,23 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.Cat;
+import java.util.Collection;
+import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.repository.CatsRepository;
 
 @Service
-public class CatsService extends BaseService<Cat> {
+public class CatsService extends PersistenceService<Cat> {
 
-    @PostConstruct
+	private final CatsRepository repository;
+
+	public CatsService(CatsRepository repository) {
+		super(repository);
+		this.repository = repository;
+	}
+
+	@PostConstruct
     public void initialize() {
         this.create(new Cat("Tom", "Friend of Jerry"));
         this.create(new Cat("Jerry", "Not really a cat"));
@@ -19,4 +28,9 @@ public class CatsService extends BaseService<Cat> {
         this.create(new Cat("Garfield", "Lazy cat"));
     }
 
+	@Override
+	public Collection<Cat> all() {
+		// not sure what should happen here - retrieve from memory or db?
+		return repository.getAll();
+	}
 }
