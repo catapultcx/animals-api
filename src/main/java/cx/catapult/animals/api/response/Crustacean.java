@@ -1,6 +1,7 @@
 package cx.catapult.animals.api.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import cx.catapult.animals.domain.Group;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,5 +15,5 @@ public class Crustacean {
   String id;
   String name;
   String description;
-  String group;
+  Group group;
 }
