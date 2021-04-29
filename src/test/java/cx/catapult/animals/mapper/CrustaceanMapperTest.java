@@ -13,6 +13,11 @@ class CrustaceanMapperTest {
   CrustaceanMapper crustaceanMapper = new CrustaceanMapperImpl();
 
   @Test
+  public void shouldReturnNullIfPersistentCrustaceanIsNull() {
+    assertThat(crustaceanMapper.toPersistentCrustacean(null)).isNull();
+  }
+
+  @Test
   public void shouldMapAllCreateCrustaceanPropertiesToPersistentCrustacean() {
     CreateCrustaceanRequest createCrustaceanRequest =
         CreateCrustaceanRequest.builder().name("Some Name").description("Some Description").build();
@@ -26,6 +31,11 @@ class CrustaceanMapperTest {
             createCrustaceanRequest.getName(),
             createCrustaceanRequest.getDescription(),
             INVERTEBRATE);
+  }
+
+  @Test
+  public void shouldReturnNullIfCrustaceanIsNull() {
+    assertThat(crustaceanMapper.toCrustacean(null)).isNull();
   }
 
   @Test
