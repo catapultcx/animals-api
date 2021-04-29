@@ -67,10 +67,30 @@ public class CrustaceansControllerTest {
 	}
 
 	@Test
+	public void updateUnknownCrustacean() throws Exception {
+		Crustacean updatedCrustacean = new Crustacean("Colin", "Colin the crab");
+		String updatedJson = "{ \"name\": \"Colin\", \"description\": \"Colin the crab\" }";
+		given(service.update("123", updatedCrustacean)).willReturn(null);
+
+		mvc.perform(MockMvcRequestBuilders.put(URI_PATH + "/123")
+				.content(updatedJson)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
 	public void delete() throws Exception {
 		given(service.delete("123")).willReturn(true);
 
 		mvc.perform(MockMvcRequestBuilders.delete(URI_PATH + "/123").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void deleteUnknownCrustacean() throws Exception {
+		given(service.delete("123")).willReturn(false);
+
+		mvc.perform(MockMvcRequestBuilders.delete(URI_PATH + "/123").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
 	}
 }

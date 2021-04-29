@@ -56,6 +56,29 @@ public class CatsServiceTest {
 	}
 
 	@Test
+	public void updateShouldWork() {
+		service.create(cat);
+		Cat updated = new Cat("Mog", "Mog the cat");
+
+		Cat result = service.update(cat.getId(), updated);
+
+		assertThat(result.getId()).isEqualTo(cat.getId());
+		assertThat(result.getName()).isEqualTo(cat.getName());
+		assertThat(result.getDescription()).isEqualTo(cat.getDescription());
+		assertThat(result.getGroup()).isEqualTo(cat.getGroup());
+	}
+
+	@Test
+	public void updateShouldWorkGivenUnknownCrab() {
+		service.create(cat);
+		Cat updated = new Cat("Molly", "Molly the unknown cat");
+
+		Cat result = service.update("unknown-id", updated);
+
+		assertThat(result).isNull();
+	}
+
+	@Test
 	public void deleteShouldWork() {
 		service.create(cat);
 

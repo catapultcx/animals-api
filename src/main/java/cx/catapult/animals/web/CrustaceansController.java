@@ -47,8 +47,8 @@ public class CrustaceansController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Void> update(@PathVariable String id, @RequestBody Crustacean updated) {
-		if (service.update(id, updated) == null) {
+	public ResponseEntity<Void> update(@PathVariable String id, @RequestBody Crustacean crustacean) {
+		if (service.update(id, crustacean) == null) {
 			return new ResponseEntity<>(NOT_FOUND);
 		}
 

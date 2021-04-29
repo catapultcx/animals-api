@@ -2,6 +2,9 @@ package cx.catapult.animals.web;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.net.URL;
 import java.util.Collection;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -59,10 +63,32 @@ public class CatsControllerIT {
         assertThat(response.getBody()).isNotEmpty();
     }
 
-    Cat create(String name) {
-        Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
-        assertThat(created.getId()).isNotEmpty();
-        assertThat(created.getName()).isEqualTo(name);
-        return created;
-    }
+	@Test
+	public void updateShouldWork() {
+		Cat created = create("Initial Cat");
+		String url = base.toString() + "/" + created.getId();
+		Cat updated = new Cat("Unknown Cat", "Unknown Cat");
+		HttpEntity<Cat> requestEntity = new HttpEntity<>(updated);
+
+		ResponseEntity<Void> response = template.exchange(url, PUT, requestEntity, Void.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+	}
+
+	@Test
+	public void updateShouldWorkGivenUnknownId() {
+		Cat unknownCrab = new Cat("Unknown Cat", "Unknown Cat");
+		String url = base.toString() + "/unknownId";
+
+		ResponseEntity<Void> response = template.exchange(url, PUT, new HttpEntity<>(unknownCrab), Void.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
+	}
+
+	Cat create(String name) {
+		Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
+		assertThat(created.getId()).isNotEmpty();
+		assertThat(created.getName()).isEqualTo(name);
+		return created;
+	}
 }
