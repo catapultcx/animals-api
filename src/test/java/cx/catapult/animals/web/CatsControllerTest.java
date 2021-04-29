@@ -17,7 +17,7 @@ import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.service.CatsService;
 
 /**
- * A {@link SpringBootTest} for the {@link CrustaceansController}.
+ * A {@link SpringBootTest} for the {@link CatsController}.
  */
 @SpringBootTest
 @ActiveProfiles("test")

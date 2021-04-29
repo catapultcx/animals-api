@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 @Entity
 @Table(name = "Animal")
@@ -29,6 +30,7 @@ public class BaseAnimal implements Animal, Serializable {
         this(null, name, description, group);
     }
 
+    @JsonCreator
     public BaseAnimal(String id, String name, String description, Group group) {
         this.id = id;
         this.name = name;

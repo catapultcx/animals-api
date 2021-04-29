@@ -19,9 +19,10 @@ public class CrustaceansService extends PersistenceService<Crustacean> {
 
 	@PostConstruct
 	public void initialize() {
-		this.create(new Crustacean("Crusty", "Crusty the crab"));
+		this.create(new Crustacean("Crusty", "Crusty the Crab"));
 		this.create(new Crustacean("Libby", "Libby the Lobster"));
 		this.create(new Crustacean("Paula", "Paula the Prawn"));
+		this.create(new Crustacean("Smelly", "Smelly the Barnacle"));
 	}
 
 	@Override
