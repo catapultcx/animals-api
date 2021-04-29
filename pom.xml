@@ -150,6 +150,9 @@
                                     </limits>
                                 </rule>
                             </rules>
+                            <excludes>
+                                <exclude>**/*Exception.class</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>

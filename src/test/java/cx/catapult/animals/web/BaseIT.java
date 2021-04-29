@@ -1,6 +1,8 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.AnimalsApiApplication;
+import cx.catapult.animals.repository.CrustaceanRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -34,4 +36,10 @@ public abstract class BaseIT {
   }
 
   @Autowired public TestRestTemplate restTemplate;
+  @Autowired private CrustaceanRepository repository;
+
+  @BeforeEach
+  public void deleteRepositoryData() {
+    repository.deleteAll();
+  }
 }

@@ -9,15 +9,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 import static cx.catapult.animals.domain.Group.INVERTEBRATE;
 import static cx.catapult.animals.tools.CrustaceanTestTools.createCrustaceanRequest;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CrustaceanControllerIT extends BaseIT {
@@ -41,14 +38,8 @@ public class CrustaceanControllerIT extends BaseIT {
     String createdId1 = submitCreateRequest(createCrustaceanRequest()).getBody().getId();
     String createdId2 = submitCreateRequest(createCrustaceanRequest()).getBody().getId();
 
-    HttpEntity<CreateCrustaceanRequest> request = new HttpEntity<>(new HttpHeaders());
-
-    ResponseEntity<List<Crustacean>> response =
-        restTemplate.exchange(
-            "/api/1/crustaceans",
-            GET,
-            request,
-            new ParameterizedTypeReference<List<Crustacean>>() {});
+    ResponseEntity<Crustacean[]> response =
+        restTemplate.getForEntity("/api/1/crustaceans", Crustacean[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(OK);
     assertThat(response.getBody()).hasSize(2);
@@ -61,18 +52,35 @@ public class CrustaceanControllerIT extends BaseIT {
   public void shouldReturnACrustaceanById() {
     String createdId = submitCreateRequest(createCrustaceanRequest()).getBody().getId();
 
-    HttpEntity<CreateCrustaceanRequest> request = new HttpEntity<>(new HttpHeaders());
-
     ResponseEntity<Crustacean> response =
-        restTemplate.exchange(
-            String.format("/api/1/crustaceans/%s", createdId),
-            GET,
-            request,
-            new ParameterizedTypeReference<Crustacean>() {});
+        restTemplate.getForEntity(
+            String.format("/api/1/crustaceans/%s", createdId), Crustacean.class);
 
     assertThat(response.getStatusCode()).isEqualTo(OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().getId()).isEqualTo(createdId);
+  }
+
+  @Test
+  public void shouldReturnNotFoundStatusCodeWhenGetCrustaceanWithIdWhichDoesNotExist() {
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(
+            String.format("/api/1/crustaceans/%s", "nonexistent"), String.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
+    assertThat(response.getBody()).isEqualTo("Crustacean by 'nonexistent' was not found");
+  }
+
+  @Test
+  public void shouldReturnNotFoundStatusCodeWhenDeleteCrustaceanWithIdWhichDoesNotExist() {
+    HttpEntity<CreateCrustaceanRequest> request = new HttpEntity<>(new HttpHeaders());
+
+    ResponseEntity deleteResponse =
+        restTemplate.exchange(
+            String.format("/api/1/crustaceans/%s", "nonexistent"), DELETE, request, String.class);
+
+    assertThat(deleteResponse.getStatusCode()).isEqualTo(NOT_FOUND);
+    assertThat(deleteResponse.getBody()).isEqualTo("Crustacean by 'nonexistent' was not found");
   }
 
   private ResponseEntity<Crustacean> submitCreateRequest(
