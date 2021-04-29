@@ -1,9 +1,14 @@
 package cx.catapult.animals.web;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,5 +43,14 @@ public class CrustaceansController {
 	@GetMapping(value = "/{id}")
 	public @ResponseBody Crustacean get(@PathVariable String id) {
 		return service.get(id);
+	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable String id) {
+		if (service.delete(id)) {
+			return new ResponseEntity<>(OK);
+		}
+
+		return new ResponseEntity<>(NOT_FOUND);
 	}
 }

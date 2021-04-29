@@ -46,4 +46,27 @@ public class CrustaceansServiceTest {
 		assertThat(actual.getDescription()).isEqualTo(crab.getDescription());
 		assertThat(actual.getGroup()).isEqualTo(crab.getGroup());
 	}
+
+	@Test
+	public void getShouldWorkGivenUnknownCrustacean() {
+		Crustacean actual = service.get("unknown-id");
+
+		assertThat(actual).isNull();
+	}
+
+	@Test
+	public void deleteShouldWork() {
+		service.create(crab);
+
+		boolean deleted = service.delete(crab.getId());
+
+		assertThat(deleted).isTrue();
+	}
+
+	@Test
+	public void deleteShouldWorkGivenUnknownCrustacean() {
+		boolean deleted = service.delete("unknown-id");
+
+		assertThat(deleted).isFalse();
+	}
 }

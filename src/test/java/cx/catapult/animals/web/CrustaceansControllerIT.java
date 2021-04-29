@@ -1,6 +1,10 @@
 package cx.catapult.animals.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 import java.net.URL;
 import java.util.Collection;
@@ -10,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import cx.catapult.animals.domain.Crustacean;
@@ -39,7 +42,7 @@ public class CrustaceansControllerIT {
     public void createShouldWork() {
         ResponseEntity<Crustacean> response = template.postForEntity(base.toString(), crustacean, Crustacean.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getStatusCode()).isEqualTo(CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(crustacean.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(crustacean.getDescription());
@@ -49,15 +52,38 @@ public class CrustaceansControllerIT {
 	@Test
 	public void allShouldWork() {
 		Collection items = template.getForObject(base.toString(), Collection.class);
+
 		assertThat(items.size()).isGreaterThanOrEqualTo(3);
 	}
 
 	@Test
 	public void getShouldWork() {
 		Crustacean created = create("Test 1");
+
 		ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(OK);
 		assertThat(response.getBody()).isNotEmpty();
 	}
+
+	@Test
+	public void deleteShouldWork() {
+		Crustacean created = create("Test 1");
+		String url = base.toString() + "/" + created.getId();
+
+		ResponseEntity<Void> response = template.exchange(url, DELETE, null, Void.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(OK);
+	}
+
+	@Test
+	public void deleteShouldWorkGivenUnknownId() {
+		String url = base.toString() + "/unknown-id";
+
+		ResponseEntity<Void> response = template.exchange(url, DELETE, null, Void.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
+    }
 
 	Crustacean create(String name) {
 		Crustacean created = template.postForObject(base.toString(), new Crustacean(name, name), Crustacean.class);
