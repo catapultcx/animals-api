@@ -1,1 +1,11 @@
-springdoc.api-docs.path=/api-docs
+spring:
+  api-docs:
+    path: /api-docs
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/animals
+    username: ${PROD-ANIMALS-DB-USERNAME}
+    password: ${PROD-ANIMALS-DB-PASSWORD}
+
+  liquibase:
+    change-log: classpath:db/changelog/liquibase-changeLog.xml
