@@ -1,12 +1,27 @@
 package cx.catapult.animals.domain;
 
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
+@SuperBuilder
+@NoArgsConstructor
+@MappedSuperclass
 public class BaseAnimal implements Animal, Serializable {
 
+    @Id
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
+    @Column(name = "NAME")
     private String name;
+    @Column(name = "DESCRIPTION")
     private String description;
+    @Column(name = "ANIMAL_GROUP")
+    @Enumerated(EnumType.STRING)
     private Group group;
 
     public BaseAnimal(String name, String description, Group group) {
