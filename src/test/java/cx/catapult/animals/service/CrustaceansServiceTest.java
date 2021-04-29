@@ -55,6 +55,29 @@ public class CrustaceansServiceTest {
 	}
 
 	@Test
+	public void updateShouldWork() {
+		service.create(crab);
+		Crustacean updated = new Crustacean("Colin", "Colin the crab");
+
+		Crustacean result = service.update(crab.getId(), updated);
+
+		assertThat(result.getId()).isEqualTo(crab.getId());
+		assertThat(result.getName()).isEqualTo(crab.getName());
+		assertThat(result.getDescription()).isEqualTo(crab.getDescription());
+		assertThat(result.getGroup()).isEqualTo(crab.getGroup());
+	}
+
+	@Test
+	public void updateShouldWorkGivenUnknownCrab() {
+		service.create(crab);
+		Crustacean updated = new Crustacean("Colin", "Colin the unknown crab");
+
+		Crustacean result = service.update("unknown-id", updated);
+
+		assertThat(result).isNull();
+	}
+
+	@Test
 	public void deleteShouldWork() {
 		service.create(crab);
 

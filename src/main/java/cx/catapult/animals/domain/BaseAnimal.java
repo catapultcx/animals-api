@@ -1,6 +1,7 @@
 package cx.catapult.animals.domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class BaseAnimal implements Animal, Serializable {
 
@@ -54,4 +55,24 @@ public class BaseAnimal implements Animal, Serializable {
     public Group getGroup() {
         return this.group;
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		BaseAnimal that = (BaseAnimal) o;
+		return Objects.equals(id, that.id) &&
+				Objects.equals(name, that.name) &&
+				Objects.equals(description, that.description) &&
+				group == that.group;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, description, group);
+	}
 }

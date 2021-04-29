@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import cx.catapult.animals.domain.Crustacean;
 import cx.catapult.animals.service.CrustaceansService;
 
 /**
@@ -41,19 +42,34 @@ public class CrustaceansControllerTest {
 
 	@Test
 	public void all() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get(URI_PATH).accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders.get(URI_PATH)
+				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	public void get() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get(URI_PATH + "/123").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders.get(URI_PATH + "/123")
+				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void update() throws Exception {
+		Crustacean updatedCrustacean = new Crustacean("Colin", "Colin the crab");
+		String updatedJson = "{ \"name\": \"Colin\", \"description\": \"Colin the crab\" }";
+		given(service.update("123", updatedCrustacean)).willReturn(updatedCrustacean);
+
+		mvc.perform(MockMvcRequestBuilders.put(URI_PATH + "/123")
+				.content(updatedJson)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isNoContent());
 	}
 
 	@Test
 	public void delete() throws Exception {
 		given(service.delete("123")).willReturn(true);
+
 		mvc.perform(MockMvcRequestBuilders.delete(URI_PATH + "/123").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}

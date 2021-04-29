@@ -2,8 +2,10 @@ package cx.catapult.animals.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.net.URL;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import cx.catapult.animals.domain.Crustacean;
@@ -60,10 +63,33 @@ public class CrustaceansControllerIT {
 	public void getShouldWork() {
 		Crustacean created = create("Test 1");
 
-		ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+		ResponseEntity<Crustacean> response = template.getForEntity(base.toString() + "/" + created.getId(), Crustacean.class);
 
 		assertThat(response.getStatusCode()).isEqualTo(OK);
-		assertThat(response.getBody()).isNotEmpty();
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody().getName()).isEqualTo("Test 1");
+	}
+
+	@Test
+	public void updateShouldWork() {
+		Crustacean created = create("Test 1");
+		String url = base.toString() + "/" + created.getId();
+		Crustacean updated = new Crustacean("Updated", "Updated");
+		HttpEntity<Crustacean> requestEntity = new HttpEntity<>(updated);
+
+		ResponseEntity<Void> response = template.exchange(url, PUT, requestEntity, Void.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
+	}
+
+	@Test
+	public void updateShouldWorkGivenUnknownId() {
+		Crustacean unknownCrab = new Crustacean("Unknown Crab", "Unknown Crab");
+		String url = base.toString() + "/unknownId";
+
+		ResponseEntity<Void> response = template.exchange(url, PUT, new HttpEntity<>(unknownCrab), Void.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
 	}
 
 	@Test

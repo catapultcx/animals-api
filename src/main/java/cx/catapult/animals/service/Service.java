@@ -33,6 +33,13 @@ public interface Service<T extends Animal> {
     T get(String id);
 
 	/**
+	 * Updates the name and/or description of an existing {@link Animal}.
+	 *
+	 * @return The updated {@link Animal} or {@code null} if it doesn't exist.
+	 */
+	T update(String id, T animal);
+
+	/**
 	 * Deletes an {@link Animal} by its ID.
 	 *
 	 * @param id The ID of the {@link Animal} to delete.
