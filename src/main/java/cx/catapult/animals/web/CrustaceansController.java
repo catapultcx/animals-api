@@ -1,8 +1,11 @@
 package cx.catapult.animals.web;
 
+import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,4 +28,15 @@ public class CrustaceansController {
 	public @ResponseBody Crustacean create(@RequestBody Crustacean crustacean) {
         return service.create(crustacean);
     }
+
+	@GetMapping(value = "", produces = "application/json")
+	public @ResponseBody
+	Collection<Crustacean> all() {
+		return service.all();
+	}
+
+	@GetMapping(value = "/{id}")
+	public @ResponseBody Crustacean get(@PathVariable String id) {
+		return service.get(id);
+	}
 }

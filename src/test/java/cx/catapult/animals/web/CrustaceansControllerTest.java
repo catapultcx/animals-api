@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 public class CrustaceansControllerTest {
 
+	private static final String URI_PATH = "/api/1/crustaceans";
+
 	@Autowired
 	private MockMvc mvc;
 
@@ -24,10 +26,21 @@ public class CrustaceansControllerTest {
 
 	@Test
 	public void create() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.post("/api/1/crustaceans")
+		mvc.perform(MockMvcRequestBuilders.post(URI_PATH)
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isCreated());
 	}
 
+	@Test
+	public void all() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get(URI_PATH).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void get() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get(URI_PATH + "/123").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
 }

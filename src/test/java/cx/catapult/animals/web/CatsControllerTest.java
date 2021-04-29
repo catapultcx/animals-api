@@ -17,26 +17,28 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 public class CatsControllerTest {
 
-    @Autowired
+	private static final String URI_PATH = "/api/1/cats";
+
+	@Autowired
     private MockMvc mvc;
 
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
     @Test
     public void all() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get(URI_PATH).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get(URI_PATH + "/123").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void create() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(MockMvcRequestBuilders.post(URI_PATH).content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
 }
