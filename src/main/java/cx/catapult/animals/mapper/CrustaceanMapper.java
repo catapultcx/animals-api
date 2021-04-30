@@ -1,6 +1,6 @@
 package cx.catapult.animals.mapper;
 
-import cx.catapult.animals.api.CreateCrustaceanRequest;
+import cx.catapult.animals.api.request.CreateOrUpdateCrustaceanRequest;
 import cx.catapult.animals.api.response.Crustacean;
 import cx.catapult.animals.domain.PersistentCrustacean;
 import org.mapstruct.Mapper;
@@ -10,5 +10,5 @@ public interface CrustaceanMapper {
 
   Crustacean toCrustacean(PersistentCrustacean persistentCrustacean);
 
-  PersistentCrustacean toPersistentCrustacean(CreateCrustaceanRequest createCrustaceanRequest);
+  PersistentCrustacean toPersistentCrustacean(CreateOrUpdateCrustaceanRequest createCrustaceanRequest);
 }

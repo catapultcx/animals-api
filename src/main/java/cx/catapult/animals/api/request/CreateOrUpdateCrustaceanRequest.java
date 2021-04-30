@@ -1,4 +1,4 @@
-package cx.catapult.animals.api;
+package cx.catapult.animals.api.request;
 
 import cx.catapult.animals.domain.Group;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import static cx.catapult.animals.domain.Group.INVERTEBRATE;
 
 @Value
 @Builder(toBuilder = true)
-public class CreateCrustaceanRequest {
+public class CreateOrUpdateCrustaceanRequest {
 
   @Size(max = 25)
   String name;
@@ -18,5 +18,5 @@ public class CreateCrustaceanRequest {
   @Size(max = 50)
   String description;
 
-  @Builder.Default Group group = INVERTEBRATE;
+  Group group = INVERTEBRATE;
 }

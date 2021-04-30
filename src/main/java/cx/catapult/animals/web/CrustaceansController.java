@@ -1,6 +1,6 @@
 package cx.catapult.animals.web;
 
-import cx.catapult.animals.api.CreateCrustaceanRequest;
+import cx.catapult.animals.api.request.CreateOrUpdateCrustaceanRequest;
 import cx.catapult.animals.api.response.Crustacean;
 import cx.catapult.animals.exception.DataNotFoundException;
 import cx.catapult.animals.mapper.CrustaceanMapper;
@@ -27,11 +27,12 @@ public class CrustaceansController {
   private final CrustaceanRepository repository;
   private final CrustaceanMapper crustaceanMapper;
 
-  @Operation(description = "Creates a new contract")
+  @Operation(description = "Creates a new Crustacean")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Create Crustacean")})
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public Crustacean create(@Valid @RequestBody CreateCrustaceanRequest createCrustaceanRequest) {
+  public Crustacean create(
+      @Valid @RequestBody CreateOrUpdateCrustaceanRequest createCrustaceanRequest) {
     return crustaceanMapper.toCrustacean(
         repository.save(crustaceanMapper.toPersistentCrustacean(createCrustaceanRequest)));
   }
@@ -79,5 +80,20 @@ public class CrustaceansController {
     } else {
       throw new DataNotFoundException(Crustacean.class, id);
     }
+  }
+
+  @Operation(description = "Updates a Crustacean")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Updated Crustacean")})
+  @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  public Crustacean update(
+      @PathVariable String id,
+      @Valid @RequestBody CreateOrUpdateCrustaceanRequest updateCrustaceanRequest) {
+    return repository
+        .findById(id)
+        .map(p -> crustaceanMapper.toPersistentCrustacean(updateCrustaceanRequest))
+        .map(repository::save)
+        .map(crustaceanMapper::toCrustacean)
+        .orElseThrow(() -> new DataNotFoundException(Crustacean.class, id));
   }
 }

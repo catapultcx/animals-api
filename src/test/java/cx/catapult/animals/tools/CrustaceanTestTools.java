@@ -1,6 +1,6 @@
 package cx.catapult.animals.tools;
 
-import cx.catapult.animals.api.CreateCrustaceanRequest;
+import cx.catapult.animals.api.request.CreateOrUpdateCrustaceanRequest;
 import cx.catapult.animals.domain.PersistentCrustacean;
 
 import java.util.UUID;
@@ -10,8 +10,8 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 public class CrustaceanTestTools {
 
-  public static CreateCrustaceanRequest createCrustaceanRequest() {
-    return CreateCrustaceanRequest.builder()
+  public static CreateOrUpdateCrustaceanRequest createOrUpdateCrustaceanRequest() {
+    return CreateOrUpdateCrustaceanRequest.builder()
         .name(randomAlphabetic(25))
         .description(randomAlphabetic(50))
         .build();

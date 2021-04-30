@@ -1,6 +1,6 @@
 package cx.catapult.animals.mapper;
 
-import cx.catapult.animals.api.CreateCrustaceanRequest;
+import cx.catapult.animals.api.request.CreateOrUpdateCrustaceanRequest;
 import cx.catapult.animals.api.response.Crustacean;
 import cx.catapult.animals.domain.PersistentCrustacean;
 import org.junit.jupiter.api.Test;
@@ -19,8 +19,8 @@ class CrustaceanMapperTest {
 
   @Test
   public void shouldMapAllCreateCrustaceanPropertiesToPersistentCrustacean() {
-    CreateCrustaceanRequest createCrustaceanRequest =
-        CreateCrustaceanRequest.builder().name("Some Name").description("Some Description").build();
+    CreateOrUpdateCrustaceanRequest createCrustaceanRequest =
+        CreateOrUpdateCrustaceanRequest.builder().name("Some Name").description("Some Description").build();
 
     PersistentCrustacean persistentCrustacean =
         crustaceanMapper.toPersistentCrustacean(createCrustaceanRequest);
