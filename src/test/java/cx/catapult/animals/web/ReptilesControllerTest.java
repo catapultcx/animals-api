@@ -22,6 +22,7 @@ public class ReptilesControllerTest {
 
     private Reptile reptile = new Reptile("Leo", "Leo lizard");
     private String json = "{ \"name\": \"Leo\", \"description\": \"Leo lizard\" }";
+    private String jsonUpdate = "{ \"name\": \"Leo\", \"description\": \"Large Leo\" }";
 
     @Test
     public void all() throws Exception {
@@ -44,6 +45,12 @@ public class ReptilesControllerTest {
     @Test
     public void delete() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/reptiles/123"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/reptiles/123").content(jsonUpdate).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 }

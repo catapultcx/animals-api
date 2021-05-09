@@ -37,6 +37,13 @@ public class ReptilesController {
         return service.create(reptile);
     }
 
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    Reptile
+    update(@PathVariable String id, @RequestBody Reptile reptile) {
+        return service.update(id, reptile);
+    }
+
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable String id) {
         service.delete(id);

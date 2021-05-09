@@ -9,6 +9,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpMethod;
 
 import java.net.URL;
 import java.util.Collection;
@@ -64,6 +65,20 @@ public class ReptilesControllerIT {
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isEmpty();
     }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        Reptile created = create("Test 3");
+        template.put(base.toString()+"/"+ created.getId(), new Reptile("Change name",
+                "Change description"));
+        ResponseEntity<Reptile> response = template.getForEntity(base.toString() + "/" + created.getId(), Reptile.class);
+        assertThat(response.getBody().getId()).isEqualTo(created.getId());
+        assertThat(response.getBody().getName()).isEqualTo("Change name");
+        assertThat(response.getBody().getDescription()).isEqualTo("Change description");
+        assertThat(response.getBody().getGroup()).isEqualTo(reptile.getGroup());
+    }
+
+
 
 
 
