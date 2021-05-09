@@ -36,4 +36,9 @@ public class ReptilesController {
     create(@RequestBody Reptile reptile) {
         return service.create(reptile);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 }

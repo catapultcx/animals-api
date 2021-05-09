@@ -57,6 +57,16 @@ public class ReptilesControllerIT {
         assertThat(response.getBody()).isNotEmpty();
     }
 
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Reptile created = create("Test 2");
+        template.delete(base.toString() + "/" + created.getId());
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).isEmpty();
+    }
+
+
+
     Reptile create(String name) {
         Reptile created = template.postForObject(base.toString(), new Reptile(name, name), Reptile.class);
         assertThat(created.getId()).isNotEmpty();

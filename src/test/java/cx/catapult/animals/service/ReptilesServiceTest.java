@@ -38,4 +38,13 @@ public class ReptilesServiceTest {
         assertThat(actual.getDescription()).isEqualTo(reptile.getDescription());
         assertThat(actual.getGroup()).isEqualTo(reptile.getGroup());
     }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        service.create(reptile);
+        Reptile actual = service.get(reptile.getId());
+        assertThat(actual).isEqualTo(reptile);
+        service.delete(actual.getId());
+        assertThat(service.get(reptile.getId())).isNull();
+    }
 }
