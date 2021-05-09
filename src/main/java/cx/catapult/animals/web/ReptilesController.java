@@ -17,6 +17,18 @@ public class ReptilesController {
     @Autowired
     private ReptilesService service;
 
+    @GetMapping(value = "", produces = "application/json")
+    public @ResponseBody
+    Collection<Reptile> all() {
+        return service.all();
+    }
+
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    Reptile get(@PathVariable String id) {
+        return service.get(id);
+    }
+
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody

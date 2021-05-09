@@ -1,6 +1,5 @@
 package cx.catapult.animals.web;
 
-import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Reptile;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,20 @@ public class ReptilesControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    private Reptile reptile = new Reptile("Leo", "Leo lizard");
     private String json = "{ \"name\": \"Leo\", \"description\": \"Leo lizard\" }";
+
+    @Test
+    public void all() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/reptiles").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void get() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/reptiles/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void create() throws Exception {

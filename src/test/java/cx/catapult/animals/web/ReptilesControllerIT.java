@@ -43,4 +43,24 @@ public class ReptilesControllerIT {
         assertThat(response.getBody().getDescription()).isEqualTo(reptile.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(reptile.getGroup());
     }
+
+    @Test
+    public void allShouldWork() throws Exception {
+        Collection items = template.getForObject(base.toString(), Collection.class);
+        assertThat(items.size()).isGreaterThanOrEqualTo(7);
+    }
+
+    @Test
+    public void getShouldWork() throws Exception {
+        Reptile created = create("Test 1");
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+    }
+
+    Reptile create(String name) {
+        Reptile created = template.postForObject(base.toString(), new Reptile(name, name), Reptile.class);
+        assertThat(created.getId()).isNotEmpty();
+        assertThat(created.getName()).isEqualTo(name);
+        return created;
+    }
 }
