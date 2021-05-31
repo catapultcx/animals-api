@@ -61,12 +61,20 @@ public class InsectsControllerIT {
     }
 
     @Test
+    public void updateShouldWork() {
+        Insect created = create("Test 1");
+        Insect updated = create("Test 2");
+        template.put(base.toString() + "/" + created.getId(), updated);
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).contains("Test 2");
+    }
+
+    @Test
     public void getShouldWork() {
         Insect created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
     }
-
 
     @Test
     Insect create(String name) {

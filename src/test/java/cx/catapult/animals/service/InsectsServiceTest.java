@@ -47,4 +47,14 @@ public class InsectsServiceTest {
         assertThat(service.all().size()).isEqualTo(sizeBefore);
     }
 
+
+    @Test
+    public void updateShouldWork() {
+        Insect initialInsect = service.create(insect);
+        Insect replacement = new Insect("Nota", "Grasshopper");
+        Insect finalInsect = service.update(initialInsect.getId(), replacement);
+        assertThat(finalInsect.getDescription()).isEqualTo(replacement.getDescription());
+        assertThat(finalInsect.getName()).isEqualTo(replacement.getName());
+    }
+
 }

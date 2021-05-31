@@ -23,6 +23,13 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     @Override
     public T get(String id) {
-        return items.get(id);
+        T animal = items.get(id);
+        if (animal == null){
+            return null;
+        }
+        if (null == animal.getId()) {
+            animal.setId(id);
+        }
+        return animal;
     }
 }

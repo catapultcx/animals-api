@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,6 +42,14 @@ public class InsectsController {
     Insect
     create(@RequestBody Insect insect) {
         return service.create(insect);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    Insect
+    update(@PathVariable String id, @RequestBody Insect insect) {
+        return service.update(id, insect);
     }
 
     @DeleteMapping(value = "/{id}")
