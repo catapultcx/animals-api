@@ -1,11 +1,12 @@
 package cx.catapult.animals.web;
 
-import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.service.CatsService;
+import cx.catapult.animals.domain.Insect;
+import cx.catapult.animals.service.InsectsService;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,38 +18,43 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CatsController {
+@RequestMapping(path = "/api/1/insects", produces = MediaType.APPLICATION_JSON_VALUE)
+public class InsectsController {
 
     @Autowired
-    private CatsService service;
+    private InsectsService service;
 
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody
-    Collection<Cat> all() {
+    Collection<Insect> all() {
         return service.all();
     }
 
     @GetMapping(value = "/{id}")
     public @ResponseBody
-    Cat get(@PathVariable String id) {
+    Insect get(@PathVariable String id) {
         return service.get(id);
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Cat
-    create(@RequestBody Cat cat) {
-        return service.create(cat);
+    Insect
+    create(@RequestBody Insect insect) {
+        return service.create(insect);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    Cat
-    update(@PathVariable String id, @RequestBody Cat cat) {
-        return service.update(id, cat);
+    Insect
+    update(@PathVariable String id, @RequestBody Insect insect) {
+        return service.update(id, insect);
     }
 
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable String id){
+        service.delete(id);
+    }
 }

@@ -1,9 +1,9 @@
 package cx.catapult.animals.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
 
@@ -36,5 +36,14 @@ public class CatsServiceTest {
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+    }
+
+    @Test
+    public void updateShouldWork() {
+        Cat initialInsect = service.create(cat);
+        Cat replacement = new Cat("Nota", "Grasshopper");
+        Cat finalCat = service.update(initialInsect.getId(), replacement);
+        assertThat(finalCat.getDescription()).isEqualTo(replacement.getDescription());
+        assertThat(finalCat.getName()).isEqualTo(replacement.getName());
     }
 }
