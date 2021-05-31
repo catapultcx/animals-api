@@ -2,7 +2,6 @@ package cx.catapult.animals.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Insect;
 import org.junit.jupiter.api.Test;
 
@@ -38,4 +37,14 @@ public class InsectsServiceTest {
         assertThat(actual.getDescription()).isEqualTo(insect.getDescription());
         assertThat(actual.getGroup()).isEqualTo(insect.getGroup());
     }
+
+    @Test
+    public void deleteShouldWork() {
+        int sizeBefore = service.all().size();
+        service.create(insect);
+        assertThat(service.all().size()).isEqualTo(sizeBefore + 1);
+        service.delete(insect.getId());
+        assertThat(service.all().size()).isEqualTo(sizeBefore);
+    }
+
 }

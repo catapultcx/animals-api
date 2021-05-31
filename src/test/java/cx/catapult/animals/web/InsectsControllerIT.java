@@ -53,14 +53,24 @@ public class InsectsControllerIT {
     }
 
     @Test
+    public void deleteShouldWork() {
+        Insect created = create("Test 1");
+        template.delete(base.toString() + "/" + created.getId());
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).isNullOrEmpty();
+    }
+
+    @Test
     public void getShouldWork() {
-        Cat created = create("Test 1");
+        Insect created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
     }
 
-    Cat create(String name) {
-        Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
+
+    @Test
+    Insect create(String name) {
+        Insect created = template.postForObject(base.toString(), new Insect(name, name), Insect.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;
