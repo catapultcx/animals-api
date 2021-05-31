@@ -21,12 +21,4 @@ public class InsectsService extends BaseService<Insect> {
         logger.info("Deleted id {} containing the insect {}", id, insect);
     }
 
-    public Insect update(String id, Insect insect) {
-        super.items.replace(id, insect);
-        logger.info("Update insect id {} containing the insect {}", id, insect);
-        return get(id);
-    }
-
-
-
 }

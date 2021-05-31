@@ -2,7 +2,6 @@ package cx.catapult.animals.web;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Insect;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +44,11 @@ public class InsectsControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/insects/123"))
             .andExpect(status().isOk());
     }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/insects/123").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
+    }
+
 }

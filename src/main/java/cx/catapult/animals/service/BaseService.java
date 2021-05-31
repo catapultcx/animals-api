@@ -1,8 +1,9 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
@@ -31,5 +32,10 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
             animal.setId(id);
         }
         return animal;
+    }
+
+    public T update(String id, T animal) {
+        items.replace(id, animal);
+        return get(id);
     }
 }
