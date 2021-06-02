@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: ./animals-api
+    ports:
+      - "8080:8080"
+  ui:
+    container_name: "gov-express"
+    build:
+      context: ./animals-ui
+    ports:
+      - "2997:2997"
+    env_file:
+      - .env
+    environment:
+      - API_ENV=pre
