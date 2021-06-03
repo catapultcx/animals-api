@@ -58,6 +58,8 @@ For further reference, please consider the following sections:
 
 ### Exercise Updates
 
+Solution for Requirements
+
 1. Run services together with docker-compose
     * New docker-compose file (docker-compose-all.yml) has been added to bring up both the services at the same time
       Following environment variables have to be supplied
