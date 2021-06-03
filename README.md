@@ -55,3 +55,15 @@ For further reference, please consider the following sections:
 * [Spring Boot guide](https://spring.io/guides/gs/spring-boot)
 * [Spring Boot and Docker](https://spring.io/guides/gs/spring-boot-docker/)
 * [MySql](https://spring.io/guides/gs/accessing-data-mysql/)
+
+### Exercise Updates
+
+1. Run services together with docker-compose
+    * New docker-compose file (docker-compose-all.yml) has been added to bring up both the services at the same time
+      Following environment variables have to be supplied
+      * ANIMALS_API_IMG
+      * ANIMALS_API_TAG
+      * ANIMALS_APP_IMG
+      * ANIMALS_APP_TAG
+
+
