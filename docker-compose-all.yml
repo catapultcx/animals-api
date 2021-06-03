@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  api:
+    container_name: "animals-api"
+    image: "${ANIMALS_API_IMG}:${ANIMALS_API_TAG}"
+    ports:
+      - "8080:8080"
+  app:
+    container_name: "gov-express"
+    image: "${ANIMALS_APP_IMG}:${ANIMALS_APP_TAG}"
+    environment:
+      API_URL: http://api:8080/api/1
+    ports:
+      - "2997:2997"
+    depends_on:
+      - api

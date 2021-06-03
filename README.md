@@ -55,3 +55,24 @@ For further reference, please consider the following sections:
 * [Spring Boot guide](https://spring.io/guides/gs/spring-boot)
 * [Spring Boot and Docker](https://spring.io/guides/gs/spring-boot-docker/)
 * [MySql](https://spring.io/guides/gs/accessing-data-mysql/)
+
+### Exercise Updates
+
+Solution for Requirements
+
+1. Run services together with docker-compose
+    * New docker-compose file (docker-compose-all.yml) has been added to bring up both the services at the same time
+      Following environment variables have to be supplied
+      * ANIMALS_API_IMG
+      * ANIMALS_API_TAG
+      * ANIMALS_APP_IMG
+      * ANIMALS_APP_TAG
+    * Image should have been created and pushed to some registry before
+    * The command is `docker-compose -f docker-compose-all.yml up`
+    
+2. Profile service performance      
+    * New Jmeter test plan (api-app-jmeter-test-plan.jmx) has been added
+    * The test plan can test API & UI separately and both together. 
+    * Number of users have been configured as 50
+    * Duration assertion has been configured with 100ms
+    * Import the jmx file into jmeter and run it against the API & APP services
