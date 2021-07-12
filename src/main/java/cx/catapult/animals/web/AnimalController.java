@@ -41,6 +41,12 @@ public class AnimalController {
     return getAnimalService(animal).get(id);
   }
 
+  @DeleteMapping(value = "delete/{id}")
+  public @ResponseBody
+  Animal delete(@PathVariable String animal, @PathVariable String id) {
+    return getAnimalService(animal).delete(id);
+  }
+
   private BaseService getAnimalService(String animalPath) {
     if (animalPath.equals("cats")) {
       return catsService;
