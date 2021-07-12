@@ -9,6 +9,8 @@ public class AracnidsServiceTest {
 
     ArachnidsService service = new ArachnidsService();
 
+    Arachnid arachnid = new Arachnid("spider", "spiderman");
+
     @Test
     public void createShouldWork() {
         Arachnid thisArachnid = new Arachnid();
@@ -19,6 +21,22 @@ public class AracnidsServiceTest {
         assertThat(actual.getName()).isEqualTo(thisArachnid.getName());
         assertThat(actual.getDescription()).isEqualTo(thisArachnid.getDescription());
         assertThat(actual.getGroup()).isEqualTo(thisArachnid.getGroup());
+    }
+
+    @Test
+    public void allShouldWork() throws Exception {
+        service.create(arachnid);
+        assertThat(service.all().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void getShouldWork() throws Exception {
+        service.create(arachnid);
+        Arachnid actual = service.get(arachnid.getId());
+        assertThat(actual).isEqualTo(arachnid);
+        assertThat(actual.getName()).isEqualTo(arachnid.getName());
+        assertThat(actual.getDescription()).isEqualTo(arachnid.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(arachnid.getGroup());
     }
 
 }

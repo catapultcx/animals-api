@@ -16,8 +16,6 @@ import java.util.Collection;
 @RequestMapping(path = "/api/1/{animal}", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AnimalController {
 
-  private BaseService<Animal> service;
-
   @Autowired
   private CatsService catsService;
 
@@ -29,6 +27,18 @@ public class AnimalController {
   public @ResponseBody
   Animal create(@RequestBody Arachnid arachnid, @PathVariable String animal) {
     return getAnimalService(animal).create(arachnid);
+  }
+
+  @GetMapping(value = "", produces = "application/json")
+  public @ResponseBody
+  Collection all(@PathVariable String animal) {
+    return getAnimalService(animal).all();
+  }
+
+  @GetMapping(value = "/{id}")
+  public @ResponseBody
+  Animal get(@PathVariable String animal, @PathVariable String id) {
+    return getAnimalService(animal).get(id);
   }
 
   private BaseService getAnimalService(String animalPath) {
