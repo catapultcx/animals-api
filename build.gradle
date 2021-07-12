@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group 'load-test'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '2.2.5'
+}
+
+apply plugin: 'scala'
+
+
+task loadTest(type: JavaExec) {
+    dependsOn testClasses
+    description = "Load Test With Gatling"
+    group = "Load Test"
+    classpath = sourceSets.test.runtimeClasspath
+    jvmArgs = [
+            "-Dgatling.core.directory.binaries=${sourceSets.test.output.classesDir.toString()}"
+    ]
+    main = "io.gatling.app.Gatling"
+    args = [
+            "--simulation", "GatlingSimulation",
+            "--results-folder", "${buildDir}/gatling-results",
+            "--binaries-folder", sourceSets.test.output.classesDir.toString(),
+            "--bodies-folder", sourceSets.test.resources.srcDirs.toList().first().toString() + "/gatling/bodies",
+    ]
+}

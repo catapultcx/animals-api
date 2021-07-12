@@ -55,3 +55,8 @@ For further reference, please consider the following sections:
 * [Spring Boot guide](https://spring.io/guides/gs/spring-boot)
 * [Spring Boot and Docker](https://spring.io/guides/gs/spring-boot-docker/)
 * [MySql](https://spring.io/guides/gs/accessing-data-mysql/)
+
+In order to load gatling results 
+On mac install - brew install gradle
+Make sure you have the scala plugin, easy if you have intellij loaded. 
+
