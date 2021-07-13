@@ -30,4 +30,10 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
         items.remove(id);
         return null;
     }
+
+    public T update(String id, T animal) {
+        animal.setId(id);
+        items.put(id, animal);
+        return items.get(id);
+    }
 }

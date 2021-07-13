@@ -47,6 +47,13 @@ public class AnimalController {
     return getAnimalService(animal).delete(id);
   }
 
+  @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public @ResponseBody
+  Animal update(@PathVariable String animal,@PathVariable String id,  @RequestBody Arachnid animalDetail) {
+    return getAnimalService(animal).update(id, animalDetail);
+  }
+
   private BaseService getAnimalService(String animalPath) {
     if (animalPath.equals("cats")) {
       return catsService;
