@@ -1,6 +1,7 @@
 package cx.catapult.animals.entity;
 
 import cx.catapult.animals.domain.Group;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -20,7 +21,8 @@ public class AnimalEntity {
 
     private String description;
 
-    private Group groupTag;
+    @Column(name = "group_tag")
+    private Group group;
 
     public String getId() {
         return id;
@@ -46,11 +48,11 @@ public class AnimalEntity {
         this.description = description;
     }
 
-    public Group getGroupTag() {
-        return groupTag;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setGroupTag(final Group group) {
-        this.groupTag = group;
+    public void setGroup(final Group group) {
+        this.group = group;
     }
 }
