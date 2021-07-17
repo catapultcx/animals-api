@@ -3,6 +3,7 @@ package cx.catapult.animals.web;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.Group;
 import java.net.URL;
 import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public abstract class BaseControllerIT<T extends Animal> {
+    public static final String DEFAULT_ANIMAL_NAME = "Default animal name";
+    public static final String DEFAULT_ANIMAL_DESCRIPTION = "Default animal description";
+    public static final Group DEFAULT_ANIMAL_GROUP = Group.AMPHIBIAN;
+
     @LocalServerPort
     private int port;
 
     private URL base;
 
-    protected abstract T createInstance();
     protected abstract T createInstance(final String name, final String description);
     protected abstract String getUrlSuffix();
     protected abstract int getExpectedItems();
@@ -62,6 +66,10 @@ public abstract class BaseControllerIT<T extends Animal> {
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;
+    }
+
+    protected T createInstance(){
+        return createInstance(DEFAULT_ANIMAL_NAME, DEFAULT_ANIMAL_DESCRIPTION);
     }
 
     protected String getUrl(){

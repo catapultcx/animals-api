@@ -34,6 +34,18 @@ public class ArachnidsServiceTest {
     }
 
     @Test
+    public void updateShouldWork() throws Exception {
+        Arachnid arachnid = service.create(this.arachnid);
+        final String updatedName = "Updated name";
+        final String updatedDescription = "Updated description";
+        Arachnid changes = new Arachnid(updatedName, updatedDescription);
+        service.update(arachnid.getId(), changes);
+        Arachnid actual = service.get(arachnid.getId());
+        assertThat(actual.getName()).isEqualTo(updatedName);
+        assertThat(actual.getDescription()).isEqualTo(updatedDescription);
+    }
+
+    @Test
     public void allShouldWork() throws Exception {
         service.create(arachnid);
         assertThat(service.all().size()).isEqualTo(1);

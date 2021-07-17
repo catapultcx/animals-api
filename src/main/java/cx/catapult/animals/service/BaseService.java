@@ -13,11 +13,19 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
         return items.values();
     }
 
+    // For simplicity of error handling this is implemented as saveOrUpdate ie. will create if not exists
+    @Override
+    public T update(final String id, final T animal){
+        animal.setId(id);
+        items.put(id, animal);
+
+        return animal;
+    }
+
     @Override
     public T create(T animal) {
         String id = UUID.randomUUID().toString();
-        animal.setId(id);
-        items.put(id, animal);
+        update(id, animal);
         return animal;
     }
 

@@ -1,12 +1,16 @@
 package cx.catapult.animals.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cx.catapult.animals.domain.Arachnid;
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest
@@ -31,4 +35,10 @@ public class ArachnidsControllerTest extends BaseControllerTest<Cat> {
            .andExpect(status().isOk());
     }
 
+    @Test
+    public void create() throws Exception {
+        final String json = "{ \"name\": \"Updated McSpiderface\", \"description\": \"Hairy updated\" }";
+        mvc.perform(MockMvcRequestBuilders.put(String.format("/api/1/%s/123", getUrlSuffix())).content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+           .andExpect(status().isOk());
+    }
 }
