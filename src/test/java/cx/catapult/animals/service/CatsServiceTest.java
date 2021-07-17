@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
 
-    CatsService service = new CatsService();
-    Cat cat = new Cat("Tom", "Bob cat");
+    private CatsService service = new CatsService();
+    private Cat cat = new Cat("Tom", "Bob cat");
 
     @Test
     public void createShouldWork() throws Exception {

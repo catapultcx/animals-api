@@ -15,29 +15,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CatsControllerTest {
+public class CatsControllerTest extends BaseControllerTest<Cat> {
 
-    @Autowired
-    private MockMvc mvc;
+    private final String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
-    private Cat cat = new Cat("Tom", "Bob cat");
-    private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
-
-    @Test
-    public void all() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    @Override
+    protected String getExpectedJson() {
+        return json;
     }
 
-    @Test
-    public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void create() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated());
+    @Override
+    protected String getUrlSuffix() {
+        return "cats";
     }
 }
