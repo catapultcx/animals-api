@@ -3,8 +3,6 @@ package cx.catapult.animals.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cx.catapult.animals.domain.Arachnid;
-import cx.catapult.animals.domain.Cat;
-import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 public class ArachnidsServiceTest {

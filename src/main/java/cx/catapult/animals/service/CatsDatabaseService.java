@@ -1,6 +1,8 @@
 package cx.catapult.animals.service;
 
+import cx.catapult.animals.domain.Arachnid;
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.entity.ArachnidEntity;
 import cx.catapult.animals.entity.CatEntity;
 import cx.catapult.animals.entity.CatRepository;
 import java.util.Collection;
@@ -56,8 +58,8 @@ public class CatsDatabaseService implements Service<Cat> {
     @Override
     public Cat get(final String id) {
         // Existing implementations return null so preserve behaviour
-        CatEntity found = catRepository.findById(id)
-                                       .orElse(null);
+        CatEntity found = catRepository.findById(id).orElseThrow(
+                () -> new RuntimeException(String.format("Cannot find cat %s", id)));
 
         return found == null ? null : modelMapper.map(found, Cat.class);
     }
