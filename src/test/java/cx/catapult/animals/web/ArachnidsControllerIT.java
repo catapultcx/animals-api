@@ -1,7 +1,11 @@
 package cx.catapult.animals.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cx.catapult.animals.domain.Arachnid;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
@@ -27,4 +31,14 @@ public class ArachnidsControllerIT extends BaseControllerIT<Arachnid> {
     protected int getExpectedItems() {
         return 5;
     }
+
+    @Test
+    public void deleteShouldWork() {
+        final String testString = "Test 1";
+        final Arachnid created = create(testString);
+        final ResponseEntity<String> response = template.getForEntity(getUrl(created.getId()), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+        assertThat(response.getBody()).contains(testString);
+    }
+
 }

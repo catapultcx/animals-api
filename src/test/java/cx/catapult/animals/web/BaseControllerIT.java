@@ -3,7 +3,6 @@ package cx.catapult.animals.web;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cx.catapult.animals.domain.Animal;
-import cx.catapult.animals.domain.Arachnid;
 import java.net.URL;
 import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,7 @@ public abstract class BaseControllerIT<T extends Animal> {
     protected abstract int getExpectedItems();
 
     @Autowired
-    private TestRestTemplate template;
+    protected TestRestTemplate template;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -45,23 +44,31 @@ public abstract class BaseControllerIT<T extends Animal> {
     }
 
     @Test
-    public void allShouldWork() throws Exception {
-        Collection items = template.getForObject(base.toString(), Collection.class);
+    public void allShouldWork() {
+        Collection items = template.getForObject(getUrl(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(getExpectedItems());
     }
 
     @Test
-    public void getShouldWork() throws Exception {
+    public void getShouldWork() {
         T created = create("Test 1");
-        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        ResponseEntity<String> response = template.getForEntity(getUrl(created.getId()), String.class);
         assertThat(response.getBody()).isNotEmpty();
     }
 
     T create(String name) {
         T instance = createInstance(name, name);
-        T created = (T) template.postForObject(base.toString(), instance, instance.getClass());
+        T created = (T) template.postForObject(getUrl(), instance, instance.getClass());
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;
+    }
+
+    protected String getUrl(){
+        return this.base.toString();
+    }
+
+    protected String getUrl(final String id){
+        return String.format("%s/%s", getUrl(), id);
     }
 }

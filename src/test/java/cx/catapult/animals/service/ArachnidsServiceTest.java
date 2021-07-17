@@ -27,8 +27,9 @@ public class ArachnidsServiceTest {
     @Test
     public void deleteShouldWork() throws Exception {
         Arachnid arachnid = service.create(this.arachnid);
-        service.delete(arachnid);
+        Arachnid deleted = service.delete(arachnid.getId());
         Arachnid actual = service.get(arachnid.getId());
+        assertThat(deleted).isEqualTo(arachnid);
         assertThat(actual).isNull();
     }
 

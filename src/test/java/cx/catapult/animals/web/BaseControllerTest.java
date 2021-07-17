@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public abstract class BaseControllerTest<T extends Animal> {
 
     @Autowired
-    private MockMvc mvc;
+    protected MockMvc mvc;
 
     protected abstract String getExpectedJson();
     protected abstract String getUrlSuffix();
@@ -31,7 +31,7 @@ public abstract class BaseControllerTest<T extends Animal> {
     @Test
     public void get() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get(String.format("/api/1/%s/123", getUrlSuffix())).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+           .andExpect(status().isOk());
     }
 
     @Test
