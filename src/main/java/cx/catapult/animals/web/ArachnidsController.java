@@ -1,7 +1,8 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Arachnid;
-import cx.catapult.animals.service.ArachnidsService;
+import cx.catapult.animals.service.ArachnidDatabaseService;
+import cx.catapult.animals.service.DeleteableService;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api/1/arachnids", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ArachnidsController {
 
-    @Autowired
-    private ArachnidsService service;
+    private final DeleteableService<Arachnid> service;
+
+    public ArachnidsController(final DeleteableService<Arachnid> service) {
+        this.service = service;
+    }
 
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody

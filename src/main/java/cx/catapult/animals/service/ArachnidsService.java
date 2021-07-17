@@ -1,12 +1,12 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Arachnid;
-import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.service.BaseService;
 import javax.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
+@Profile("!db")
 public class ArachnidsService extends BaseDeleteableService<Arachnid> {
 
     @PostConstruct

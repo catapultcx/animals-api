@@ -13,9 +13,13 @@ First install:
 
 ### Commands
 
-Run the service:
+Run the service with the in-memory persistence:
 
     mvn spring-boot:run
+
+Run the service with the MariaDB persistence (see below for configuration):
+
+    mvn spring-boot:run -Dspring-boot.run.profiles=db
     
 Tests with coverage:
 
@@ -43,6 +47,18 @@ API docs can be found at:
 * http://localhost:8080/api-docs
 * http://localhost:8080/swagger-ui.html
  
+### Creating a database
+
+In order to run the 'db' profile to use a MariaDB database for persistence
+the following commands need to be run.
+
+#### Create the database and the user
+
+This command creates the database `animals` with user `animals` and password `password`
+```
+create database animals;
+grant all on animals.* to animals@localhost identified by 'password';
+```
 
 ### Reference Documentation
 For further reference, please consider the following sections:

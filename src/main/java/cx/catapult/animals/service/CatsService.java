@@ -1,11 +1,13 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
 @Service
+@Profile("!db")
 public class CatsService extends BaseService<Cat> {
 
     @PostConstruct
