@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cx.catapult.animals.domain.Arachnid;
 import cx.catapult.animals.domain.Cat;
+import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 public class ArachnidsServiceTest {
@@ -21,6 +22,14 @@ public class ArachnidsServiceTest {
         assertThat(actual.getName()).isEqualTo(thisArachnid.getName());
         assertThat(actual.getDescription()).isEqualTo(thisArachnid.getDescription());
         assertThat(actual.getGroup()).isEqualTo(thisArachnid.getGroup());
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Arachnid arachnid = service.create(this.arachnid);
+        service.delete(arachnid);
+        Arachnid actual = service.get(arachnid.getId());
+        assertThat(actual).isNull();
     }
 
     @Test
