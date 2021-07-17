@@ -3,7 +3,9 @@ package cx.catapult.animals.web;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.Arachnid;
 import cx.catapult.animals.domain.Group;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,9 +39,10 @@ public abstract class BaseControllerIT<T extends Animal> {
     }
 
     @Test
-    public void createShouldWork() throws Exception {
+    public void createShouldWork() {
         T instance = createInstance();
-        ResponseEntity<T> response = (ResponseEntity<T>) template.postForEntity(base.toString(), instance, instance.getClass());
+        ResponseEntity<? extends Animal> response = template.postForEntity(base.toString(), instance,
+                                                                                   instance.getClass());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(instance.getName());
@@ -58,6 +61,25 @@ public abstract class BaseControllerIT<T extends Animal> {
         T created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(getUrl(created.getId()), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void updateShouldWork() throws MalformedURLException {
+        T instance = createInstance();
+        T updatedInstance = createInstance("Updated name", "Updated desc");
+        ResponseEntity<? extends Animal> postResponse = template.postForEntity(getUrl(), instance,
+                                                                                                  instance.getClass());
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        final String id = postResponse.getBody().getId();
+        final String url = getUrl(id);
+        template.put(url, updatedInstance);
+
+        ResponseEntity<? extends Animal> response = template.getForEntity(url, updatedInstance.getClass());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getId()).isEqualTo(id);
+        assertThat(response.getBody().getName()).isEqualTo(updatedInstance.getName());
+        assertThat(response.getBody().getDescription()).isEqualTo(updatedInstance.getDescription());
     }
 
     T create(String name) {

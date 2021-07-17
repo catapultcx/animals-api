@@ -1,5 +1,6 @@
 package cx.catapult.animals.web;
 
+import cx.catapult.animals.domain.Arachnid;
 import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.service.CatsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,13 @@ public class CatsController {
     Cat
     create(@RequestBody Cat cat) {
         return service.create(cat);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    Cat
+    update(@RequestBody Cat cat, @PathVariable String id) {
+        return service.update(id, cat);
     }
 }

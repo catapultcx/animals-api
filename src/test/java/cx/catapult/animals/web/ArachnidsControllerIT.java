@@ -44,22 +44,4 @@ public class ArachnidsControllerIT extends BaseControllerIT<Arachnid> {
         assertThat(response.getBody()).contains(testString);
     }
 
-    @Test
-    public void updateShouldWork() throws MalformedURLException {
-        Arachnid instance = createInstance();
-        Arachnid updatedInstance = createInstance("Updated name", "Updated desc");
-        ResponseEntity<Arachnid> postResponse = (ResponseEntity<Arachnid>) template.postForEntity(getUrl(), instance,
-        instance.getClass());
-        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        final String id = postResponse.getBody().getId();
-        final String url = getUrl(id);
-        template.put(url, updatedInstance);
-
-        ResponseEntity<Arachnid> response = template.getForEntity(url, Arachnid.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getId()).isEqualTo(id);
-        assertThat(response.getBody().getName()).isEqualTo(updatedInstance.getName());
-        assertThat(response.getBody().getDescription()).isEqualTo(updatedInstance.getDescription());
-    }
 }

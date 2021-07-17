@@ -39,4 +39,11 @@ public abstract class BaseControllerTest<T extends Animal> {
         mvc.perform(MockMvcRequestBuilders.post(String.format("/api/1/%s", getUrlSuffix())).content(getExpectedJson()).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void update() throws Exception {
+        final String json = "{ \"name\": \"Updated name\", \"description\": \"Updated description\" }";
+        mvc.perform(MockMvcRequestBuilders.put(String.format("/api/1/%s/123", getUrlSuffix())).content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+           .andExpect(status().isOk());
+    }
 }

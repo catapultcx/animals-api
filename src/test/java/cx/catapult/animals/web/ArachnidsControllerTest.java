@@ -35,10 +35,4 @@ public class ArachnidsControllerTest extends BaseControllerTest<Cat> {
            .andExpect(status().isOk());
     }
 
-    @Test
-    public void create() throws Exception {
-        final String json = "{ \"name\": \"Updated McSpiderface\", \"description\": \"Hairy updated\" }";
-        mvc.perform(MockMvcRequestBuilders.put(String.format("/api/1/%s/123", getUrlSuffix())).content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
-           .andExpect(status().isOk());
-    }
 }
