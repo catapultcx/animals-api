@@ -1,11 +1,14 @@
 package cx.catapult.animals.domain;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 public class BaseAnimal implements Animal, Serializable {
 
     private String id;
+    @NotBlank(message = "Name cannot be null or empty")
     private String name;
+    @NotBlank(message = "Description cannot be null or empty")
     private String description;
     private Group group;
 

@@ -8,6 +8,7 @@ class AnimalsApiApplicationTests {
 
 	@Test
 	void contextLoads() {
+		AnimalsApiApplication.main(new String[0]);
 	}
 
 }
