@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/1/horses", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,22 +54,10 @@ public class HorsesController {
         return service.all();
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        BindingResult result = ex.getBindingResult();
-        List<FieldError> fieldErrors = result.getFieldErrors();
-        ApiError apiError = new ApiError();
-        apiError.setMessage(fieldErrors.get(0).getDefaultMessage());
-        return ResponseEntity.badRequest().body(apiError);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiError> handleConstraintViolationException(
-            ConstraintViolationException ex) {
-        ConstraintViolation constraintViolation = ex.getConstraintViolations().stream().findAny().get();
-        ApiError apiError = new ApiError();
-        apiError.setMessage(constraintViolation.getMessage());
-        return ResponseEntity.badRequest().body(apiError);
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public @ResponseBody
+    void delete(@PathVariable @Valid @NotBlank(message = "Id cannot be null") String id) {
+        service.delete(id);
     }
 }

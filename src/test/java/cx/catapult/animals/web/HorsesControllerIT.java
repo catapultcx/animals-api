@@ -6,12 +6,11 @@ import cx.catapult.animals.domain.Horse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -22,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Execution(ExecutionMode.SAME_THREAD)
 class HorsesControllerIT {
     @LocalServerPort
     private int port;
@@ -100,7 +98,6 @@ class HorsesControllerIT {
     }
 
     @Test
-    @Order(2)
     void get_shouldGetValidRecord() {
         ResponseEntity<Horse> response = template.postForEntity(base.toString(), horse, Horse.class);
 
@@ -122,8 +119,44 @@ class HorsesControllerIT {
     }
 
     @Test
-    public void allShouldWork() {
+    void get_shouldReturnNotFoundWhenIdIsNotAvailable() {
+        ResponseEntity<ApiError> response = template.getForEntity(base.toString() + "/1", ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).isEqualTo("Record not found");
+    }
+
+    @Test
+    public void all_shouldReturnExistingRecords() {
         Collection items = template.getForObject(base.toString(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(4);
+    }
+
+    @Test
+    void delete_shouldDeleteValidRecord() {
+        ResponseEntity<Horse> response = template.postForEntity(base.toString(), horse, Horse.class);
+
+        ResponseEntity<Void> deleteResponse = template.exchange(base.toString() + "/" + response.getBody().getId(), HttpMethod.DELETE, null, Void.class, (Object) null);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity getResponse = template.getForEntity(base.toString() + "/1", ApiError.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void delete_shouldReturnBadRequestWhenIdIsNull() {
+        ResponseEntity<ApiError> response = template.exchange(base.toString() + "/ ", HttpMethod.DELETE, null, ApiError.class, (Object) null);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Id cannot be null");
+    }
+
+    @Test
+    void delete_shouldReturnNotFoundWhenIdIsNotAvailable() {
+        ResponseEntity<ApiError> response = template.exchange(base.toString() + "/1", HttpMethod.DELETE, null, ApiError.class, (Object) null);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).isEqualTo("Record not found");
     }
 }

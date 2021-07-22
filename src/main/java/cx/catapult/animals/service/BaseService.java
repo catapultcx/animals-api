@@ -1,8 +1,11 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.exception.AnimalNotFoundException;
 
 import java.util.*;
+
+import static java.util.Objects.isNull;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
@@ -23,6 +26,18 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     @Override
     public T get(String id) {
-        return items.get(id);
+        T item = items.get(id);
+        if (isNull(item)) {
+            throw new AnimalNotFoundException();
+        }
+        return item;
+    }
+
+    @Override
+    public void delete(String id) {
+        T item = items.remove(id);
+        if (isNull(item)) {
+            throw new AnimalNotFoundException();
+        }
     }
 }

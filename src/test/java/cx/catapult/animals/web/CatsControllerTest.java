@@ -7,15 +7,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static cx.catapult.animals.TestUtils.convertStringToObject;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CatsControllerTest {
+class CatsControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -24,19 +24,24 @@ public class CatsControllerTest {
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
     @Test
-    public void all() throws Exception {
+    void all() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/1/cats").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
+    void get() throws Exception {
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+
+        Cat cat = (Cat)convertStringToObject(result.getResponse().getContentAsString(), Cat.class);
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/"+cat.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void create() throws Exception {
+    void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
