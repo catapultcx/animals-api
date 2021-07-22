@@ -31,6 +31,12 @@ class HorsesControllerTest {
     }
 
     @Test
+    public void all() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/horses").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void handleValidationExceptions() throws Exception {
         String json = "{ \"description\": \"Stallion\" }";
         mvc.perform(MockMvcRequestBuilders.post("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))

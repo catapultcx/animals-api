@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -118,5 +119,11 @@ class HorsesControllerIT {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody().getMessage()).isEqualTo("Id cannot be null");
+    }
+
+    @Test
+    public void allShouldWork() {
+        Collection items = template.getForObject(base.toString(), Collection.class);
+        assertThat(items.size()).isGreaterThanOrEqualTo(4);
     }
 }

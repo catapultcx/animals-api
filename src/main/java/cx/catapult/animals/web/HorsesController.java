@@ -25,6 +25,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -47,6 +48,12 @@ public class HorsesController {
     public @ResponseBody
     Horse get(@PathVariable @Valid @NotBlank(message = "Id cannot be null") String id) {
         return service.get(id);
+    }
+
+    @GetMapping(value = "", produces = "application/json")
+    public @ResponseBody
+    Collection<Horse> all() {
+        return service.all();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
