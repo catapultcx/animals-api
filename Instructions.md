@@ -17,16 +17,9 @@ cd /tmp/animals-ui
 docker-compose up
 ```
 
-#### Run the Jmeter Performance Test for Frontend App
-
-```
-cd /tmp/animals-ui/jmeter-test
-jmeter -n -t frontend-test-plan.jmx -j frontend-test-plan.log
-```
-
 #### Run the Jmeter Performance Test for Backend App
 
 ```
-cd /tmp/animals-ui/jmeter-test
+cd /tmp/animals-api/jmeter-test
 jmeter -n -t backend-test-plan.jmx -j backend-test-plan.log
 ```
