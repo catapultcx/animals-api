@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 
+import cx.catapult.animals.domain.ApiError;
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -56,6 +59,75 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    void update_shouldUpdateIfRecordExists() {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        Cat cat = response.getBody();
+        cat.setName("Warrior");
+
+        ResponseEntity<Void> updateResponse = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(cat), Void.class);
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+
+        response = template.getForEntity(base.toString() + "/" + response.getBody().getId(), Cat.class);
+
+        assertThat(response.getBody().getName()).isEqualTo(cat.getName());
+    }
+
+    @Test
+    void update_shouldUpdateIfRecordDoesntExists() {
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(cat), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).isEqualTo("Record not found");
+    }
+
+    @Test
+    void update_shouldReturnUnsupportedMediaRequestWhenRequestIsNull() {
+        ResponseEntity response = template.exchange(base.toString(), HttpMethod.PUT, null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenNameInRequestIsNull() {
+        cat.setName(null);
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(cat), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Name cannot be null or empty");
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenNameInRequestIsBlank() {
+        cat.setName("");
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(cat), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Name cannot be null or empty");
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenDescriptionInRequestIsNull() {
+        cat.setDescription(null);
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(cat), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Description cannot be null or empty");
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenDescriptionInRequestIsBlank() {
+        cat.setDescription("");
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(cat), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Description cannot be null or empty");
     }
 
     Cat create(String name) {

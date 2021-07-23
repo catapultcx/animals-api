@@ -56,4 +56,13 @@ class HorsesControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/horses/"+horse.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    public void update() throws Exception {
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/horses/").content(result.getResponse().getContentAsString()).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isAccepted());
+    }
 }

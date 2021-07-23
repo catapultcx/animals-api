@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -136,7 +137,7 @@ class HorsesControllerIT {
     void delete_shouldDeleteValidRecord() {
         ResponseEntity<Horse> response = template.postForEntity(base.toString(), horse, Horse.class);
 
-        ResponseEntity<Void> deleteResponse = template.exchange(base.toString() + "/" + response.getBody().getId(), HttpMethod.DELETE, null, Void.class, (Object) null);
+        ResponseEntity<Void> deleteResponse = template.exchange(base.toString() + "/" + response.getBody().getId(), HttpMethod.DELETE, null, Void.class);
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         ResponseEntity getResponse = template.getForEntity(base.toString() + "/1", ApiError.class);
@@ -146,7 +147,7 @@ class HorsesControllerIT {
 
     @Test
     void delete_shouldReturnBadRequestWhenIdIsNull() {
-        ResponseEntity<ApiError> response = template.exchange(base.toString() + "/ ", HttpMethod.DELETE, null, ApiError.class, (Object) null);
+        ResponseEntity<ApiError> response = template.exchange(base.toString() + "/ ", HttpMethod.DELETE, null, ApiError.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody().getMessage()).isEqualTo("Id cannot be null");
@@ -154,9 +155,78 @@ class HorsesControllerIT {
 
     @Test
     void delete_shouldReturnNotFoundWhenIdIsNotAvailable() {
-        ResponseEntity<ApiError> response = template.exchange(base.toString() + "/1", HttpMethod.DELETE, null, ApiError.class, (Object) null);
+        ResponseEntity<ApiError> response = template.exchange(base.toString() + "/1", HttpMethod.DELETE, null, ApiError.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().getMessage()).isEqualTo("Record not found");
+    }
+
+    @Test
+    void update_shouldUpdateIfRecordExists() {
+        ResponseEntity<Horse> response = template.postForEntity(base.toString(), horse, Horse.class);
+        horse = response.getBody();
+        horse.setName("Warrior");
+
+        ResponseEntity<Void> updateResponse = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(horse), Void.class);
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+
+        response = template.getForEntity(base.toString() + "/" + response.getBody().getId(), Horse.class);
+
+        assertThat(response.getBody().getName()).isEqualTo(horse.getName());
+    }
+
+    @Test
+    void update_shouldUpdateIfRecordDoesntExists() {
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(horse), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).isEqualTo("Record not found");
+    }
+
+    @Test
+    void update_shouldReturnUnsupportedMediaRequestWhenRequestIsNull() {
+        ResponseEntity response = template.exchange(base.toString(), HttpMethod.PUT, null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenNameInRequestIsNull() {
+        horse.setName(null);
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(horse), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Name cannot be null or empty");
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenNameInRequestIsBlank() {
+        horse.setName("");
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(horse), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Name cannot be null or empty");
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenDescriptionInRequestIsNull() {
+        horse.setDescription(null);
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(horse), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Description cannot be null or empty");
+    }
+
+    @Test
+    void update_shouldReturnBadRequestWhenDescriptionInRequestIsBlank() {
+        horse.setDescription("");
+
+        ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(horse), ApiError.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Description cannot be null or empty");
     }
 }

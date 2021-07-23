@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -34,5 +35,12 @@ public class CatsController {
     Cat
     create(@RequestBody Cat cat) {
         return service.create(cat);
+    }
+
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public @ResponseBody
+    void update(@RequestBody @Valid Cat cat) {
+        service.update(cat);
     }
 }

@@ -45,4 +45,13 @@ class CatsControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void update() throws Exception {
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/cats/").content(result.getResponse().getContentAsString()).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isAccepted());
+    }
 }

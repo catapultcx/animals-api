@@ -40,4 +40,11 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
             throw new AnimalNotFoundException();
         }
     }
+
+    @Override
+    public void update(T animal) {
+        if (!isNull(get(animal.getId()))) {
+            items.put(animal.getId(), animal);
+        }
+    }
 }
