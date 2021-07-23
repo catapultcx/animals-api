@@ -1,9 +1,15 @@
 package cx.catapult.animals.domain;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
+@Data
 public class BaseAnimal implements Animal, Serializable {
+
+    public static final String CAT_STRING = "CAT";
+    public static final String HORSE_STRING = "HORSE";
 
     private String id;
     @NotBlank(message = "Name cannot be null or empty")
@@ -21,40 +27,5 @@ public class BaseAnimal implements Animal, Serializable {
         this.name = name;
         this.description = description;
         this.group = group;
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public Group getGroup() {
-        return this.group;
     }
 }

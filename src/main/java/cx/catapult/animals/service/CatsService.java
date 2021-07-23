@@ -1,22 +1,47 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.repository.AnimalRepository;
+import cx.catapult.animals.repository.entity.AnimalEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import java.util.Collection;
+
+import static cx.catapult.animals.domain.BaseAnimal.CAT_STRING;
 
 @Service
 public class CatsService extends BaseService<Cat> {
 
-    @PostConstruct
-    public void initialize() {
-        this.create(new Cat("Tom", "Friend of Jerry"));
-        this.create(new Cat("Jerry", "Not really a cat"));
-        this.create(new Cat("Bili", "Furry cat"));
-        this.create(new Cat("Smelly", "Cat with friends"));
-        this.create(new Cat("Tiger", "Large cat"));
-        this.create(new Cat("Tigger", "Not a scary cat"));
-        this.create(new Cat("Garfield", "Lazy cat"));
+    @Autowired
+    public CatsService(final AnimalRepository animalRepository) {
+        super(animalRepository);
+    }
+
+    @Override
+    public Collection<Cat> all() {
+        return convertedList(animalRepository.findByAnimalType(CAT_STRING));
+    }
+
+    @Override
+    Cat convertEntityToDomainObject(AnimalEntity animalEntity) {
+        return Cat.builder()
+                .description(animalEntity.getDescription())
+                .id(animalEntity.getId().toString())
+                .name(animalEntity.getName())
+                .group(Group.toGroup(animalEntity.getGroup()))
+                .build();
+    }
+
+    @Override
+    AnimalEntity convertDomainObjectToEntity(Cat animal) {
+        return AnimalEntity.builder()
+                .animalType(CAT_STRING)
+                .group(animal.getGroup().name())
+                .description(animal.getDescription())
+                .name(animal.getName())
+                .build();
     }
 
 }

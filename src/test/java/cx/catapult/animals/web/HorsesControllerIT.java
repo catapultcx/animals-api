@@ -3,8 +3,8 @@ package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.ApiError;
 import cx.catapult.animals.domain.Horse;
+import cx.catapult.animals.repository.AnimalRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +32,8 @@ class HorsesControllerIT {
 
     @Autowired
     private TestRestTemplate template;
+    @Autowired
+    private AnimalRepository animalRepository;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -40,7 +42,6 @@ class HorsesControllerIT {
     }
 
     @Test
-    @Order(1)
     void create_shouldInsertWhenValidRequest() {
         ResponseEntity<Horse> response = template.postForEntity(base.toString(), horse, Horse.class);
 
@@ -49,6 +50,8 @@ class HorsesControllerIT {
         assertThat(response.getBody().getName()).isEqualTo(horse.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(horse.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(horse.getGroup());
+
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
@@ -109,6 +112,8 @@ class HorsesControllerIT {
         assertThat(response.getBody().getName()).isEqualTo(horse.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(horse.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(horse.getGroup());
+
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
@@ -129,8 +134,12 @@ class HorsesControllerIT {
 
     @Test
     public void all_shouldReturnExistingRecords() {
+        ResponseEntity<Horse> response = template.postForEntity(base.toString(), horse, Horse.class);
+
         Collection items = template.getForObject(base.toString(), Collection.class);
-        assertThat(items.size()).isGreaterThanOrEqualTo(4);
+        assertThat(items.size()).isGreaterThanOrEqualTo(1);
+
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
@@ -173,10 +182,11 @@ class HorsesControllerIT {
         response = template.getForEntity(base.toString() + "/" + response.getBody().getId(), Horse.class);
 
         assertThat(response.getBody().getName()).isEqualTo(horse.getName());
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
-    void update_shouldUpdateIfRecordDoesntExists() {
+    void update_shouldNotUpdateIfRecordDoesntExists() {
         ResponseEntity<ApiError> response = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(horse), ApiError.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

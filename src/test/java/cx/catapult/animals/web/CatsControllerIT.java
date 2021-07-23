@@ -3,6 +3,7 @@ package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.ApiError;
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.repository.AnimalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -32,33 +34,44 @@ public class CatsControllerIT {
 
     @Autowired
     private TestRestTemplate template;
+    @Autowired
+    private AnimalRepository animalRepository;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() throws MalformedURLException {
         this.base = new URL("http://localhost:" + port + "/api/1/cats");
     }
 
     @Test
-    public void createShouldWork() throws Exception {
+    public void createShouldWork()  {
         ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
+
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
-    public void allShouldWork() throws Exception {
+    public void allShouldWork()  {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
         Collection items = template.getForObject(base.toString(), Collection.class);
-        assertThat(items.size()).isGreaterThanOrEqualTo(7);
+
+        assertThat(items.size()).isGreaterThanOrEqualTo(1);
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
-    public void getShouldWork() throws Exception {
-        Cat created = create("Test 1");
-        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
-        assertThat(response.getBody()).isNotEmpty();
+    public void getShouldWork()  {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+
+        response = template.getForEntity(base.toString() + "/" + response.getBody().getId(), Cat.class);
+
+        assertThat(response.getBody().getId()).isNotEmpty();
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
@@ -73,6 +86,7 @@ public class CatsControllerIT {
         response = template.getForEntity(base.toString() + "/" + response.getBody().getId(), Cat.class);
 
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
+        animalRepository.deleteById(Long.parseLong(response.getBody().getId()));
     }
 
     @Test
@@ -130,10 +144,4 @@ public class CatsControllerIT {
         assertThat(response.getBody().getMessage()).isEqualTo("Description cannot be null or empty");
     }
 
-    Cat create(String name) {
-        Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
-        assertThat(created.getId()).isNotEmpty();
-        assertThat(created.getName()).isEqualTo(name);
-        return created;
-    }
 }

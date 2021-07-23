@@ -16,20 +16,26 @@ First install:
 Run the service:
 
     mvn spring-boot:run
-    
-Tests with coverage:
+
+Run MSSQL Docker container:
+
+    docker-compose -f docker-compose-mysql.yml up
+
+Tests with coverage (run docker container for MySQL first):
 
     mvn clean test
-    
+After testing bring down the container
+
 Build the `.jar`:
 
-    mvn clean package    
+    mvn clean package -Dmaven.test.skip=true  
 
 
 Run with Docker (build jar first)
 
     docker-compose up
 
+This brings up both application and MySQL server in docker containers
 
 ### URLs
 
