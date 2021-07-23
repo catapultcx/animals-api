@@ -1,19 +1,18 @@
 ### SRE Interview Instructions
 
-Please follow the following steps in order to run the frontend and backend applications using docker compose.
+Please follow the following steps in order to run the backend application using docker compose.
 
 #### Clone Repositories
 
 ```
 mkdir /tmp
-git clone https://github.com/catapultcx/animals-ui
 git clone https://github.com/catapultcx/animals-api
 ```
 
-#### Start the applications with docker-compose
+#### Start the backend application with docker-compose
 
 ```
-cd /tmp/animals-ui
+cd /tmp/animals-api
 docker-compose up
 ```
 
