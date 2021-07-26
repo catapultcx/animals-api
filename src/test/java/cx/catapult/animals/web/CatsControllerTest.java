@@ -1,10 +1,14 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.repository.CatRepository;
+import cx.catapult.animals.service.CatsService;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +24,12 @@ public class CatsControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    private CatRepository catRepository;
+
+    @MockBean
+    private CatsService catsService;
+
     private Cat cat = new Cat("Tom", "Bob cat");
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
@@ -31,7 +41,7 @@ public class CatsControllerTest {
 
     @Test
     public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/" + UUID.randomUUID()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -39,5 +49,11 @@ public class CatsControllerTest {
     public void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/cats/"  + UUID.randomUUID()).content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
     }
 }

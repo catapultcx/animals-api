@@ -1,21 +1,28 @@
 package cx.catapult.animals.web;
 
-
 import cx.catapult.animals.domain.Cat;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.Collection;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
@@ -46,6 +53,33 @@ public class CatsControllerIT {
     }
 
     @Test
+    public void updateShouldWork() throws Exception {
+        // given
+        UUID id = UUID.fromString("4f2e85b9-57bd-4668-9631-4fc2041f9f1f");
+        Cat tom = new Cat();
+        tom.setId(id.toString());
+        tom.setName("my wonderful cat!");
+        tom.setDescription("my wonderful description");
+        template.postForEntity(base.toString(), tom, Cat.class);
+
+        // and
+        String expectedName = "updated name";
+        String expectedDescription = "updated description";
+        tom.setName(expectedName);
+        tom.setDescription(expectedDescription);
+
+        // when
+        ResponseEntity<Cat> responseEntity = restPut(String.valueOf(base) + "/" + id, tom);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody().getId()).isEqualTo(id.toString());
+        assertThat(responseEntity.getBody().getName()).isEqualTo(expectedName);
+        assertThat(responseEntity.getBody().getDescription()).isEqualTo(expectedDescription);
+    }
+
+    @Test
     public void allShouldWork() throws Exception {
         Collection items = template.getForObject(base.toString(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(7);
@@ -64,4 +98,11 @@ public class CatsControllerIT {
         assertThat(created.getName()).isEqualTo(name);
         return created;
     }
+
+    private ResponseEntity<Cat> restPut(String url, Cat cat) throws URISyntaxException {
+        URI uri = new URI(url);
+        HttpEntity<Cat> httpEntity = new HttpEntity<Cat>(cat, new HttpHeaders());
+        return template.exchange(uri, HttpMethod.PUT, httpEntity, Cat.class);
+    }
+
 }
