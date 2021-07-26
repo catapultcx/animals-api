@@ -1,6 +1,7 @@
 package cx.catapult.animals.domain;
 
 import java.io.Serializable;
+import javax.persistence.MappedSuperclass;
 
 public class BaseAnimal implements Animal, Serializable {
 
