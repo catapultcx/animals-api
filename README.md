@@ -25,11 +25,17 @@ Build the `.jar`:
 
     mvn clean package    
 
-
 Run with Docker (build jar first)
 
     docker-compose up
 
+Run from Docker Hub
+
+    docker run --rm -p 8080:8080 -d catapultcx/animals-api:latest
+
+Publish to Docker Hub
+
+    ./docker.sh
 
 ### URLs
 
