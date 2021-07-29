@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 
 @RestController
-@RequestMapping(path = "/api/1/horse", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/1/horses", produces = MediaType.APPLICATION_JSON_VALUE)
 public class HorseController {
 
     @Autowired
