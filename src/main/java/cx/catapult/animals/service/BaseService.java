@@ -1,9 +1,10 @@
 package cx.catapult.animals.service;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import cx.catapult.animals.domain.Animal;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
@@ -28,7 +29,13 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     }
 
     @Override
-    public T delete(String id) {
-        return items.remove(id);
+    public boolean delete(String id) {
+        return items.remove(id) != null;
+    }
+
+    @Override
+    public T update(T animal) {
+        items.put(animal.getId(), animal);
+        return items.get(animal.getId());
     }
 }

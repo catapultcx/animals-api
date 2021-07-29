@@ -1,7 +1,6 @@
 package cx.catapult.animals.web;
 
 
-import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Horse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class HorseControllerIT {
 
     @BeforeEach
     public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/api/1/horse");
+        this.base = new URL("http://localhost:" + port + "/api/1/horses");
     }
 
     @Test
@@ -64,9 +64,21 @@ public class HorseControllerIT {
     @Test
     public void shouldDeleteHorse() throws Exception {
         Horse created = create("Test 1");
-        ResponseEntity<Horse> actualResponse = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Horse.class);
+        ResponseEntity<Boolean> actualResponse = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Boolean.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
-        assertThat(actualResponse.getBody()).isNotNull();
+        assertThat(actualResponse.getBody()).isTrue();
+    }
+
+    @Test
+    public void shouldUpdateHorse() throws Exception {
+        Horse created = create("Test 1");
+        created.setName("new name");
+        created.setDescription("new description");
+        ResponseEntity<Horse> actualResponse = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(created), Horse.class);
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualResponse).isNotNull();
+        assertThat(actualResponse.getBody().getDescription()).isEqualTo(created.getDescription());
+        assertThat(actualResponse.getBody().getName()).isEqualTo(created.getName());
     }
 
     Horse create(String name) {

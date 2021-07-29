@@ -1,6 +1,5 @@
 package cx.catapult.animals.web;
 
-import cx.catapult.animals.domain.Horse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +17,8 @@ public class HorseControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    String json = "{ \"name\": \"Robin\", \"description\": \"the Horse\" }";
+
     @Test
     public void all() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/1/horses").accept(MediaType.APPLICATION_JSON))
@@ -32,7 +33,6 @@ public class HorseControllerTest {
 
     @Test
     public void create() throws Exception {
-        String json = "{ \"name\": \"Robin\", \"description\": \"the Horse\" }";
         mvc.perform(MockMvcRequestBuilders.post("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
@@ -41,5 +41,11 @@ public class HorseControllerTest {
     public void delete() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/horses/123").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
+    }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

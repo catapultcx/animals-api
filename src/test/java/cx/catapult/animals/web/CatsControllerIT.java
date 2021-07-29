@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -56,6 +58,18 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void shouldUpdateCat() throws Exception {
+        Cat created = create("Test 1");
+        created.setName("new name");
+        created.setDescription("new description");
+        ResponseEntity<Cat> actualResponse = template.exchange(base.toString(), HttpMethod.PUT, new HttpEntity<>(created), Cat.class);
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualResponse).isNotNull();
+        assertThat(actualResponse.getBody().getDescription()).isEqualTo(created.getDescription());
+        assertThat(actualResponse.getBody().getName()).isEqualTo(created.getName());
     }
 
     Cat create(String name) {
