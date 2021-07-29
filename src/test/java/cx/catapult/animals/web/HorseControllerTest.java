@@ -36,4 +36,10 @@ public class HorseControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void delete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/horses/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+    }
 }

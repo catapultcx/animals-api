@@ -35,4 +35,12 @@ public class HorseServiceTest {
         assertThat(actual.getDescription()).isEqualTo(horse.getDescription());
         assertThat(actual.getGroup()).isEqualTo(horse.getGroup());
     }
+
+//    @Test
+//    public void shouldRemoveHorse() throws Exception {
+//        service.create(horse);
+//        Horse removedCat = service.delete(horse.getId());
+//        assertThat(removedCat).isEqualTo(horse);
+//        assertThat(service.all().size()).isEqualTo(0);
+//    }
 }

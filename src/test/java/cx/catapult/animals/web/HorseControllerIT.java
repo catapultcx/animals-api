@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -40,6 +41,7 @@ public class HorseControllerIT {
     public void createShouldWork() throws Exception {
         ResponseEntity<Horse> response = template.postForEntity(base.toString(), horse, Horse.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(horse.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(horse.getDescription());
@@ -57,6 +59,14 @@ public class HorseControllerIT {
         Horse created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void shouldDeleteHorse() throws Exception {
+        Horse created = create("Test 1");
+        ResponseEntity<Horse> actualResponse = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Horse.class);
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+        assertThat(actualResponse.getBody()).isNotNull();
     }
 
     Horse create(String name) {
