@@ -20,20 +20,20 @@ public class HorseControllerTest {
 
     @Test
     public void all() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/horse").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/horses").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/horse/123").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/horses/123").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void create() throws Exception {
         String json = "{ \"name\": \"Robin\", \"description\": \"the Horse\" }";
-        mvc.perform(MockMvcRequestBuilders.post("/api/1/horse").content(json).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 }
