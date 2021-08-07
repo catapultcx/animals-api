@@ -46,8 +46,8 @@ public class HorsesController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public @ResponseBody
-    void update(@RequestBody Horse horse) {
-        service.update(horse);
+    void update(@PathVariable String id, @RequestBody Horse horse) {
+        service.update(id, horse);
     }
 
 }
