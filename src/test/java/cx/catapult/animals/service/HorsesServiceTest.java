@@ -1,40 +1,41 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.Horse;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CatsServiceTest {
+public class HorsesServiceTest {
 
-    CatsService service = new CatsService();
-    Cat cat = new Cat("Tom", "Bob cat");
+    HorsesService service = new HorsesService();
+    Horse horse = new Horse("Black Beauty", "its Beauty");
 
     @Test
     public void createShouldWork() throws Exception {
-        Cat thisCat = new Cat();
-        thisCat.setName("Jerry");
-        thisCat.setDescription("Mouse Cat");
-        Cat actual = service.create(thisCat);
-        assertThat(actual).isEqualTo(thisCat);
-        assertThat(actual.getName()).isEqualTo(thisCat.getName());
-        assertThat(actual.getDescription()).isEqualTo(thisCat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(thisCat.getGroup());
+        Horse thisHorse = new Horse();
+        thisHorse.setName("Black Beauty");
+        thisHorse.setDescription("its Beauty");
+        Horse actual = service.create(thisHorse);
+        assertThat(actual).isEqualTo(thisHorse);
+        assertThat(actual.getName()).isEqualTo(thisHorse.getName());
+        assertThat(actual.getDescription()).isEqualTo(thisHorse.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(thisHorse.getGroup());
     }
 
     @Test
     public void allShouldWork() throws Exception {
-        service.create(cat);
+        service.create(horse);
         assertThat(service.all().size()).isEqualTo(1);
     }
 
     @Test
     public void getShouldWork() throws Exception {
-        service.create(cat);
-        Cat actual = service.get(cat.getId());
-        assertThat(actual).isEqualTo(cat);
-        assertThat(actual.getName()).isEqualTo(cat.getName());
-        assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+        service.create(horse);
+        Horse actual = service.get(horse.getId());
+        assertThat(actual).isEqualTo(horse);
+        assertThat(actual.getName()).isEqualTo(horse.getName());
+        assertThat(actual.getDescription()).isEqualTo(horse.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(horse.getGroup());
     }
 }
