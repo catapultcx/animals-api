@@ -1,6 +1,5 @@
 package cx.catapult.animals.web;
 
-import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Horse;
 import cx.catapult.animals.service.HorsesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +35,13 @@ public class HorsesController {
     public @ResponseBody
     Horse get(@PathVariable String id) {
         return service.get(id);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public @ResponseBody
+    void
+    delete(@PathVariable String id) {
+        service.delete(id);
     }
 }

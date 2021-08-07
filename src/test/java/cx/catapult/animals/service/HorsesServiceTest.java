@@ -4,6 +4,8 @@ import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Horse;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HorsesServiceTest {
@@ -37,5 +39,21 @@ public class HorsesServiceTest {
         assertThat(actual.getName()).isEqualTo(horse.getName());
         assertThat(actual.getDescription()).isEqualTo(horse.getDescription());
         assertThat(actual.getGroup()).isEqualTo(horse.getGroup());
+    }
+
+    @Test
+    public void shouldRemoveHorse() throws Exception {
+        service.create(horse);
+        boolean isDeleted = service.delete(horse.getId());
+        assertThat(isDeleted).isTrue();
+        assertThat(service.all().size()).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldReturnsFalseIfNotFound() throws Exception {
+        service.create(horse);
+        boolean isDeleted = service.delete(UUID.randomUUID().toString());
+        assertThat(isDeleted).isFalse();
+        assertThat(service.all().size()).isEqualTo(1);
     }
 }
