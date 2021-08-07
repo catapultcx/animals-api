@@ -33,4 +33,10 @@ public class HorsesControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void get() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/horses/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

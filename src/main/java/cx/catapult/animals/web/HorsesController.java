@@ -31,4 +31,10 @@ public class HorsesController {
     create(@RequestBody Horse horse) {
         return service.create(horse);
     }
+
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    Horse get(@PathVariable String id) {
+        return service.get(id);
+    }
 }
