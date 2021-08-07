@@ -26,8 +26,7 @@ public class HorsesController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Horse
-    create(@RequestBody Horse horse) {
+    Horse create(@RequestBody Horse horse) {
         return service.create(horse);
     }
 
@@ -40,8 +39,15 @@ public class HorsesController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public @ResponseBody
-    void
-    delete(@PathVariable String id) {
+    void delete(@PathVariable String id) {
         service.delete(id);
     }
+
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public @ResponseBody
+    void update(@RequestBody Horse horse) {
+        service.update(horse);
+    }
+
 }
