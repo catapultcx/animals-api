@@ -43,7 +43,7 @@ public class HorsesController {
         service.delete(id);
     }
 
-    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public @ResponseBody
     void update(@RequestBody Horse horse) {

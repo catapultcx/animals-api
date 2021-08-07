@@ -48,7 +48,7 @@ public class HorsesControllerTest {
 
     @Test
     public void update() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.put("/api/1/horses").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/horses/123").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isAccepted());
     }
 
