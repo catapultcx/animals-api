@@ -11,7 +11,7 @@ public class BirdsServiceTest {
     Bird bird = new Bird("Tom", "Bob bird");
 
     @Test
-    public void createShouldWork() throws Exception {
+    public void createShouldWork()  {
         Bird thisBird = new Bird();
         thisBird.setName("Jerry");
         thisBird.setDescription("Mouse Bird");
@@ -23,13 +23,13 @@ public class BirdsServiceTest {
     }
 
     @Test
-    public void allShouldWork() throws Exception {
+    public void allShouldWork() {
         service.create(bird);
         assertThat(service.all().size()).isEqualTo(1);
     }
 
     @Test
-    public void getShouldWork() throws Exception {
+    public void getShouldWork() {
         service.create(bird);
         Bird actual = service.get(bird.getId());
         assertThat(actual).isEqualTo(bird);
@@ -37,4 +37,14 @@ public class BirdsServiceTest {
         assertThat(actual.getDescription()).isEqualTo(bird.getDescription());
         assertThat(actual.getGroup()).isEqualTo(bird.getGroup());
     }
+    @Test
+    public void deleteShouldWork() {
+        service.create(bird);
+        int size  = service.all().size();
+        assertThat(size).isEqualTo(1);
+        service.delete(bird.getId());
+        int size2  = service.all().size();
+        assertThat(size2).isEqualTo(0);
+    }
+
 }

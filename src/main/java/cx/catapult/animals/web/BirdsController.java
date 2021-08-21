@@ -35,4 +35,9 @@ public class BirdsController {
     create(@RequestBody Bird cat) {
         return service.create(cat);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 }
