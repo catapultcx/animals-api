@@ -1,23 +1,27 @@
 package cx.catapult.animals.domain;
 
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
+@MappedSuperclass
 public class BaseAnimal implements Animal, Serializable {
 
+    @Id
     private String id;
     private String name;
     private String description;
-    private Group group;
+    private AnimalGroup animalGroup;
 
-    public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+    public BaseAnimal(String name, String description, AnimalGroup animalGroup) {
+        this(null, name, description, animalGroup);
     }
 
-    public BaseAnimal(String id, String name, String description, Group group) {
+    public BaseAnimal(String id, String name, String description, AnimalGroup animalGroup) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.group = group;
+        this.animalGroup = animalGroup;
     }
 
     @Override
@@ -51,7 +55,7 @@ public class BaseAnimal implements Animal, Serializable {
     }
 
     @Override
-    public Group getGroup() {
-        return this.group;
+    public AnimalGroup getAnimalGroup() {
+        return this.animalGroup;
     }
 }

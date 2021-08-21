@@ -19,7 +19,7 @@ public class BirdsControllerTest {
     private MockMvc mvc;
 
     private Bird bird = new Bird("Tom", "Bob cat");
-    private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
+    private String json = "{ \"id\": \"123\", \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
     @Test
     public void all() throws Exception {

@@ -43,7 +43,7 @@ public class BirdsControllerIT {
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(bird.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(bird.getDescription());
-        assertThat(response.getBody().getGroup()).isEqualTo(bird.getGroup());
+        assertThat(response.getBody().getAnimalGroup()).isEqualTo(bird.getAnimalGroup());
     }
 
     @Test
