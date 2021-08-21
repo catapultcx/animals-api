@@ -36,6 +36,14 @@ public class BirdsController {
         return service.create(cat);
     }
 
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody
+    Bird
+    update(@RequestBody Bird cat) {
+        return service.update(cat);
+    }
+
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable String id) {
         service.delete(id);

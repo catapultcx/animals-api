@@ -1,5 +1,6 @@
 package cx.catapult.animals.service;
 
+import cx.catapult.animals.domain.Bird;
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.Test;
 
@@ -47,4 +48,14 @@ public class CatsServiceTest {
         int size2  = service.all().size();
         assertThat(size2).isEqualTo(0);
     }
+    @Test
+    public void updateShouldWork() {
+        Cat created = service.create(cat);
+        created.setName("New Name");
+        created.setDescription("New Description");
+        Cat updated = service.update(created);
+        assertThat(updated.getName()).isEqualTo("New Name");
+        assertThat(updated.getDescription()).isEqualTo("New Description");
+    }
+
 }

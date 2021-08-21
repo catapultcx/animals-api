@@ -38,4 +38,16 @@ public class BirdsControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/birds").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/birds").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/birds/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

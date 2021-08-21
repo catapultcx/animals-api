@@ -37,6 +37,7 @@ public class BirdsServiceTest {
         assertThat(actual.getDescription()).isEqualTo(bird.getDescription());
         assertThat(actual.getGroup()).isEqualTo(bird.getGroup());
     }
+
     @Test
     public void deleteShouldWork() {
         service.create(bird);
@@ -47,4 +48,13 @@ public class BirdsServiceTest {
         assertThat(size2).isEqualTo(0);
     }
 
+    @Test
+    public void updateShouldWork() {
+        Bird created = service.create(bird);
+        created.setName("New Name");
+        created.setDescription("New Description");
+        Bird updated = service.update(created);
+        assertThat(updated.getName()).isEqualTo("New Name");
+        assertThat(updated.getDescription()).isEqualTo("New Description");
+    }
 }
