@@ -1,16 +1,15 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
-import cx.catapult.animals.domain.Bird;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.util.CollectionUtils;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
-
-//    private HashMap<String, T> items = new HashMap<>();
 
     @Override
     public Collection<T> all() {
@@ -22,26 +21,29 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     abstract CrudRepository<T, String> getRepository();
 
     @Override
+    @Transactional
     public T create(T animal) {
         String id = UUID.randomUUID().toString();
         animal.setId(id);
-        return getRepository().save(animal);
-        //items.put(id, animal);
+        System.out.println("Saving " + animal.getId() + ":" + animal.getName());
+
+        T ret = getRepository().save(animal);
+        return ret;
     }
 
     @Override
     public T get(String id) {
         return getRepository().findById(id).orElse(null);
-        //return items.get(id);
     }
 
     @Override
+    @Transactional
     public void delete(String id) {
         getRepository().findById(id).ifPresent(e -> getRepository().delete(e));
-        //items.remove(id);
     }
 
     @Override
+    @Transactional
     public T update(T animal) {
         AtomicReference<T> ref = new AtomicReference<>();
         getRepository().findById(animal.getId()).ifPresent(e -> {
@@ -52,13 +54,5 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
         });
 
         return ref.get();
-//        T existing = items.get(animal.getId());
-//
-//        if (null != existing) {
-//            existing.setName(animal.getName());
-//            existing.setDescription(animal.getDescription());
-//        }
-//
-//        return existing;
     }
 }
