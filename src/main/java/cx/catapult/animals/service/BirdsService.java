@@ -17,7 +17,6 @@ public class BirdsService extends BaseService<Bird> {
         this.birdRepository = birdRepository;
     }
 
-
     @Override
     CrudRepository<Bird, String> getRepository() {
         return this.birdRepository;

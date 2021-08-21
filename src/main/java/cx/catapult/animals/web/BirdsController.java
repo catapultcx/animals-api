@@ -31,17 +31,17 @@ public class BirdsController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Bird
-    create(@RequestBody Bird cat) {
-        return service.create(cat);
+    Bird create(@RequestBody Bird bird) {
+        //System.out.println("POST create!!!!!");
+        return service.create(bird);
     }
 
     @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Bird
-    update(@RequestBody Bird cat) {
-        return service.update(cat);
+    Bird update(@RequestBody Bird bird) {
+        //System.out.println("PUT update!!!!!");
+        return service.update(bird);
     }
 
     @DeleteMapping(value = "/{id}")

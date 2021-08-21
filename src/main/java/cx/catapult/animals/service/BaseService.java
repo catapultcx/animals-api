@@ -23,12 +23,10 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     @Override
     @Transactional
     public T create(T animal) {
-        String id = UUID.randomUUID().toString();
+        final String id = UUID.randomUUID().toString();
         animal.setId(id);
-        System.out.println("Saving " + animal.getId() + ":" + animal.getName());
-
-        T ret = getRepository().save(animal);
-        return ret;
+        // System.out.println("Saving " + animal.getId() + ":" + animal.getName());
+        return getRepository().save(animal);
     }
 
     @Override
