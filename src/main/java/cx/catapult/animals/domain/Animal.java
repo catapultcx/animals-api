@@ -2,18 +2,18 @@ package cx.catapult.animals.domain;
 
 public interface Animal {
 
-    String getId();
+  String getId();
 
-    void setId(String id);
+  void setId(String id);
 
-    String getName();
+  String getName();
 
-    void setName(String name);
+  void setName(String name);
 
-    String getDescription();
+  String getDescription();
 
-    void setDescription(String description);
+  void setDescription(String description);
 
-    Group getGroup();
+  Group getGroup();
 
 }

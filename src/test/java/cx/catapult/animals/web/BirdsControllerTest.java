@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.service.CatsService;
+import cx.catapult.animals.domain.Bird;
+import cx.catapult.animals.service.BirdsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,19 +27,19 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 @ExtendWith(MockitoExtension.class)
-class CatsControllerTest {
+class BirdsControllerTest {
 
   private static final String ID = "ff8080817b6fd27e017b6fd282bb0000";
-  private static final String CATS_URL = "/api/1/cats";
-  private static final String FORMATTED_URL = format("%s/%s", CATS_URL, ID);
+  private static final String BIRDS_URL = "/api/1/birds";
+  private static final String FORMATTED_URL = format("%s/%s", BIRDS_URL, ID);
   private PodamFactory podamFactory;
   private ObjectMapper mapper;
   private MockMvc mockMvc;
   @InjectMocks
-  private CatsController classUnderTest;
+  private BirdsController classUnderTest;
 
   @Mock
-  private CatsService mockCatsService;
+  private BirdsService mockBirdsService;
 
   @BeforeEach
   void setUp() {
@@ -50,42 +50,41 @@ class CatsControllerTest {
 
   @Test
   void all_happyPath_ableToFetchAllTheRecord() throws Exception {
-    mockMvc.perform(get(CATS_URL)
+    mockMvc.perform(get(BIRDS_URL)
         .contentType(APPLICATION_JSON))
            .andDo(print())
            .andExpect(status().isOk());
-    verify(mockCatsService).all();
+    verify(mockBirdsService).all();
   }
 
   @Test
   void get_happyPath_ableToFetchRecord() throws Exception {
-
     mockMvc.perform(get(FORMATTED_URL)
         .contentType(APPLICATION_JSON))
            .andDo(print())
            .andExpect(status().isOk());
-    verify(mockCatsService).get(ID);
+    verify(mockBirdsService).get(ID);
   }
 
   @Test
   void create_happyPath_manageToCreateRecord() throws Exception {
-    final Cat cat = podamFactory.manufacturePojo(Cat.class);
+    final Bird bird = podamFactory.manufacturePojo(Bird.class);
 
-    mockMvc.perform(post(CATS_URL).content(mapper.writeValueAsString(cat))
-                                  .contentType(APPLICATION_JSON))
+    mockMvc.perform(post(BIRDS_URL).content(mapper.writeValueAsString(bird))
+                                   .contentType(APPLICATION_JSON))
            .andDo(print())
            .andExpect(status().isCreated());
-    verify(mockCatsService).create(any(Cat.class));
+    verify(mockBirdsService).create(any(Bird.class));
   }
 
   @Test
   void update_happyPath_manageToUpdateRecord() throws Exception {
-    final Cat cat = podamFactory.manufacturePojo(Cat.class);
-    mockMvc.perform(put(FORMATTED_URL).content(mapper.writeValueAsString(cat))
+    final Bird bird = podamFactory.manufacturePojo(Bird.class);
+    mockMvc.perform(put(FORMATTED_URL).content(mapper.writeValueAsString(bird))
                                       .contentType(APPLICATION_JSON))
            .andDo(print())
            .andExpect(status().isOk());
-    verify(mockCatsService).update(anyString(), any(Cat.class));
+    verify(mockBirdsService).update(anyString(), any(Bird.class));
   }
 
   @Test
@@ -93,6 +92,6 @@ class CatsControllerTest {
     mockMvc.perform(delete(FORMATTED_URL).contentType(APPLICATION_JSON))
            .andDo(print())
            .andExpect(status().isOk());
-    verify(mockCatsService).delete(ID);
+    verify(mockBirdsService).delete(ID);
   }
 }
