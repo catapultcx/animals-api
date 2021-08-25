@@ -20,6 +20,10 @@ Run the service:
 Tests with coverage:
 
     mvn clean test
+
+Run integration tests:
+
+    mvn clean verify
     
 Build the `.jar`:
 
