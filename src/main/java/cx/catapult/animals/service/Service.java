@@ -15,4 +15,6 @@ public interface Service<T extends Animal> {
 
     Optional<T> delete(String id);
 
+    Optional<T> update(String id, T toUpdate);
+
 }

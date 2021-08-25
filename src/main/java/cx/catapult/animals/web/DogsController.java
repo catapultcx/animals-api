@@ -45,4 +45,10 @@ public class DogsController {
     Dog delete(@PathVariable String id) {
         return service.delete(id).orElse(null);
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json")
+    public @ResponseBody
+    Dog update(@PathVariable String id, @RequestBody Dog dog) {
+        return service.update(id, dog).orElse(null);
+    }
 }

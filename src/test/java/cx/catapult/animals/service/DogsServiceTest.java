@@ -68,4 +68,35 @@ public class DogsServiceTest {
         assertThat(deleted.getName()).isEqualTo(dog.getName());
         assertThat(deleted.getDescription()).isEqualTo(dog.getDescription());
     }
+
+    @Test
+    public void blankIdsShouldBeHandledWhileUpdating() {
+        final Dog dog = new Dog("Spike", "Fluffy dog");
+
+        assertThat(service.update(null, dog)).isEqualTo(Optional.empty());
+        assertThat(service.update("   ", dog)).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    public void nonExistingIdShouldBeHandledWhileUpdating() {
+        final Dog dog = new Dog("Spike", "Fluffy dog");
+
+        assertThat(service.update("NonExisting", dog)).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    public void updatingExistingDogShouldWork() {
+        final Dog dog = new Dog("Spike", "Fluffy dog");
+
+        Dog dogToUpdate = service.create(dog);
+
+        dogToUpdate.setName("New name");
+        dogToUpdate.setDescription("New description");
+
+        final Dog dogUpdated = service.update(dogToUpdate.getId(), dogToUpdate).get();
+
+        assertThat(dogUpdated.getId()).isEqualTo(dog.getId());
+        assertThat(dogUpdated.getName()).isEqualTo(dogToUpdate.getName());
+        assertThat(dogUpdated.getDescription()).isEqualTo(dogToUpdate.getDescription());
+    }
 }

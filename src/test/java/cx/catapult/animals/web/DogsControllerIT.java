@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +71,17 @@ public class DogsControllerIT {
     public void deleteShouldHandleNonExisting() throws Exception {
         final ResponseEntity<String> response = template.exchange(base.toString() + "/nonexisting", HttpMethod.DELETE, null, String.class);
         assertThat(response.getBody()).isEqualTo(null);
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        Dog created = create("Test 1");
+
+        Dog toUpdate = new Dog("UpdatedName", "UpdatedDescription");
+
+        final ResponseEntity<Dog> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.PUT, new HttpEntity<Dog>(toUpdate), Dog.class);
+        final Dog updated = response.getBody();
+        assertThat(updated.getId()).isEqualTo(created.getId());
     }
 
     private Dog create(String name) {

@@ -43,4 +43,27 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
         return Optional.ofNullable(items.remove(id));
     }
+
+    @Override
+    public synchronized Optional<T> update(String id, T toUpdate) {
+        if (StringUtils.isBlank(id)) {
+            log.fine("Can't update object of blank/null id");
+            return Optional.empty();
+        };
+
+        final T item = items.get(id);
+        if (item == null) {
+            log.fine("Can't update object of id that doesn't exist");
+            return Optional.empty();
+        }
+
+        item.setName(toUpdate.getName());
+        item.setDescription(toUpdate.getDescription());
+
+        items.put(id, item);
+
+        log.info("Updated item of id " + id);
+
+        return Optional.ofNullable(item);
+    }
 }
