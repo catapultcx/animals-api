@@ -35,4 +35,10 @@ public class CatsController {
     create(@RequestBody Cat cat) {
         return service.create(cat);
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json")
+    public @ResponseBody
+    Cat update(@PathVariable String id, @RequestBody Cat cat) {
+        return service.update(id, cat).orElse(null);
+    }
 }
