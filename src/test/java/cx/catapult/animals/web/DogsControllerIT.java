@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -54,6 +55,21 @@ public class DogsControllerIT {
         Dog created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Dog created = create("Test 1");
+        final ResponseEntity<Dog> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Dog.class);
+        final Dog deleted = response.getBody();
+        assertThat(deleted.getName()).isEqualTo(created.getName());
+        assertThat(deleted.getDescription()).isEqualTo(created.getDescription());
+    }
+
+    @Test
+    public void deleteShouldHandleNonExisting() throws Exception {
+        final ResponseEntity<String> response = template.exchange(base.toString() + "/nonexisting", HttpMethod.DELETE, null, String.class);
+        assertThat(response.getBody()).isEqualTo(null);
     }
 
     private Dog create(String name) {

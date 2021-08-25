@@ -39,4 +39,10 @@ public class DogsController {
     Dog get(@PathVariable String id) {
         return service.get(id);
     }
+
+    @DeleteMapping(value = "/{id}", produces = "application/json")
+    public @ResponseBody
+    Dog delete(@PathVariable String id) {
+        return service.delete(id).orElse(null);
+    }
 }

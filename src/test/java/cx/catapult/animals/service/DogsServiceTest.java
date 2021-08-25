@@ -3,8 +3,11 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.Dog;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DogsServiceTest {
 
@@ -46,5 +49,23 @@ public class DogsServiceTest {
         assertThat(actual.getName()).isEqualTo(dog.getName());
         assertThat(actual.getDescription()).isEqualTo(dog.getDescription());
         assertThat(actual.getGroup()).isEqualTo(dog.getGroup());
+    }
+
+    @Test
+    public void blankIdsShouldBeHandledWhileDeleting() {
+        assertThat(service.delete(null)).isEqualTo(Optional.empty());
+        assertThat(service.delete("   ")).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    public void deletingExistingDogShouldWork() {
+        final Dog dog = new Dog("Spike", "Fluffy dog");
+
+        Dog created = service.create(dog);
+
+        final Dog deleted = service.delete(created.getId()).get();
+
+        assertThat(deleted.getName()).isEqualTo(dog.getName());
+        assertThat(deleted.getDescription()).isEqualTo(dog.getDescription());
     }
 }
