@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,5 +41,25 @@ public class DogsControllerIT {
         assertThat(response.getBody().getName()).isEqualTo(dog.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(dog.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(dog.getGroup());
+    }
+
+    @Test
+    public void allShouldWork() throws Exception {
+        Collection items = template.getForObject(base.toString(), Collection.class);
+        assertThat(items.size()).isGreaterThanOrEqualTo(2);
+    }
+
+    @Test
+    public void getShouldWork() throws Exception {
+        Dog created = create("Test 1");
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+    }
+
+    private Dog create(String name) {
+        Dog created = template.postForObject(base.toString(), new Dog(name, name), Dog.class);
+        assertThat(created.getId()).isNotEmpty();
+        assertThat(created.getName()).isEqualTo(name);
+        return created;
     }
 }

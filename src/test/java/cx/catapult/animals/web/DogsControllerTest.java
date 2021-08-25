@@ -26,4 +26,16 @@ public class DogsControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/dogs").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void all() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/dogs").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void get() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/dogs/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

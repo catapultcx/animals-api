@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.logging.Logger;
 
 @RestController
@@ -25,5 +26,17 @@ public class DogsController {
         final Dog created = service.create(dog);
         log.info("Created dog. ID: " + created.getId());
         return created;
+    }
+
+    @GetMapping(value = "", produces = "application/json")
+    public @ResponseBody
+    Collection<Dog> all() {
+        return service.all();
+    }
+
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    Dog get(@PathVariable String id) {
+        return service.get(id);
     }
 }
