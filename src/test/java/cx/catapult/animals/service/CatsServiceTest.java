@@ -1,14 +1,24 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.repository.AnimalRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
 
-    CatsService service = new CatsService();
     Cat cat = new Cat("Tom", "Bob cat");
+
+    private CatsService service;
+
+    @BeforeEach
+    public void init() {
+        final AnimalRepository mockAnimalRepository = Mockito.mock(AnimalRepository.class);
+        service = new CatsService(mockAnimalRepository);
+    }
 
     @Test
     public void createShouldWork() throws Exception {
@@ -19,7 +29,7 @@ public class CatsServiceTest {
         assertThat(actual).isEqualTo(thisCat);
         assertThat(actual.getName()).isEqualTo(thisCat.getName());
         assertThat(actual.getDescription()).isEqualTo(thisCat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(thisCat.getGroup());
+        assertThat(actual.getGroop()).isEqualTo(thisCat.getGroop());
     }
 
     @Test
@@ -35,6 +45,6 @@ public class CatsServiceTest {
         assertThat(actual).isEqualTo(cat);
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+        assertThat(actual.getGroop()).isEqualTo(cat.getGroop());
     }
 }

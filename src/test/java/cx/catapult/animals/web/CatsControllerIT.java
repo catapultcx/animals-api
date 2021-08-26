@@ -44,7 +44,7 @@ public class CatsControllerIT {
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
-        assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
+        assertThat(response.getBody().getGroop()).isEqualTo(cat.getGroop());
     }
 
     @Test

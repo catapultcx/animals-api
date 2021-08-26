@@ -1,23 +1,31 @@
 package cx.catapult.animals.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import java.io.Serializable;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class BaseAnimal implements Animal, Serializable {
 
+    @Id
     private String id;
+
     private String name;
     private String description;
-    private Group group;
+    private Groop groop;
 
-    public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+    public BaseAnimal(String name, String description, Groop groop) {
+        this(null, name, description, groop);
     }
 
-    public BaseAnimal(String id, String name, String description, Group group) {
+    public BaseAnimal(String id, String name, String description, Groop groop) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.group = group;
+        this.groop = groop;
     }
 
     @Override
@@ -51,7 +59,7 @@ public class BaseAnimal implements Animal, Serializable {
     }
 
     @Override
-    public Group getGroup() {
-        return this.group;
+    public Groop getGroop() {
+        return this.groop;
     }
 }

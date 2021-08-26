@@ -42,7 +42,7 @@ public class DogsControllerIT {
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(dog.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(dog.getDescription());
-        assertThat(response.getBody().getGroup()).isEqualTo(dog.getGroup());
+        assertThat(response.getBody().getGroop()).isEqualTo(dog.getGroop());
     }
 
     @Test

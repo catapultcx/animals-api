@@ -14,6 +14,6 @@ public interface Animal {
 
     void setDescription(String description);
 
-    Group getGroup();
+    Groop getGroop();
 
 }

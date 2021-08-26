@@ -1,7 +1,10 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.BaseAnimal;
+import cx.catapult.animals.repository.AnimalRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Map;
@@ -15,6 +18,14 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     private final Map<String, T> items = new ConcurrentHashMap<>();
 
     private final Logger log = Logger.getLogger(BaseService.class.getName());
+    private AnimalRepository animalRepository;
+
+    @Autowired
+    public BaseService(AnimalRepository animalRepository) {
+
+        this.animalRepository = animalRepository;
+    }
+
 
     @Override
     public Collection<T> all() {
@@ -25,6 +36,7 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     public T create(T animal) {
         String id = UUID.randomUUID().toString();
         animal.setId(id);
+        animalRepository.save((BaseAnimal) animal);
         items.put(id, animal);
         return animal;
     }
@@ -41,7 +53,14 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
             return Optional.empty();
         };
 
-        return Optional.ofNullable(items.remove(id));
+        final T removed = items.remove(id);
+
+        if (null == removed) {
+            return Optional.empty();
+        }
+
+        animalRepository.delete((BaseAnimal) removed);
+        return Optional.ofNullable(removed);
     }
 
     @Override
@@ -60,6 +79,7 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
         item.setName(toUpdate.getName());
         item.setDescription(toUpdate.getDescription());
 
+        animalRepository.save((BaseAnimal) item);
         items.put(id, item);
 
         log.info("Updated item of id " + id);

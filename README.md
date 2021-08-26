@@ -10,6 +10,7 @@ First install:
 
 * Java 13
 * Maven 3.6.3+
+* MariaDB (native or Docker image)
 
 ### Commands
 

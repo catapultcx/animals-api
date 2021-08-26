@@ -1,6 +1,6 @@
 package cx.catapult.animals.domain;
 
-public enum Group {
+public enum Groop {
 
     AMPHIBIAN,
     BIRD,
