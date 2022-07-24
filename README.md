@@ -8,7 +8,7 @@ Animals API is a Spring Boot web application with a Swagger documented API.
 
 First install:
 
-* Java 13
+* Java 17
 * Maven 3.6.3+
 
 ### Commands
@@ -16,11 +16,11 @@ First install:
 Run the service:
 
     mvn spring-boot:run
-    
+
 Tests with coverage:
 
     mvn clean test
-    
+
 Build the `.jar`:
 
     mvn clean package    
@@ -42,13 +42,13 @@ Publish to Docker Hub
 Once started the API will be available at:
 
  * http://localhost:8080
- 
- 
+
+
 API docs can be found at:
 
 * http://localhost:8080/api-docs
 * http://localhost:8080/swagger-ui.html
- 
+
 
 ### Reference Documentation
 For further reference, please consider the following sections:
