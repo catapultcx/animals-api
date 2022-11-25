@@ -10,7 +10,8 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = Cat.class, name = "Cat")
+    @JsonSubTypes.Type(value = Cat.class, name = "Cat"),
+    @JsonSubTypes.Type(value = Iguana.class, name = "Iguana")
 })
 public class BaseAnimal implements Animal, Serializable {
 

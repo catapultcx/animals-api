@@ -3,6 +3,7 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.Iguana;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,7 @@ public class AnimalService extends BaseService<BaseAnimal> {
         this.create(new Cat("Tiger", "Large cat", "Orange"));
         this.create(new Cat("Tigger", "Not a scary cat", "Orange"));
         this.create(new Cat("Garfield", "Lazy cat", "Orange"));
+        this.create(new Iguana("Iggy", "A very cool Iguana", "Green"));
     }
 
 }
