@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 
+import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,30 +20,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
-public class CatsControllerIT {
+public class AnimalControllerIT {
     @LocalServerPort
     private int port;
 
     private URL base;
 
-    private Cat cat = new Cat("Tom", "Bob cat");
+    private Cat animal = new Cat("Tom", "Bob cat", "Orange");
 
     @Autowired
     private TestRestTemplate template;
 
     @BeforeEach
     public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/api/1/cats");
+        this.base = new URL("http://localhost:" + port + "/api/1/animals");
     }
 
     @Test
     public void createShouldWork() throws Exception {
-        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), animal, BaseAnimal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
-        assertThat(response.getBody().getName()).isEqualTo(cat.getName());
-        assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
-        assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
+        assertThat(response.getBody().getName()).isEqualTo(animal.getName());
+        assertThat(response.getBody().getDescription()).isEqualTo(animal.getDescription());
+        assertThat(response.getBody().getClassification()).isEqualTo(animal.getClassification());
+        assertThat(response.getBody().getColour()).isEqualTo(animal.getColour());
     }
 
     @Test
@@ -59,9 +61,10 @@ public class CatsControllerIT {
     }
 
     Cat create(String name) {
-        Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
+        Cat created = template.postForObject(base.toString(), new Cat(name, name, "Orange"), Cat.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
+        assertThat(created.getColour()).isEqualTo("Orange");
         return created;
     }
 }

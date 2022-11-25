@@ -1,23 +1,36 @@
 package cx.catapult.animals.domain;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.io.Serializable;
 
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
+
+@JsonTypeInfo(use = NAME, include = PROPERTY)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Cat.class, name = "Cat")
+})
 public class BaseAnimal implements Animal, Serializable {
 
     private String id;
     private String name;
     private String description;
-    private Group group;
+    private Classification classification;
 
-    public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+    private String colour;
+
+    public BaseAnimal(String name, String description, Classification classification, String colour) {
+        this(null, name, description, classification, colour);
     }
 
-    public BaseAnimal(String id, String name, String description, Group group) {
+    public BaseAnimal(String id, String name, String description, Classification classification, String colour) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.group = group;
+        this.classification = classification;
+        this.colour = colour;
     }
 
     @Override
@@ -51,7 +64,18 @@ public class BaseAnimal implements Animal, Serializable {
     }
 
     @Override
-    public Group getGroup() {
-        return this.group;
+    public Classification getClassification() {
+        return this.classification;
     }
+
+    @Override
+    public String getColour() {
+        return colour;
+    }
+
+    @Override
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
 }

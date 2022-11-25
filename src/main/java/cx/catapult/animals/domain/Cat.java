@@ -2,10 +2,10 @@ package cx.catapult.animals.domain;
 
 public class Cat extends BaseAnimal {
     public Cat() {
-        this("", "");
+        this("", "", "");
     }
 
-    public Cat(String name, String description) {
-        super(name, description, Group.MAMMALS);
+    public Cat(String name, String description, String colour) {
+        super(name, description, Classification.MAMMALS, colour);
     }
 }
