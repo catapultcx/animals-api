@@ -12,9 +12,7 @@ public class CatsServiceTest {
 
     @Test
     public void createShouldWork() throws Exception {
-        Cat thisCat = new Cat();
-        thisCat.setName("Jerry");
-        thisCat.setDescription("Mouse Cat");
+        Cat thisCat = new Cat("Jerry", "Mouse Cat");
         Cat actual = service.create(thisCat);
         assertThat(actual).isEqualTo(thisCat);
         assertThat(actual.getName()).isEqualTo(thisCat.getName());

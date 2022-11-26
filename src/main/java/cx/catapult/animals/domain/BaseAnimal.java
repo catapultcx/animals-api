@@ -1,16 +1,17 @@
 package cx.catapult.animals.domain;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class BaseAnimal implements Animal, Serializable {
 
-    private String id;
-    private String name;
-    private String description;
-    private Group group;
+    private final String id;
+    private final String name;
+    private final String description;
+    private final Group group;
 
     public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+        this(UUID.randomUUID().toString(), name, description, group);
     }
 
     public BaseAnimal(String id, String name, String description, Group group) {
@@ -26,28 +27,13 @@ public class BaseAnimal implements Animal, Serializable {
     }
 
     @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
     public String getName() {
         return this.name;
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
     public String getDescription() {
         return this.description;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override

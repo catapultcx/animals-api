@@ -15,9 +15,7 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     @Override
     public T create(T animal) {
-        String id = UUID.randomUUID().toString();
-        animal.setId(id);
-        items.put(id, animal);
+        items.put(animal.getId(), animal);
         return animal;
     }
 
