@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -57,6 +58,36 @@ public class HashMapAnimalRepository implements AnimalRepository {
         } else {
             throw new AnimalRepositoryException(format("Failed to remove animal: %s It doesn't exist in the database", animalId));
         }
+    }
+
+    @Override
+    public Animal updateAnimalForOwner(String ownerId, Animal animal) {
+        if(animal.id() == null){
+            throw new AnimalRepositoryException(format("For owner id: %s. animal id can't be null", ownerId));
+        }
+        var animalsForId = getAnimalsForOwner(ownerId, animal);
+
+        Optional<Animal> toRemove = animalsForId.stream()
+            .filter(storedEvent ->
+                storedEvent.id().equals(animal.id())
+            ).findFirst();
+
+        if (toRemove.isPresent()) {
+            animals.get(ownerId).remove(toRemove.get());
+            animals.get(ownerId).add(animal);
+        }
+
+        return getAnimalForOwner(ownerId, animal.id());
+    }
+
+    private Collection<Animal> getAnimalsForOwner(String ownerId, Animal animal) {
+        Collection<Animal> animalsForId;
+        if (ownerIdExists(ownerId)) {
+            animalsForId = animals.get(ownerId);
+        } else {
+            throw new AnimalRepositoryException(format("Owner id: %s does not exist. Can not update animal: %s", ownerId, animal.id()));
+        }
+        return animalsForId;
     }
 
     private boolean ownerIdExists(String ownerId) {

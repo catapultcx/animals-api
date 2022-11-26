@@ -36,4 +36,9 @@ public class AnimalServiceImpl implements AnimalService {
     public void removeAnimalForOwner(String ownerId, String animalId) {
         animalRepository.removeAnimalForOwner(ownerId, animalId);
     }
+
+    @Override
+    public Animal updateAnimalForOwner(String ownerId, Animal animal) {
+        return animalRepository.updateAnimalForOwner(ownerId, animal);
+    }
 }

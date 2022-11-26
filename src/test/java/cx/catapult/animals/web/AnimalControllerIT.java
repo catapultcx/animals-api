@@ -138,5 +138,51 @@ class AnimalControllerIT {
         assertEquals(0, getAllAfterDelete.size());
     }
 
+ @Test
+    void updateAnimalShouldWork() {
+        var saved = RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234U")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .extract()
+            .response()
+            .as(Animal.class);
+
+        var getAllBeforeUpdate = RestAssured
+            .given()
+            .pathParam("ownerId", "1234U")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(1, getAllBeforeUpdate.size());
+
+       var update = RestAssured
+           .with()
+           .contentType(ContentType.JSON)
+           .body(new Animal(saved.id(), "Cat", "Billy", "Blue", "An updated Billy not so Brown"))
+           .when()
+           .pathParam("ownerId", "1234U")
+           .pathParam("animalId", saved.id())
+           .put(BASE_ENDPOINT + "/{animalId}")
+           .then()
+           .statusCode(HttpStatus.SC_OK)
+           .extract()
+           .response()
+           .as(Animal.class);
+
+        var expected = new Animal(saved.id(), "Cat", "Billy", "Blue", "An updated Billy not so Brown");
+
+        assertEquals(expected, update);
+    }
+
 
 }

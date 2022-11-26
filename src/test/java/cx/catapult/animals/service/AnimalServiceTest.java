@@ -77,28 +77,22 @@ class AnimalServiceTest {
 
     @Test
     void testDeleteWorks() {
-        Mockito.when(animalRepository.createAnimalForOwner(any(), any()))
-            .thenReturn(
-                new Animal("1233", "type", "name", "purple", "A detailed description")
-            );
-
-        var createdAnimal = service.createAnimalForOwner("1234",
-            new Animal("1233", "type", "name", "purple", "A detailed description"));
-        var expected = new Animal("1233", "type", "name", "purple", "A detailed description");
-
-        assertEquals(expected, createdAnimal);
-
         Mockito.doNothing().when(animalRepository).removeAnimalForOwner(any(),any());
 
-        Mockito.when(animalRepository.getAllAnimalsForOwner(any()))
-            .thenReturn(
-                Collections.emptyList()
-            );
-        animalRepository.removeAnimalForOwner("1234", "1233");
-        var allAnimalsForOwner = service.getAllAnimalsForOwner("1234");
-        assertThat(allAnimalsForOwner).isEmpty();
+        service.removeAnimalForOwner("1234", "1233");
 
         Mockito.verify(animalRepository, times(1)).removeAnimalForOwner(any(), any());
+    }
+
+    @Test
+    void testUpdateWorks() {
+        var updated = new Animal("1233", "update", "name", "purple", "A detailed description");
+        Mockito.when(animalRepository.updateAnimalForOwner(any(), any()))
+            .thenReturn(updated);
+
+        service.updateAnimalForOwner("1234", updated);
+
+        Mockito.verify(animalRepository, times(1)).updateAnimalForOwner(any(), any());
     }
 
 

@@ -113,7 +113,36 @@ class HashMapAnimalRepositoryTest {
         var sizeAfterDelete = animalRepository.getAllAnimalsForOwner(OWNER_ID).size();
 
         assertEquals(0, sizeAfterDelete);
-
     }
 
+    @Test
+    void testUpdatingAnimalForOwnerSucceeds() {
+        //1. Create initial record
+        var recordToAdd = new Animal(null, "type", "name", "description", "description");
+
+        var animal = animalRepository.createAnimalForOwner(OWNER_ID, recordToAdd);
+        var animalId = animal.id();
+        var initialExpectedRecord = new Animal(animalId, "type", "name", "description", "description");
+
+        //2. Verify initial record exists
+        Collection<Animal> allAvailableEvents = animalRepository.getAllAnimalsForOwner(OWNER_ID);
+        assertEquals(1, allAvailableEvents.size());
+        assertTrue(allAvailableEvents.contains(initialExpectedRecord));
+
+        //3. Update the record and verify
+        var updateAnimal = new Animal(animalId, "I", "am", "an", "update");
+        var updateResponse = animalRepository.updateAnimalForOwner(OWNER_ID, updateAnimal);
+        var expectedAfterUpdate = new Animal(animalId, "I", "am", "an", "update");
+
+        assertNotEquals(initialExpectedRecord, updateResponse);
+        assertEquals(expectedAfterUpdate, updateResponse);
+
+        //4. Verify the update has worked again by getting all records
+        Collection<Animal> expectedEvents = new ArrayList<>();
+        expectedEvents.add(expectedAfterUpdate);
+
+        Collection<Animal> allAvailableEventsAfterUpdate = animalRepository.getAllAnimalsForOwner(OWNER_ID);
+        assertEquals(1, allAvailableEventsAfterUpdate.size());
+        assertTrue(allAvailableEventsAfterUpdate.containsAll(expectedEvents));
+    }
 }
