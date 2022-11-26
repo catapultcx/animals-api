@@ -60,7 +60,7 @@ class HashMapAnimalRepositoryTest {
     }
 
     @Test
-    void testWhenAddingAMultipleRecordItSucceeds() {
+    void testWhenAddingMultipleAnimalsItSucceeds() {
         var recordToAdd = new Animal(null, "type", "name", "description", "description");
         var anotherRecordToAdd = new Animal(null, "type", "name2", "colour", "description");
         final String ownderId2 = "1234";
@@ -82,7 +82,7 @@ class HashMapAnimalRepositoryTest {
     }
 
     @Test
-    void testGettingAnForOwnerItSucceeds() {
+    void testGettingAnimalForOwnerItSucceeds() {
         var recordToAdd = new Animal(null, "type", "name", "description", "description");
         var anotherRecordToAdd = new Animal(null, "type", "name2", "colour", "description");
         final String ownderId2 = "1234";
@@ -96,6 +96,24 @@ class HashMapAnimalRepositoryTest {
         assertEquals("name", animalForOwner.name());
         assertEquals(animal.id(), animalForOwner.id());
         assertNotEquals(animal1.id(), animalForOwner.id());
+    }
+
+    @Test
+    void testRemovingAnimalForOwnerItSucceeds() {
+        var recordToAdd = new Animal(null, "type", "name", "description", "description");
+
+        var animal = animalRepository.createAnimalForOwner(OWNER_ID, recordToAdd);
+        var animalForOwner = animalRepository.getAnimalForOwner(OWNER_ID, animal.id());
+        var initialSize = animalRepository.getAllAnimalsForOwner(OWNER_ID).size();
+
+        assertEquals(1, initialSize);
+        assertEquals(animal.id(), animalForOwner.id());
+
+        animalRepository.removeAnimalForOwner(OWNER_ID, animalForOwner.id());
+        var sizeAfterDelete = animalRepository.getAllAnimalsForOwner(OWNER_ID).size();
+
+        assertEquals(0, sizeAfterDelete);
+
     }
 
 }

@@ -12,4 +12,6 @@ public interface AnimalRepository {
 
     Animal getAnimalForOwner(String ownerId, String animalId);
 
+    void removeAnimalForOwner(String ownerId, String animalId);
+
 }

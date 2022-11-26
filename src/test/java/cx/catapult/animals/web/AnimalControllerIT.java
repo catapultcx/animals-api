@@ -89,5 +89,54 @@ class AnimalControllerIT {
         assertEquals("Billy", response.name());
     }
 
+    @Test
+    void deleteAnimalShouldWork() {
+        var saved = RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234D")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .extract()
+            .response()
+            .as(Animal.class);
+
+        var getAllBeforeDelete = RestAssured
+            .given()
+            .pathParam("ownerId", "1234D")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(1, getAllBeforeDelete.size());
+
+        RestAssured
+            .given()
+            .pathParam("ownerId", "1234D")
+            .pathParam("animalId", saved.id())
+            .delete(BASE_ENDPOINT + "/{animalId}")
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        var getAllAfterDelete = RestAssured
+            .given()
+            .pathParam("ownerId", "1234D")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+
+        assertEquals(0, getAllAfterDelete.size());
+    }
+
 
 }

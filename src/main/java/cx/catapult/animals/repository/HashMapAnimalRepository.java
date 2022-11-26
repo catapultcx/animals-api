@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.lang.String.format;
+
 @Repository
 public class HashMapAnimalRepository implements AnimalRepository {
 
@@ -22,16 +24,16 @@ public class HashMapAnimalRepository implements AnimalRepository {
 
     @Override
     public Animal createAnimalForOwner(String ownerId, Animal animal) {
-        var toPersist = new Animal(UUID.randomUUID().toString(), animal.type(), animal.name(), animal.colour(), animal.description());
+        final var animalId = UUID.randomUUID().toString();
+        var toPersist = new Animal(animalId, animal.type(), animal.name(), animal.colour(), animal.description());
         if (ownerIdExists(ownerId)) {
             animals.get(ownerId).add(toPersist);
-            return toPersist;
         } else {
             Collection<Animal> animalList = new ArrayList<>();
             animalList.add(toPersist);
             animals.put(ownerId, animalList);
-            return toPersist;
         }
+        return getAnimalForOwner(ownerId, animalId);
     }
 
     @Override
@@ -47,8 +49,18 @@ public class HashMapAnimalRepository implements AnimalRepository {
             .orElseThrow(() -> new AnimalRepositoryException("Could not find animal id"));
     }
 
-    private boolean ownerIdExists(String ownderId) {
-        return animals.containsKey(ownderId);
+    @Override
+    public void removeAnimalForOwner(String ownerId, String animalId) {
+        if (ownerIdExists(ownerId)) {
+            var toRemove = getAnimalForOwner(ownerId, animalId);
+            this.animals.get(ownerId).remove(toRemove);
+        } else {
+            throw new AnimalRepositoryException(format("Failed to remove animal: %s It doesn't exist in the database", animalId));
+        }
+    }
+
+    private boolean ownerIdExists(String ownerId) {
+        return animals.containsKey(ownerId);
     }
 
 }
