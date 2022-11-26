@@ -1,102 +1,261 @@
 package cx.catapult.animals.web;
 
 
-import cx.catapult.animals.domain.BaseAnimal;
-import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.domain.Iguana;
+import cx.catapult.animals.domain.Animal;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.net.URL;
 import java.util.Collection;
-import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
-public class AnimalControllerIT {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+class AnimalControllerIT {
+    private static final String BASE_ENDPOINT = "/owners/{ownerId}/animals";
     @LocalServerPort
     private int port;
 
-    private URL base;
-
-    private Cat cat = new Cat("Tom", "Bob cat", "Orange");
-    private Iguana iguana = new Iguana("Tom", "Bob cat", "Orange");
-
-    @Autowired
-    private TestRestTemplate template;
-
     @BeforeEach
-    public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/api/1/animals");
+    void setUp() {
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = port;
     }
 
     @Test
-    public void createShouldWorkForCat() throws Exception {
-        ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), cat, BaseAnimal.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody().getId()).isNotEmpty();
-        assertThat(response.getBody().getName()).isEqualTo(cat.getName());
-        assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
-        assertThat(response.getBody().getClassification()).isEqualTo(cat.getClassification());
-        assertThat(response.getBody().getColour()).isEqualTo(cat.getColour());
+    void createShouldWorkForAnimal() {
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .assertThat()
+            .body("type", equalTo("Cat"));
     }
 
     @Test
-    void createShouldWorkForIguana() throws Exception {
-        ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), iguana, BaseAnimal.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(requireNonNull(response.getBody()).getId()).isNotEmpty();
-        assertThat(response.getBody().getName()).isEqualTo(iguana.getName());
-        assertThat(response.getBody().getDescription()).isEqualTo(iguana.getDescription());
-        assertThat(response.getBody().getClassification()).isEqualTo(iguana.getClassification());
-        assertThat(response.getBody().getColour()).isEqualTo(iguana.getColour());
+    void allShouldWork() {
+        var response = RestAssured
+            .given()
+            .pathParam("ownerId", "TEST")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertTrue(response.size() >= 1);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    //TODO: Fix unchecked warning becuase of generic type added/missing from collection
-    void allShouldWork() throws Exception {
-        Collection<BaseAnimal> items = template.getForObject(base.toString(), Collection.class);
-        assertThat(items).hasSizeGreaterThanOrEqualTo(8);
+    void getAnimalShouldWork() {
+        var saved = RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .extract()
+            .response()
+            .as(Animal.class);
+
+
+        var response = RestAssured
+            .given()
+            .pathParam("ownerId", "1234")
+            .pathParam("animalId", saved.id())
+            .get(BASE_ENDPOINT + "/{animalId}")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Animal.class);
+
+        assertEquals("Billy", response.name());
     }
 
     @Test
-    void getCatShouldWork() throws Exception {
-        Cat created = createCat("Test 1");
-        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
-        assertThat(response.getBody()).isNotEmpty();
-    }
-    @Test
-    void getIguanaShouldWork() throws Exception {
-        Iguana created = createIguana("Test 2");
-        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
-        assertThat(response.getBody()).isNotEmpty();
+    void deleteAnimalShouldWork() {
+        var saved = RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234D")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .extract()
+            .response()
+            .as(Animal.class);
+
+        var getAllBeforeDelete = RestAssured
+            .given()
+            .pathParam("ownerId", "1234D")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(1, getAllBeforeDelete.size());
+
+        RestAssured
+            .given()
+            .pathParam("ownerId", "1234D")
+            .pathParam("animalId", saved.id())
+            .delete(BASE_ENDPOINT + "/{animalId}")
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        var getAllAfterDelete = RestAssured
+            .given()
+            .pathParam("ownerId", "1234D")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+
+        assertEquals(0, getAllAfterDelete.size());
     }
 
-    private Cat createCat(String name) {
-        Cat created = template.postForObject(base.toString(), new Cat(name, name, "Orange"), Cat.class);
-        assertThat(created.getId()).isNotEmpty();
-        assertThat(created.getName()).isEqualTo(name);
-        assertThat(created.getColour()).isEqualTo("Orange");
-        return created;
+    @Test
+    void updateAnimalShouldWork() {
+        var saved = RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234U")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .extract()
+            .response()
+            .as(Animal.class);
+
+        var getAllBeforeUpdate = RestAssured
+            .given()
+            .pathParam("ownerId", "1234U")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(1, getAllBeforeUpdate.size());
+
+        var update = RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(saved.id(), "Cat", "Billy", "Blue", "An updated Billy not so Brown"))
+            .when()
+            .pathParam("ownerId", "1234U")
+            .pathParam("animalId", saved.id())
+            .put(BASE_ENDPOINT + "/{animalId}")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Animal.class);
+
+        var expected = new Animal(saved.id(), "Cat", "Billy", "Blue", "An updated Billy not so Brown");
+
+        assertEquals(expected, update);
     }
-    private Iguana createIguana(String name) {
-        Iguana created = template.postForObject(base.toString(), new Iguana(name, name, "Green"), Iguana.class);
-        assertThat(created.getId()).isNotEmpty();
-        assertThat(created.getName()).isEqualTo(name);
-        assertThat(created.getColour()).isEqualTo("Green");
-        return created;
+
+    @Test
+    void allShouldWorkWithFilters() {
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Dog", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Leopard", "Jim", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Coyote", "Jim", "Blue", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+
+
+        var responseCatFilter = RestAssured
+            .given()
+            .pathParam("ownerId", "1234")
+            .queryParam("type", "Cat")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(1, responseCatFilter.size());
+
+        var responseBrownFilter = RestAssured
+            .given()
+            .pathParam("ownerId", "1234")
+            .queryParam("colour", "Brown")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(3, responseBrownFilter.size());
     }
+
 
 
 }

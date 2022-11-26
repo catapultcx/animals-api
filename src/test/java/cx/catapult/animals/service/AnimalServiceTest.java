@@ -1,65 +1,97 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.BaseAnimal;
-import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.domain.Iguana;
+import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.repository.AnimalRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
-import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 
+@ExtendWith(MockitoExtension.class)
 class AnimalServiceTest {
 
+    @Mock
+    private AnimalRepository animalRepository;
     private AnimalService service;
 
     @BeforeEach
     void setUp() {
-        service = new AnimalService();
+        service = new AnimalServiceImpl(animalRepository);
     }
 
-    @ParameterizedTest
-    @ArgumentsSource(AnimalSubtypeProvider.class)
-    void allShouldWork(BaseAnimal animal) throws Exception {
-        service.create(animal);
-        assertThat(service.all()).hasSize(1);
+    @Test
+    void allShouldWork() {
+        Mockito.when(animalRepository.getAllAnimalsForOwner(any()))
+            .thenReturn(List.of(
+                new Animal("1233", "type", "name", "purple", "A detailed description")
+            ));
+        var allAnimalsForOwner = service.getAllAnimalsForOwner("1234");
+
+        var expected = List.of(new Animal("1233", "type", "name", "purple", "A detailed description"));
+        assertThat(allAnimalsForOwner).hasSize(1);
+        assertEquals(expected, allAnimalsForOwner);
+        Mockito.verify(animalRepository, times(1)).getAllAnimalsForOwner(eq("1234"));
     }
 
-    @ParameterizedTest
-    @ArgumentsSource(AnimalSubtypeProvider.class)
-    void getShouldWork(BaseAnimal animal) throws Exception {
-        service.create(animal);
-        BaseAnimal actual = service.get(animal.getId());
-        assertThat(actual).isEqualTo(animal);
-        assertThat(actual.getName()).isEqualTo(animal.getName());
-        assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
-        assertThat(actual.getClassification()).isEqualTo(animal.getClassification());
+    @Test
+    void getShouldWork() {
+        Mockito.when(animalRepository.getAnimalForOwner(any(), eq("1233")))
+            .thenReturn(
+                new Animal("1233", "type", "name", "purple", "A detailed description")
+            );
+
+        var animalForOwner = service.getAnimalForOwner("1234", "1233");
+
+        var expected = new Animal("1233", "type", "name", "purple", "A detailed description");
+        assertEquals(expected, animalForOwner);
+        Mockito.verify(animalRepository, times(1)).getAnimalForOwner(eq("1234"), eq("1233"));
+
     }
 
-    @ParameterizedTest
-    @ArgumentsSource(AnimalSubtypeProvider.class)
-    void testCreateWorks(BaseAnimal animal) throws Exception {
-        service.create(animal);
-        BaseAnimal actual = service.get(animal.getId());
-        assertThat(actual).isEqualTo(animal);
-        assertThat(actual.getName()).isEqualTo(animal.getName());
-        assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
-        assertThat(actual.getClassification()).isEqualTo(animal.getClassification());
+    @Test
+    void testCreateWorks() {
+        Mockito.when(animalRepository.createAnimalForOwner(any(), any()))
+            .thenReturn(
+                new Animal("1233", "type", "name", "purple", "A detailed description")
+            );
+
+        var createdAnimal = service.createAnimalForOwner("1234",
+            new Animal("1233", "type", "name", "purple", "A detailed description"));
+        var expected = new Animal("1233", "type", "name", "purple", "A detailed description");
+
+        assertEquals(expected, createdAnimal);
+        Mockito.verify(animalRepository, times(1)).createAnimalForOwner(eq("1234"), any());
     }
 
-    private static class AnimalSubtypeProvider implements ArgumentsProvider {
-        @Override
-        public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-            return Stream.of(
-                    new Cat("name", "description", "colour"),
-                    new Iguana("name", "description", "colour"))
-                .map(Arguments::of);
-        }
+    @Test
+    void testDeleteWorks() {
+        Mockito.doNothing().when(animalRepository).removeAnimalForOwner(any(), any());
+
+        service.removeAnimalForOwner("1234", "1233");
+
+        Mockito.verify(animalRepository, times(1)).removeAnimalForOwner(any(), any());
     }
+
+    @Test
+    void testUpdateWorks() {
+        var updated = new Animal("1233", "update", "name", "purple", "A detailed description");
+        Mockito.when(animalRepository.updateAnimalForOwner(any(), any()))
+            .thenReturn(updated);
+
+        service.updateAnimalForOwner("1234", updated);
+
+        Mockito.verify(animalRepository, times(1)).updateAnimalForOwner(any(), any());
+    }
+
 
 }
