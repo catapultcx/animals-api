@@ -66,4 +66,14 @@ public class AnimalsControllerIT {
         assertThat(animalResponse.getType()).isEqualTo(created.getType());
         assertThat(animalResponse.getDescription()).isEqualTo(created.getDescription());
     }
+
+    @Test
+    public void deleteShouldWork() {
+        var created = template.postForObject(base.toString(), AnimalFactory.aCat(), Animal.class);
+
+        template.delete(base.toString() + "/" + created.getId());
+
+        var response = template.getForEntity(base.toString() + "/" + created.getId(), Animal.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }

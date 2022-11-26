@@ -11,23 +11,29 @@ import java.util.UUID;
 @org.springframework.stereotype.Service
 public class AnimalService implements Service {
 
-    private final Map<String, Animal> items = new HashMap<>();
+    private final Map<String, Animal> animals = new HashMap<>();
 
     @Override
     public Collection<Animal> all() {
-        return items.values();
+        return animals.values();
     }
 
     @Override
     public Animal create(Animal animal) {
         animal.setId(UUID.randomUUID().toString());
-        items.put(animal.getId(), animal);
+        animals.put(animal.getId(), animal);
         return animal;
     }
 
     @Override
     public Animal get(String id) {
-        return items.get(id);
+        return animals.get(id);
+    }
+
+    @Override
+    public Animal delete(String id) {
+        //TODO Handle scenario, when animal with given id not exist
+        return animals.remove(id);
     }
 
     @PostConstruct

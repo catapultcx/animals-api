@@ -2,9 +2,11 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.AnimalFactory;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AnimalServiceTest {
 
@@ -35,5 +37,16 @@ public class AnimalServiceTest {
         assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
         assertThat(actual.getType()).isEqualTo(animal.getType());
         assertThat(actual.getColour()).isEqualTo(animal.getColour());
+    }
+
+    @Test
+    public void deleteShouldWorkIfAnimialWithIdExist() {
+        service.create(animal);
+        var id = animal.getId();
+
+        var deleted = service.delete(id);
+
+        assertThat(deleted.getId()).isEqualTo(id);
+        assertNull(service.get(id));
     }
 }
