@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+
+import static cx.catapult.animals.web.AnimalFilter.filterAnimals;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,8 +37,14 @@ public class AnimalController {
     @GetMapping(value = "/owners/{ownerId}/animals", produces = "application/json")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Animal> all(@PathVariable String ownerId) {
-        return service.getAllAnimalsForOwner(ownerId);
+    public Collection<Animal> all(@PathVariable String ownerId,
+                                  @RequestParam(value = "type", required=false) String type,
+                                  @RequestParam(value = "name", required=false) String name,
+                                  @RequestParam(value = "colour", required=false) String colour,
+                                  @RequestParam(value = "description", required=false) String description
+    ) {
+        final Collection<Animal> allAnimalsForOwner = service.getAllAnimalsForOwner(ownerId);
+        return filterAnimals(allAnimalsForOwner, type, name, colour, description);
     }
 
     @GetMapping(value = "/owners/{ownerId}/animals/{animalId}")

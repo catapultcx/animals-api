@@ -11,7 +11,9 @@ public interface AnimalService {
     Collection<Animal> getAllAnimalsForOwner(String ownerId);
 
     Animal getAnimalForOwner(String ownerId, String animalId);
+
     void removeAnimalForOwner(String ownerId, String animalId);
+
     Animal updateAnimalForOwner(String ownerId, Animal animal);
 
 }

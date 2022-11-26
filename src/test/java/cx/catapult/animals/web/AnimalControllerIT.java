@@ -56,7 +56,7 @@ class AnimalControllerIT {
             .response()
             .as(Collection.class);
 
-            assertTrue(response.size() >= 1);
+        assertTrue(response.size() >= 1);
     }
 
     @Test
@@ -138,7 +138,7 @@ class AnimalControllerIT {
         assertEquals(0, getAllAfterDelete.size());
     }
 
- @Test
+    @Test
     void updateAnimalShouldWork() {
         var saved = RestAssured
             .with()
@@ -165,24 +165,97 @@ class AnimalControllerIT {
 
         assertEquals(1, getAllBeforeUpdate.size());
 
-       var update = RestAssured
-           .with()
-           .contentType(ContentType.JSON)
-           .body(new Animal(saved.id(), "Cat", "Billy", "Blue", "An updated Billy not so Brown"))
-           .when()
-           .pathParam("ownerId", "1234U")
-           .pathParam("animalId", saved.id())
-           .put(BASE_ENDPOINT + "/{animalId}")
-           .then()
-           .statusCode(HttpStatus.SC_OK)
-           .extract()
-           .response()
-           .as(Animal.class);
+        var update = RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(saved.id(), "Cat", "Billy", "Blue", "An updated Billy not so Brown"))
+            .when()
+            .pathParam("ownerId", "1234U")
+            .pathParam("animalId", saved.id())
+            .put(BASE_ENDPOINT + "/{animalId}")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Animal.class);
 
         var expected = new Animal(saved.id(), "Cat", "Billy", "Blue", "An updated Billy not so Brown");
 
         assertEquals(expected, update);
     }
+
+    @Test
+    void allShouldWorkWithFilters() {
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Cat", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Dog", "Billy", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Leopard", "Jim", "Brown", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+        RestAssured
+            .with()
+            .contentType(ContentType.JSON)
+            .body(new Animal(null, "Coyote", "Jim", "Blue", "Billy Brown"))
+            .when()
+            .pathParam("ownerId", "1234")
+            .post(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_CREATED);
+
+
+
+        var responseCatFilter = RestAssured
+            .given()
+            .pathParam("ownerId", "1234")
+            .queryParam("type", "Cat")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(1, responseCatFilter.size());
+
+        var responseBrownFilter = RestAssured
+            .given()
+            .pathParam("ownerId", "1234")
+            .queryParam("colour", "Brown")
+            .get(BASE_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .response()
+            .as(Collection.class);
+
+        assertEquals(3, responseBrownFilter.size());
+    }
+
 
 
 }

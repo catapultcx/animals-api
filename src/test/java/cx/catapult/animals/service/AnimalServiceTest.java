@@ -9,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,7 +75,7 @@ class AnimalServiceTest {
 
     @Test
     void testDeleteWorks() {
-        Mockito.doNothing().when(animalRepository).removeAnimalForOwner(any(),any());
+        Mockito.doNothing().when(animalRepository).removeAnimalForOwner(any(), any());
 
         service.removeAnimalForOwner("1234", "1233");
 

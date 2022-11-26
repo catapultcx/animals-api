@@ -13,9 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HashMapAnimalRepositoryTest {
 
-    private AnimalRepository animalRepository;
-
     private static final String OWNER_ID = "1234";
+    private AnimalRepository animalRepository;
 
     @BeforeEach
     void setUp() {

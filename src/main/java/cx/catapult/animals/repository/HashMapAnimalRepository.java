@@ -62,7 +62,7 @@ public class HashMapAnimalRepository implements AnimalRepository {
 
     @Override
     public Animal updateAnimalForOwner(String ownerId, Animal animal) {
-        if(animal.id() == null){
+        if (animal.id() == null) {
             throw new AnimalRepositoryException(format("For owner id: %s. animal id can't be null", ownerId));
         }
         var animalsForId = getAnimalsForOwner(ownerId, animal);
