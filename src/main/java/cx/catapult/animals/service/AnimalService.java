@@ -32,11 +32,11 @@ public class AnimalService implements Service {
 
     @PostConstruct
     public void initialize() {
-        this.create(Animal.aCat("Tom", "Friend of Jerry"));
-        this.create(Animal.aCat("Jerry", "Not really a cat"));
-        this.create(Animal.aCat("Bili", "Furry cat"));
-        this.create(Animal.anEagle("Eagle-1", "1st Eagle"));
-        this.create(Animal.anEagle("Eagle-2", "2nd Eagle"));
-        this.create(Animal.anEagle("Eagle-3", "3rd Eagle"));
+        this.create(Animal.aCat("Tom", "Friend of Jerry", "orange"));
+        this.create(Animal.aCat("Jerry", "Not really a cat", "white"));
+        this.create(Animal.aCat("Bili", "Furry cat", "black"));
+        this.create(Animal.anEagle("Eagle-1", "1st Eagle", "red"));
+        this.create(Animal.anEagle("Eagle-2", "2nd Eagle", "black"));
+        this.create(Animal.anEagle("Eagle-3", "3rd Eagle", "yellow"));
     }
 }

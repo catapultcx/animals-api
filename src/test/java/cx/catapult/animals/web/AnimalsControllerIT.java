@@ -2,6 +2,7 @@ package cx.catapult.animals.web;
 
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.AnimalFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class AnimalsControllerIT {
 
     private URL base;
 
-    private final Animal aCat = Animal.aCat("Tom", "Bob cat");
+    private final Animal aCat = AnimalFactory.aCat();
 
     @Autowired
     private TestRestTemplate template;
@@ -46,6 +47,7 @@ public class AnimalsControllerIT {
         assertThat(animalResponse.getName()).isEqualTo(aCat.getName());
         assertThat(animalResponse.getDescription()).isEqualTo(aCat.getDescription());
         assertThat(animalResponse.getType()).isEqualTo(aCat.getType());
+        assertThat(animalResponse.getColour()).isEqualTo(aCat.getColour());
     }
 
     @Test
@@ -56,7 +58,7 @@ public class AnimalsControllerIT {
 
     @Test
     public void getShouldWork() throws Exception {
-        var created = template.postForObject(base.toString(), Animal.aCat("Cat-1", "Cat-1 description"), Animal.class);
+        var created = template.postForObject(base.toString(), AnimalFactory.aCat(), Animal.class);
 
         var response = template.getForEntity(base.toString() + "/" + created.getId(), Animal.class);
 

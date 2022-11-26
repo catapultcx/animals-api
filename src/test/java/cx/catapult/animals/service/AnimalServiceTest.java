@@ -1,23 +1,23 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.AnimalFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnimalServiceTest {
 
-    AnimalService service = new AnimalService();
-    Animal animal = Animal.aCat("Tom", "Bob cat");
+    private final AnimalService service = new AnimalService();
+    private final Animal animal = AnimalFactory.aCat() ;
 
     @Test
     public void createShouldWork() throws Exception {
-        Animal thisAnimal = Animal.aCat("Jerry", "Mouse Cat");
-        Animal actual = service.create(thisAnimal);
-        assertThat(actual).isEqualTo(thisAnimal);
-        assertThat(actual.getName()).isEqualTo(thisAnimal.getName());
-        assertThat(actual.getDescription()).isEqualTo(thisAnimal.getDescription());
-        assertThat(actual.getType()).isEqualTo(thisAnimal.getType());
+        var actual = service.create(animal);
+        assertThat(actual).isEqualTo(animal);
+        assertThat(actual.getName()).isEqualTo(animal.getName());
+        assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
+        assertThat(actual.getType()).isEqualTo(animal.getType());
     }
 
     @Test
@@ -29,10 +29,11 @@ public class AnimalServiceTest {
     @Test
     public void getShouldWork() throws Exception {
         service.create(animal);
-        Animal actual = service.get(animal.getId());
+        var actual = service.get(animal.getId());
         assertThat(actual).isEqualTo(animal);
         assertThat(actual.getName()).isEqualTo(animal.getName());
         assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
         assertThat(actual.getType()).isEqualTo(animal.getType());
+        assertThat(actual.getColour()).isEqualTo(animal.getColour());
     }
 }

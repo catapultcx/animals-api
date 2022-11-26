@@ -3,32 +3,33 @@ package cx.catapult.animals.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 public class Animal implements Serializable {
 
     private String id;
     private final String name;
     private final String description;
+    private final String colour;
     private final AnimalType type;
 
-    public static Animal aCat(String name, String description) {
-        return new Animal(name, description, AnimalType.MAMMALS);
+    public static Animal aCat(String name, String description, String colour) {
+        return new Animal(name, description, colour, AnimalType.MAMMALS);
     }
 
-    public static Animal anEagle(String name, String description) {
-        return new Animal(name, description, AnimalType.BIRD);
+    public static Animal anEagle(String name, String description, String colour) {
+        return new Animal(name, description, colour, AnimalType.BIRD);
     }
 
     @JsonCreator
-    public Animal(String name, String description, AnimalType type) {
-        this(null, name, description, type);
+    public Animal(String name, String description, String colour, AnimalType type) {
+        this(null, name, description, colour, type);
     }
 
-    private Animal(String id, String name, String description, AnimalType type) {
+    private Animal(String id, String name, String description, String colour, AnimalType type) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.colour = colour;
         this.type = type;
     }
 
@@ -42,6 +43,10 @@ public class Animal implements Serializable {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public String getColour() {
+        return colour;
     }
 
     public AnimalType getType() {
