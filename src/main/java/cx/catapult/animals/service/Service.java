@@ -4,12 +4,12 @@ import cx.catapult.animals.domain.Animal;
 
 import java.util.Collection;
 
-public interface Service<T extends Animal> {
+public interface Service {
 
-    public Collection<T> all();
+    public Collection<Animal> all();
 
-    T create(T animal);
+    Animal create(Animal animal);
 
-    public T get(String id);
+    public Animal get(String id);
 
 }
