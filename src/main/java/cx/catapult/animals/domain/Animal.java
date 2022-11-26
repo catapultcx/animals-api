@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class Animal implements Serializable {
 
-    private final String id;
+    private String id;
     private final String name;
     private final String description;
     private final AnimalType type;
@@ -22,7 +22,7 @@ public class Animal implements Serializable {
 
     @JsonCreator
     public Animal(String name, String description, AnimalType type) {
-        this(UUID.randomUUID().toString(), name, description, type);
+        this(null, name, description, type);
     }
 
     private Animal(String id, String name, String description, AnimalType type) {
@@ -46,5 +46,9 @@ public class Animal implements Serializable {
 
     public AnimalType getType() {
         return this.type;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @org.springframework.stereotype.Service
 public class AnimalService implements Service {
@@ -19,6 +20,7 @@ public class AnimalService implements Service {
 
     @Override
     public Animal create(Animal animal) {
+        animal.setId(UUID.randomUUID().toString());
         items.put(animal.getId(), animal);
         return animal;
     }
