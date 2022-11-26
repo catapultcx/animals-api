@@ -43,4 +43,12 @@ public class AnimalsControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/123"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/animals/123")
+                        .content(AnimalFactory.ANIMAL_JSON_PAYLOAD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
 }

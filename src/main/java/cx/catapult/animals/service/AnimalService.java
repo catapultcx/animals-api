@@ -36,6 +36,14 @@ public class AnimalService implements Service {
         return animals.remove(id);
     }
 
+    @Override
+    public Animal update(String id, Animal animalToUpdate) {
+        //TODO Handle scenario, when animal with given id not exist
+        animalToUpdate.setId(id);
+        animals.put(id, animalToUpdate);
+        return animalToUpdate;
+    }
+
     @PostConstruct
     public void initialize() {
         this.create(Animal.aCat("Tom", "Friend of Jerry", "orange"));

@@ -41,4 +41,11 @@ public class AnimalsController {
     public Animal delete(@PathVariable String id) {
         return service.delete(id);
     }
+
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Animal delete(@PathVariable String id, @RequestBody Animal animalToUpdate) {
+        return service.update(id, animalToUpdate);
+    }
 }

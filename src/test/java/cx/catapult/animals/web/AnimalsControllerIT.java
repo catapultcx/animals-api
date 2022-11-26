@@ -3,6 +3,7 @@ package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.AnimalFactory;
+import cx.catapult.animals.domain.AnimalType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +76,18 @@ public class AnimalsControllerIT {
 
         var response = template.getForEntity(base.toString() + "/" + created.getId(), Animal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void updateShouldWork() {
+        var created = template.postForObject(base.toString(), AnimalFactory.aCat(), Animal.class);
+        var toUpdate = new Animal("updated", "updated Desc", "Red", AnimalType.MAMMALS);
+
+        template.put(base.toString() + "/" + created.getId(), toUpdate);
+
+        var response = template.getForEntity(base.toString() + "/" + created.getId(), Animal.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getDescription()).isEqualTo(toUpdate.getDescription());
+        assertThat(response.getBody().getId()).isEqualTo(created.getId());
     }
 }

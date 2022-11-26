@@ -14,4 +14,5 @@ public interface Service {
 
     Animal delete(String id);
 
+    Animal update(String id, Animal animalToUpdate);
 }
