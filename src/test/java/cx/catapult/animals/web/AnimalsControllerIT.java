@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.Collection;
@@ -89,5 +88,13 @@ public class AnimalsControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getDescription()).isEqualTo(toUpdate.getDescription());
         assertThat(response.getBody().getId()).isEqualTo(created.getId());
+    }
+
+    @Test
+    public void searchShouldWork() {
+        var response = template.getForEntity(base.toString() + "/search?searchTerm=eagle", Collection.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().toArray()).extracting("name").containsExactlyInAnyOrder("Eagle-1", "Eagle-2", "Eagle-3");
     }
 }

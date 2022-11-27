@@ -3,10 +3,9 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.Animal;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class AnimalService implements Service {
@@ -42,6 +41,22 @@ public class AnimalService implements Service {
         animalToUpdate.setId(id);
         animals.put(id, animalToUpdate);
         return animalToUpdate;
+    }
+
+    @Override
+    public List<Animal> filter(String searchTerm) {
+        return animals.values().stream()
+                .filter(hasAnimalMatched(searchTerm))
+                .collect(Collectors.toList());
+    }
+
+    private static Predicate<Animal> hasAnimalMatched(String searchTerm) {
+        var lowerCaseSearchTerm = searchTerm.toLowerCase();
+        return animal ->
+                animal.getName().toLowerCase().contains(lowerCaseSearchTerm) ||
+                        animal.getDescription().toLowerCase().contains(lowerCaseSearchTerm) ||
+                        animal.getType().name().toLowerCase().contains(lowerCaseSearchTerm) ||
+                        animal.getColour().toLowerCase().contains(lowerCaseSearchTerm);
     }
 
     @PostConstruct

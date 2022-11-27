@@ -51,4 +51,10 @@ public class AnimalsControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void search() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/search?searchTerm=123"))
+                .andExpect(status().isOk());
+    }
 }

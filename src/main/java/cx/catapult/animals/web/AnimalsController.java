@@ -48,4 +48,11 @@ public class AnimalsController {
     public Animal delete(@PathVariable String id, @RequestBody Animal animalToUpdate) {
         return service.update(id, animalToUpdate);
     }
+
+    @GetMapping(value = "/search")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Collection<Animal> search(@RequestParam(name = "searchTerm") String searchTerm) {
+        return service.filter(searchTerm);
+    }
 }
