@@ -25,6 +25,12 @@ Build the `.jar`:
 
     mvn clean package    
 
+### Docker
+
+Note: these are not tested on all environments, if you struggle with them then just run the jar with `mvn spring-boot:run`
+
+If you are familiar with docker you may wish to use it to run the service.
+
 Run with Docker (build jar first)
 
     docker-compose up
