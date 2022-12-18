@@ -6,6 +6,11 @@ public class Cat extends BaseAnimal {
     }
 
     public Cat(String name, String description) {
-        super(name, description, Group.MAMMALS);
+        super(name, description, Group.MAMMALS, "Cat");
+    }
+
+    @Override
+    public String getType() {
+        return "Cat";
     }
 }
