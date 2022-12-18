@@ -1,6 +1,7 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.BaseAnimal;
 
 import java.util.*;
 
@@ -24,5 +25,10 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     @Override
     public T get(String id) {
         return items.get(id);
+    }
+
+    @Override
+    public void addAll(Collection<T> c) {
+        c.forEach(this::create);
     }
 }
