@@ -16,4 +16,12 @@ public interface Animal {
 
     Group getGroup();
 
+    String getType();
+
+    void setType(String type);
+
+    String getColour();
+
+    void setColour(String colour);
+
 }
