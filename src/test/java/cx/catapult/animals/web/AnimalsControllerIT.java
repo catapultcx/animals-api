@@ -13,11 +13,13 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -66,7 +68,7 @@ public class AnimalsControllerIT {
 
     @Test
     public void canCreateAnimal() {
-        BaseAnimal bob = new BaseAnimal("666","Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
+        BaseAnimal bob = new BaseAnimal("Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
 
         ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), bob, BaseAnimal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -76,6 +78,21 @@ public class AnimalsControllerIT {
         assertThat(response.getBody().getGroup()).isEqualTo(bob.getGroup());
         assertThat(response.getBody().getType()).isEqualTo(bob.getType());
         assertThat(response.getBody().getColour()).isEqualTo(bob.getColour());
+    }
+
+    @Test
+    public void canDeleteAnimal() {
+        BaseAnimal bob = new BaseAnimal("Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
+        bob = animalsService.create(bob);
+
+        ResponseEntity<BaseAnimal> response = template.exchange(RequestEntity.delete(base.toString() + "/" + UUID.randomUUID()).build(), BaseAnimal.class);        assertThat(animalsService.get(bob.getId())).isNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void cannotDeleteUnknownAnimal() {
+        ResponseEntity<BaseAnimal> response = template.exchange(RequestEntity.delete(base.toString() + "/" + UUID.randomUUID()).build(), BaseAnimal.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 }

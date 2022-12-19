@@ -1,9 +1,11 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
-import cx.catapult.animals.domain.BaseAnimal;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
@@ -30,5 +32,9 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     @Override
     public void addAll(Collection<T> c) {
         c.forEach(this::create);
+    }
+
+    public Optional<T> delete(String id) {
+        return Optional.ofNullable(items.remove(id));
     }
 }
