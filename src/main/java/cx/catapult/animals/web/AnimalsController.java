@@ -47,4 +47,12 @@ public class AnimalsController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<BaseAnimal> update(@PathVariable String id, @RequestBody BaseAnimal animal) {
+        return animalsService.update(id, animal)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
 }

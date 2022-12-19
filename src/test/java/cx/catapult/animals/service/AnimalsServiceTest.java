@@ -43,4 +43,22 @@ class AnimalsServiceTest {
         animalsService.delete(bob.getId());
         assertThat(animalsService.all()).doesNotContain(bob);
     }
+
+    @Test
+    void canUpdateAnimal() {
+        CatsService catsService = mock(CatsService.class);
+        when(catsService.all()).thenReturn(Set.of());
+
+        AnimalsService animalsService = new AnimalsService(catsService);
+        BaseAnimal bob = new BaseAnimal("Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
+
+        bob = animalsService.create(bob);
+
+        assertThat(animalsService.all()).contains(bob);
+
+        bob.setColour("Purple");
+        animalsService.update(bob.getId(), bob);
+
+        assertThat(animalsService.get(bob.getId()).getColour()).isEqualTo("Purple");
+    }
 }

@@ -1,6 +1,8 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.BaseAnimal;
+import io.micrometer.core.instrument.binder.db.MetricsDSLContext;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,5 +38,10 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     public Optional<T> delete(String id) {
         return Optional.ofNullable(items.remove(id));
+    }
+
+    public Optional<T> update(String id, T animal) {
+        animal.setId(id);
+        return Optional.ofNullable(items.put(id, animal));
     }
 }

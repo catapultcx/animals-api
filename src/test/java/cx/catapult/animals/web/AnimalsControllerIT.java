@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Group;
@@ -85,13 +86,33 @@ public class AnimalsControllerIT {
         BaseAnimal bob = new BaseAnimal("Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
         bob = animalsService.create(bob);
 
-        ResponseEntity<BaseAnimal> response = template.exchange(RequestEntity.delete(base.toString() + "/" + UUID.randomUUID()).build(), BaseAnimal.class);        assertThat(animalsService.get(bob.getId())).isNull();
+        ResponseEntity<BaseAnimal> response = template.exchange(RequestEntity.delete(base.toString() + "/" + bob.getId()).build(), BaseAnimal.class);
+        assertThat(animalsService.get(bob.getId())).isNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     public void cannotDeleteUnknownAnimal() {
         ResponseEntity<BaseAnimal> response = template.exchange(RequestEntity.delete(base.toString() + "/" + UUID.randomUUID()).build(), BaseAnimal.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void canUpdateAnimal() throws JsonProcessingException {
+        BaseAnimal bob = new BaseAnimal("Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
+        bob = animalsService.create(bob);
+
+        bob.setColour("Green");
+        bob.getId();
+        ResponseEntity<BaseAnimal> response = template.exchange(RequestEntity.put(base.toString() + "/" + bob.getId()).body(bob), BaseAnimal.class);
+        assertThat(animalsService.get(bob.getId()).getColour()).isEqualTo("Green");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void cannotUpdateUnknownAnimal() {
+        BaseAnimal bob = new BaseAnimal("Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
+        ResponseEntity<BaseAnimal> response = template.exchange(RequestEntity.put(base.toString() + "/" + UUID.randomUUID()).body(bob), BaseAnimal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 

@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -63,5 +64,24 @@ public class AnimalsControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/{id}", UUID.randomUUID().toString()))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void canUpdateAnimal() throws Exception {
+        BaseAnimal bob = new BaseAnimal("Bob", "Awkward", Group.MAMMALS, "Gerbil", "Beige");
+        bob = animalsService.create(bob);
+
+        bob.setColour("Orange");
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/animals/{id}", bob.getId()).content(objectMapper.writeValueAsString(bob)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+
+        assertThat(animalsService.get(bob.getId()).getColour()).isEqualTo("Orange");
+    }
+
+    @Test
+    public void cannotUpdateMissingAnimal() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/animals/{id}", UUID.randomUUID().toString()).content("{}").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
+    }
+
 
 }
