@@ -6,7 +6,7 @@ import java.util.*;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
-    private HashMap<String, T> items = new HashMap<>();
+    private final HashMap<String, T> items = new HashMap<>();
 
     @Override
     public Collection<T> all() {
@@ -25,4 +25,16 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     public T get(String id) {
         return items.get(id);
     }
+
+    @Override
+    public boolean delete(String id) {
+        T item = items.get(id);
+        return items.remove(id, item);
+    }
+
+    @Override
+    public T update(T animal) {
+        return items.replace(animal.getId(), animal);
+    }
+
 }

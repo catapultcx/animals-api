@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URL;
 import java.util.Collection;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -56,6 +57,33 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Cat createdCat = response.getBody();
+        assertThat(createdCat).isNotNull();
+        assertThat(createdCat.getId()).isNotEmpty();
+        String newName = "Macavity";
+        createdCat.setName(newName);
+        template.put(base.toString(), createdCat);
+        ResponseEntity<String> getResponse = template.getForEntity(base.toString() + "/" + createdCat.getId(), String.class);
+        assertThat(getResponse.getBody()).isNotEmpty();
+        assertThat(getResponse.getBody()).contains(newName);
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Cat createdCat = response.getBody();
+        assertThat(createdCat).isNotNull();
+        assertThat(createdCat.getId()).isNotEmpty();
+        template.delete(base.toString() + "/" + createdCat.getId(), String.class);
+        ResponseEntity<String> getResponse = template.getForEntity(base.toString() + "/" + createdCat.getId(), String.class);
+        assertThat(getResponse.getBody()).isNull();
     }
 
     Cat create(String name) {
