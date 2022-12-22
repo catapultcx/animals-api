@@ -6,6 +6,10 @@ public interface Animal {
 
     void setId(String id);
 
+    String getSpecies();
+
+    void setSpecies(String species);
+
     String getName();
 
     void setName(String name);
@@ -15,5 +19,7 @@ public interface Animal {
     void setDescription(String description);
 
     Group getGroup();
+
+    void setGroup(Group group);
 
 }

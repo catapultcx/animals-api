@@ -1,6 +1,8 @@
 package cx.catapult.animals.service;
 
+import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.Generic;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
