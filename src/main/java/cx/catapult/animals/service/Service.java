@@ -6,10 +6,14 @@ import java.util.Collection;
 
 public interface Service<T extends Animal> {
 
-    public Collection<T> all();
+    Collection<T> all();
 
     T create(T animal);
 
-    public T get(String id);
+    T get(String id);
+
+    boolean delete(String id);
+
+    T update(T animal);
 
 }

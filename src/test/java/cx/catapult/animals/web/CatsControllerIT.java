@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -25,7 +28,7 @@ public class CatsControllerIT {
 
     private URL base;
 
-    private Cat cat = new Cat("Tom", "Bob cat");
+    private final Cat cat = new Cat("Tom", "Bob cat");
 
     @Autowired
     private TestRestTemplate template;
@@ -36,7 +39,7 @@ public class CatsControllerIT {
     }
 
     @Test
-    public void createShouldWork() throws Exception {
+    public void createShouldWork() {
         ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
@@ -46,19 +49,45 @@ public class CatsControllerIT {
     }
 
     @Test
-    public void allShouldWork() throws Exception {
+    public void allShouldWork() {
         Collection items = template.getForObject(base.toString(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(7);
     }
 
     @Test
-    public void getShouldWork() throws Exception {
+    public void getShouldWork() {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
     }
 
-    Cat create(String name) {
+    @Test
+    public void deleteShouldWork() {
+        Cat aCat = create("Muti");
+
+        ResponseEntity<String> response = template.exchange(base.toString() + "/" + aCat.getId(), HttpMethod.DELETE, new HttpEntity<>(""), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        response = template.getForEntity(base.toString() + "/" + aCat.getId(), String.class);
+        System.out.println("response = " + response);
+        assertThat(response.getBody()).isNull();
+    }
+
+    @Test
+    public void updateShouldWork() {
+        Cat aCat = create("Suti");
+        aCat.setDescription("Suti is a adorable cat!");
+
+        ResponseEntity<String> response = template.exchange(base.toString(), HttpMethod.PUT,
+                new HttpEntity<>(aCat), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("Suti is a adorable cat!");
+
+    }
+
+    private Cat create(String name) {
         Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);

@@ -1,5 +1,8 @@
 package cx.catapult.animals.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 
 public class BaseAnimal implements Animal, Serializable {
@@ -7,7 +10,8 @@ public class BaseAnimal implements Animal, Serializable {
     private String id;
     private String name;
     private String description;
-    private Group group;
+    private final Group group;
+    private Colour[] colours;
 
     public BaseAnimal(String name, String description, Group group) {
         this(null, name, description, group);
@@ -18,6 +22,11 @@ public class BaseAnimal implements Animal, Serializable {
         this.name = name;
         this.description = description;
         this.group = group;
+    }
+
+    public BaseAnimal(String name, String description, Group group, Colour[] colours) {
+        this(name, description, group);
+        this.colours = colours;
     }
 
     @Override
@@ -53,5 +62,38 @@ public class BaseAnimal implements Animal, Serializable {
     @Override
     public Group getGroup() {
         return this.group;
+    }
+
+    @Override
+    public Colour[] getColours() {
+        return this.colours;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseAnimal that = (BaseAnimal) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(description, that.description)
+                .append(group, that.group)
+                .append(colours, that.colours)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(description)
+                .append(group)
+                .append(colours)
+                .toHashCode();
     }
 }

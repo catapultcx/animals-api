@@ -1,12 +1,14 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.BaseAnimal;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 
-public abstract class BaseService<T extends Animal> implements Service<T> {
+public abstract class BaseService<T extends BaseAnimal> implements Service<T> {
 
-    private HashMap<String, T> items = new HashMap<>();
+    private final HashMap<String, T> items = new HashMap<>();
 
     @Override
     public Collection<T> all() {
@@ -14,7 +16,7 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     }
 
     @Override
-    public T create(T animal) {
+    public T create(final T animal) {
         String id = UUID.randomUUID().toString();
         animal.setId(id);
         items.put(id, animal);
@@ -22,7 +24,22 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     }
 
     @Override
-    public T get(String id) {
+    public T get(final String id) {
         return items.get(id);
+    }
+
+    @Override
+    public boolean delete(final String id) {
+        if (items.containsKey(id)) {
+            items.remove(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public T update(final T animal) {
+        items.replace(animal.getId(), animal);
+        return items.get(animal.getId());
     }
 }
