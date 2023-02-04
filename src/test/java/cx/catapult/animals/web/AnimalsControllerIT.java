@@ -1,7 +1,8 @@
 package cx.catapult.animals.web;
 
 
-import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.BaseAnimal;
+import cx.catapult.animals.domain.Group;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +20,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
-public class CatsControllerIT {
+public class AnimalsControllerIT {
     @LocalServerPort
     private int port;
 
     private URL base;
 
-    private Cat cat = new Cat("Tom", "Bob cat");
+    private BaseAnimal cat = new BaseAnimal("Tom", "Cat", "Grey", "Bob cat", Group.MAMMALS);
 
     @Autowired
     private TestRestTemplate template;
 
     @BeforeEach
     public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/api/1/cats");
+        this.base = new URL("http://localhost:" + port + "/api/1/animals");
     }
 
     @Test
     public void createShouldWork() throws Exception {
-        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), cat, BaseAnimal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
@@ -53,13 +54,14 @@ public class CatsControllerIT {
 
     @Test
     public void getShouldWork() throws Exception {
-        Cat created = create("Test 1");
+        BaseAnimal created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
     }
 
-    Cat create(String name) {
-        Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
+    BaseAnimal create(String name) {
+        BaseAnimal created = template.postForObject(
+                base.toString(), new BaseAnimal(name, name, name, name, Group.MAMMALS), BaseAnimal.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;

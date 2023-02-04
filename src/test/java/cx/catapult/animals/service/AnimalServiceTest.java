@@ -1,21 +1,22 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.BaseAnimal;
+import cx.catapult.animals.domain.Group;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CatsServiceTest {
+public class AnimalServiceTest {
 
-    CatsService service = new CatsService();
-    Cat cat = new Cat("Tom", "Bob cat");
+    AnimalService service = new AnimalService();
+    BaseAnimal cat = new BaseAnimal("Tom", "Cat", "Grey", "Bob cat", Group.MAMMALS);
 
     @Test
     public void createShouldWork() throws Exception {
-        Cat thisCat = new Cat();
+        BaseAnimal thisCat = new BaseAnimal();
         thisCat.setName("Jerry");
         thisCat.setDescription("Mouse Cat");
-        Cat actual = service.create(thisCat);
+        BaseAnimal actual = service.create(thisCat);
         assertThat(actual).isEqualTo(thisCat);
         assertThat(actual.getName()).isEqualTo(thisCat.getName());
         assertThat(actual.getDescription()).isEqualTo(thisCat.getDescription());
@@ -31,7 +32,7 @@ public class CatsServiceTest {
     @Test
     public void getShouldWork() throws Exception {
         service.create(cat);
-        Cat actual = service.get(cat.getId());
+        BaseAnimal actual = service.get(cat.getId());
         assertThat(actual).isEqualTo(cat);
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
