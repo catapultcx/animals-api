@@ -11,6 +11,6 @@ public interface IAnimalService {
     BaseAnimal create(BaseAnimal animal);
 
     public BaseAnimal get(String id);
-
-
+    void update(BaseAnimal animal);
+    void delete(String id);
 }

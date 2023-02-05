@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -66,4 +69,21 @@ public class AnimalsControllerIT {
         assertThat(created.getName()).isEqualTo(name);
         return created;
     }
+    @Test
+    void updateShouldWork() {
+        BaseAnimal created = template.postForObject(
+                base.toString(), new BaseAnimal("id", "name", "name", "name", "name", Group.MAMMALS), BaseAnimal.class);
+
+        HttpEntity<BaseAnimal> requestUpdate = new HttpEntity<>(created);
+        ResponseEntity<Void> response = template.exchange(base.toString(), HttpMethod.PUT, requestUpdate, Void.class);
+        assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+    }
+
+    @Test
+    void deleteShouldWork() {
+        ResponseEntity<Void> response = template.exchange(base.toString() + "/testId", HttpMethod.DELETE, null, Void.class);
+        assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+    }
+
+
 }

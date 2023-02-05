@@ -40,4 +40,22 @@ public class AnimalService implements IAnimalService {
     public BaseAnimal get(String id) {
         return items.get(id);
     }
+
+    @Override
+    public void update(BaseAnimal animal) {
+        BaseAnimal baseAnimal = items.get(animal.getId());
+        baseAnimal.setName(animal.getName());
+        baseAnimal.setType(animal.getType());
+        baseAnimal.setColor(animal.getColor());
+        baseAnimal.setDescription(animal.getDescription());
+
+        items.put(animal.getId(), baseAnimal);
+    }
+
+    @Override
+    public void delete(String id) {
+        items.remove(id);
+    }
+
+
 }

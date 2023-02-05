@@ -35,4 +35,19 @@ public class AnimalController {
     create(@RequestBody BaseAnimal baseAnimal) {
         return service.create(baseAnimal);
     }
+
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    void
+    update(@RequestBody BaseAnimal baseAnimal) {
+        service.update(baseAnimal);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 }

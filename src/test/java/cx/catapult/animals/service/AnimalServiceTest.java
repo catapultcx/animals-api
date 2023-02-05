@@ -5,6 +5,8 @@ import cx.catapult.animals.domain.Group;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AnimalServiceTest {
 
@@ -37,5 +39,47 @@ public class AnimalServiceTest {
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        BaseAnimal thisCat = new BaseAnimal();
+        thisCat.setName("Jerry");
+        thisCat.setDescription("Mouse Cat");
+        thisCat.setType("Cat");
+        thisCat.setColor("Grey");
+        BaseAnimal actual = service.create(thisCat);
+
+        BaseAnimal catUpdate = new BaseAnimal();
+        catUpdate.setId(actual.getId());
+        catUpdate.setName("Tom");
+        catUpdate.setDescription("Mouse Cat");
+        catUpdate.setType("Cat");
+        catUpdate.setColor("Grey");
+        service.update(catUpdate);
+        BaseAnimal updatedCat = service.get(actual.getId());
+
+                assertThat(actual.getId()).isEqualTo(updatedCat.getId());
+        assertThat(catUpdate.getName()).isEqualTo(updatedCat.getName());
+        assertThat(catUpdate.getColor()).isEqualTo(updatedCat.getColor());
+        assertThat(catUpdate.getType()).isEqualTo(updatedCat.getType());
+        assertThat(updatedCat.getDescription()).isEqualTo(actual.getDescription());
+        assertThat(updatedCat.getGroup()).isEqualTo(actual.getGroup());
+    }
+
+    @Test
+    public void daleteShouldWork() throws Exception {
+        BaseAnimal thisCat = new BaseAnimal();
+        thisCat.setName("Jerry");
+        thisCat.setDescription("Mouse Cat");
+        thisCat.setType("Cat");
+        thisCat.setColor("Grey");
+        BaseAnimal actual = service.create(thisCat);
+
+        assertNotNull(service.get(actual.getId()));
+
+        service.delete(actual.getId());
+
+        assertNull(service.get(actual.getId()));
     }
 }
