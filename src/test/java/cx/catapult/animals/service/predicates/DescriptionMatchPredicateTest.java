@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DescriptionMatchPredicateTest {
     @Test
-    void desciptionTestShouldMatchOnNullValue() {
+    void descriptionTestShouldMatchOnNullValue() {
         DescriptionMatchPredicate descriptionMatchPredicate = new DescriptionMatchPredicate(null);
 
         BaseAnimal cat = new BaseAnimal("Tom", "Cat", "Grey", "Grey Big", Group.MAMMALS);
@@ -20,7 +20,7 @@ class DescriptionMatchPredicateTest {
     }
 
     @Test
-    void desciptionTestShouldMatchOnEmptyValue() {
+    void descriptionTestShouldMatchOnEmptyValue() {
         DescriptionMatchPredicate descriptionMatchPredicate = new DescriptionMatchPredicate("");
 
         BaseAnimal cat = new BaseAnimal("Tom", "Cat", "Grey", "Grey Big", Group.MAMMALS);
@@ -29,7 +29,7 @@ class DescriptionMatchPredicateTest {
     }
 
     @Test
-    void desciptionTestShouldMatch() {
+    void descriptionTestShouldMatch() {
         DescriptionMatchPredicate descriptionMatchPredicate = new DescriptionMatchPredicate("Grey Big");
 
         BaseAnimal cat = new BaseAnimal("Tom", "Cat", "Grey", "Grey Big", Group.MAMMALS);
@@ -38,7 +38,7 @@ class DescriptionMatchPredicateTest {
     }
 
     @Test
-    void desciptionTestShouldNotMatch() {
+    void descriptionTestShouldNotMatch() {
         DescriptionMatchPredicate descriptionMatchPredicate = new DescriptionMatchPredicate("Grey Red");
 
         BaseAnimal cat = new BaseAnimal("Tom", "Cat", "Grey", "Grey Big", Group.MAMMALS);
