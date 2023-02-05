@@ -1,12 +1,17 @@
 package cx.catapult.animals.service;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.service.predicates.ColorMatchPredicate;
+import cx.catapult.animals.service.predicates.DescriptionMatchPredicate;
+import cx.catapult.animals.service.predicates.NameMatchPredicate;
+import cx.catapult.animals.service.predicates.TypeMatchPredicate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 public class AnimalService implements IAnimalService {
 
@@ -56,6 +61,19 @@ public class AnimalService implements IAnimalService {
     public void delete(String id) {
         items.remove(id);
     }
+    
+    public List<BaseAnimal> filter(String name, String color, String type, String description) {
+        ColorMatchPredicate colorMatchPredicate = new ColorMatchPredicate(color);
+        NameMatchPredicate nameMatchPredicate = new NameMatchPredicate(name);
+        TypeMatchPredicate typeMatchPredicate = new TypeMatchPredicate(type);
+        DescriptionMatchPredicate descriptionMatchPredicate = new DescriptionMatchPredicate(description);
+        return this.items
+                .entrySet().stream()
+                .filter(nameMatchPredicate
+                        .and(colorMatchPredicate)
+                        .and(typeMatchPredicate)
+                        .and(descriptionMatchPredicate))
+                .map(Map.Entry::getValue).collect(Collectors.toList());
 
-
+    }
 }

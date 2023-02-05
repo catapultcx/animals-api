@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/1/animals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,5 +50,13 @@ public class AnimalController {
     public @ResponseBody
     void delete(@PathVariable String id) {
         service.delete(id);
+    }
+
+    @GetMapping(value = "/filter")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    List<BaseAnimal> filter(@RequestParam(required = false) String name, @RequestParam(required = false) String color
+            , @RequestParam(required = false) String type, @RequestParam(required = false) String description) {
+        return service.filter(name, color, type, description);
     }
 }

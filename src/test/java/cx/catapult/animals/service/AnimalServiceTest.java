@@ -4,9 +4,10 @@ import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Group;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AnimalServiceTest {
 
@@ -81,5 +82,50 @@ public class AnimalServiceTest {
         service.delete(actual.getId());
 
         assertNull(service.get(actual.getId()));
+    }
+
+    @Test
+    public void nameFilterShouldWork() throws Exception {
+        BaseAnimal thisCat = new BaseAnimal();
+        thisCat.setName("Jerry");
+        thisCat.setDescription("Mouse Cat");
+        thisCat.setType("Cat");
+        thisCat.setColor("Grey");
+        service.create(thisCat);
+        List<BaseAnimal> actual = service.filter("Jerry", null, null, null);
+
+        assertEquals(1, actual.size());
+
+        assertEquals("Jerry", actual.get(0).getName());
+    }
+
+    @Test
+    public void nameFilterShouldNotWork() throws Exception {
+        BaseAnimal thisCat = new BaseAnimal();
+        thisCat.setName("Jerry");
+        thisCat.setDescription("Mouse Cat");
+        thisCat.setType("Cat");
+        thisCat.setColor("Grey");
+        service.create(thisCat);
+        List<BaseAnimal> actual = service.filter("Tommy", null, null, null);
+
+        assertEquals(0, actual.size());
+    }
+
+
+    @Test
+    public void nameAndTypeFilterShouldWork() throws Exception {
+        BaseAnimal thisCat = new BaseAnimal();
+        thisCat.setName("Jerry");
+        thisCat.setDescription("Mouse Cat");
+        thisCat.setType("Cat");
+        thisCat.setColor("Grey");
+        service.create(thisCat);
+        List<BaseAnimal> actual = service.filter("Jerry", null, "Cat", null);
+
+        assertEquals(1, actual.size());
+
+        assertEquals("Jerry", actual.get(0).getName());
+        assertEquals("Cat", actual.get(0).getType());
     }
 }

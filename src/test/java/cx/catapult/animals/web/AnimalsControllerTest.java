@@ -1,5 +1,7 @@
 package cx.catapult.animals.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Group;
@@ -12,6 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -25,6 +30,8 @@ public class AnimalsControllerTest {
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
     private String updateJson = "{\"id\": \"Id1\", \"name\": \"Tom\", \"description\": \"Bob cat\" }";
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void all() throws Exception {
@@ -64,5 +71,19 @@ public class AnimalsControllerTest {
     public void delete() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/123").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void filter() throws Exception {
+       String response = mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/filter?name=Tom").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+       List<BaseAnimal> animals =  objectMapper.readValue(response, new TypeReference<List<BaseAnimal>>(){});
+       assertEquals(1, animals.size());
+    }
+
+    private String getAnimal(String name, String color, String type, String desc) throws JsonProcessingException {
+        BaseAnimal baseAnimal = new BaseAnimal(name, color, type, desc, Group.MAMMALS);
+        return objectMapper.writeValueAsString(baseAnimal);
     }
 }
