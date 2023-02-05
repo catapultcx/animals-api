@@ -14,9 +14,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.lang.reflect.ParameterizedType;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -85,5 +87,28 @@ public class AnimalsControllerIT {
         assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
     }
 
+    @Test
+    public void filterShouldWork() {
+        ResponseEntity<BaseAnimal[]> response = template.getForEntity(base.toString() + "/filter?name=Garfield", BaseAnimal[].class);
+        BaseAnimal[] body = response.getBody();
+        assertThat(body).isNotEmpty();
+        assertThat(body[0].getName()).isEqualTo("Garfield");
+    }
+
+    @Test
+    public void filterShouldWorkWithNoResults() {
+        ResponseEntity<BaseAnimal[]> response = template.getForEntity(base.toString() + "/filter?name=Garfield-1", BaseAnimal[].class);
+        BaseAnimal[] body = response.getBody();
+        assertThat(body).isEmpty();
+    }
+
+    @Test
+    public void filterShouldWorkWithNameAndDescription() {
+        ResponseEntity<BaseAnimal[]> response = template.getForEntity(base.toString() + "/filter?name=Garfield&description=Lazy cat", BaseAnimal[].class);
+        BaseAnimal[] body = response.getBody();
+        assertThat(body).isNotEmpty();
+        assertThat(body[0].getName()).isEqualTo("Garfield");
+        assertThat(body[0].getDescription()).isEqualTo("Lazy cat");
+    }
 
 }

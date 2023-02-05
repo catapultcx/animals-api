@@ -74,12 +74,24 @@ public class AnimalsControllerTest {
     }
 
     @Test
-    public void filter() throws Exception {
-       String response = mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/filter?name=Tom").contentType(MediaType.APPLICATION_JSON_VALUE))
+    public void filterWithName() throws Exception {
+       String response = mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/filter?name=Garfield").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
        List<BaseAnimal> animals =  objectMapper.readValue(response, new TypeReference<List<BaseAnimal>>(){});
        assertEquals(1, animals.size());
+       assertEquals("Garfield", animals.get(0).getName());
+    }
+
+    @Test
+    public void filterWithNameAndType() throws Exception {
+        String response = mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/filter?name=Garfield&type=Cat").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<BaseAnimal> animals =  objectMapper.readValue(response, new TypeReference<List<BaseAnimal>>(){});
+        assertEquals(1, animals.size());
+        assertEquals("Garfield", animals.get(0).getName());
+        assertEquals("Cat", animals.get(0).getType());
     }
 
     private String getAnimal(String name, String color, String type, String desc) throws JsonProcessingException {
