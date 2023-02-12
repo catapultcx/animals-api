@@ -7,9 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AnimalServiceTest {
@@ -78,5 +79,29 @@ public class AnimalServiceTest {
 
         service.delete(actual.getId());
         assertNull(service.get(actual.getId()));
+    }
+
+    @Test
+    public void filterByNameShouldWork() {
+        service.create(animal);
+        List<Animal> actual = service.filter("Jerry", null, null, null);
+        assertEquals(1, actual.size());
+        assertThat(actual.get(0).getName()).isEqualTo("Jerry");
+    }
+
+    @Test
+    public void filterByNameShouldReturnEmptyList() {
+        service.create(animal);
+        List<Animal> actual = service.filter("Tom", null, null, null);
+        assertEquals(0, actual.size());
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void filterByNameAndColourShouldWork() {
+        service.create(animal);
+        List<Animal> actual = service.filter("Jerry", null, "Grey", null);
+        assertEquals(1, actual.size());
+        assertThat(actual.get(0).getType()).isEqualTo("Mouse");
     }
 }

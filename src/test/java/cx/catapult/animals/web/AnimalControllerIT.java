@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -80,6 +82,38 @@ public class AnimalControllerIT {
         ResponseEntity<Void> response = template.exchange(base.toString() + "/" + createdAnimal.getId(),
                 HttpMethod.DELETE, null, Void.class);
         assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+    }
+
+    @Test
+    public void filterShouldWork() {
+        ResponseEntity<List<Animal>> responseEntity =
+                template.exchange(base.toString() + "/filter?name=Tiger",
+                        HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+        List<Animal> body = responseEntity.getBody()
+                .stream().toList();
+        assertThat(body).isNotEmpty();
+        assertThat(body.get(0).getName()).isEqualTo("Tiger");
+    }
+
+    @Test
+    public void filterShouldReturnEmptyAnimalListForWrongFilterValues() {
+        ResponseEntity<List<Animal>> responseEntity =
+                template.exchange(base.toString() + "/filter?name=Simpsons",
+                        HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+        List<Animal> body = responseEntity.getBody()
+                .stream().toList();
+        assertThat(body).isEmpty();
+    }
+
+    @Test
+    public void filterShouldWorkWithNameAndType() {
+        ResponseEntity<List<Animal>> responseEntity =
+                template.exchange(base.toString() + "/filter?name=Tiger&type=Tiger",
+                        HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+        List<Animal> body = responseEntity.getBody()
+                .stream().toList();
+        assertThat(body).isNotEmpty();
+        assertThat(body.get(0).getColour()).isEqualTo("Yellow and Black Stripes");
     }
 
     Animal create(String name, String description, String colour, String type) {

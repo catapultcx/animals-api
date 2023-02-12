@@ -3,6 +3,7 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.Animal;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface IService {
     Collection<Animal> all();
@@ -14,4 +15,6 @@ public interface IService {
     Animal update(Animal animal);
 
     void delete(String id);
+
+    List<Animal> filter(String name, String description, String colour, String type);
 }
