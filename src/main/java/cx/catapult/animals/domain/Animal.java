@@ -1,19 +1,8 @@
 package cx.catapult.animals.domain;
 
-public interface Animal {
+public class Animal extends BaseAnimal {
 
-    String getId();
-
-    void setId(String id);
-
-    String getName();
-
-    void setName(String name);
-
-    String getDescription();
-
-    void setDescription(String description);
-
-    Group getGroup();
-
+    public Animal(String name, String description, String colour, String type) {
+        super(name, description, colour, type);
+    }
 }

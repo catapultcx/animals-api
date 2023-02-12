@@ -1,57 +1,31 @@
 package cx.catapult.animals.domain;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.io.Serializable;
 
-public class BaseAnimal implements Animal, Serializable {
+@Data
+@Builder
+public class BaseAnimal implements Serializable {
 
     private String id;
     private String name;
     private String description;
+    private String colour;
+    private String type;
     private Group group;
 
-    public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+    public BaseAnimal(String name, String description, String colour, String type) {
+        this(null, name, description, colour, type, Type.valueOf(type.toUpperCase()).getGroup());
     }
 
-    public BaseAnimal(String id, String name, String description, Group group) {
+    public BaseAnimal(String id, String name, String description, String colour, String type, Group group) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.colour = colour;
+        this.type = type;
         this.group = group;
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public Group getGroup() {
-        return this.group;
     }
 }
