@@ -4,9 +4,12 @@ package cx.catapult.animals.web;
 import cx.catapult.animals.domain.Animal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,12 +29,8 @@ public class AnimalControllerIT {
 
     private Animal animal = new Animal("Tom", "Bob cat", "Black", "Cat");
 
+    @Autowired
     private TestRestTemplate template;
-
-    public AnimalControllerIT(int port, TestRestTemplate template) {
-        this.port = port;
-        this.template = template;
-    }
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -59,6 +58,20 @@ public class AnimalControllerIT {
         Animal created = create("Test 1", "Sample Test", "Black", "Cat");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void updateShouldWork() {
+        Animal createdAnimal = create("Test 1", "Sample Test", "Black", "Cat");
+        createdAnimal.setColour("Black");
+        HttpEntity<Animal> updateAnimal = new HttpEntity<>(createdAnimal);
+        ResponseEntity<Animal> response = template.exchange(base.toString(), HttpMethod.PUT, updateAnimal, Animal.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getId()).isNotEmpty();
+        assertThat(response.getBody().getName()).isEqualTo(createdAnimal.getName());
+        assertThat(response.getBody().getDescription()).isEqualTo(createdAnimal.getDescription());
+        assertThat(response.getBody().getGroup()).isEqualTo(createdAnimal.getGroup());
     }
 
     Animal create(String name, String description, String colour, String type) {

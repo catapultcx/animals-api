@@ -51,4 +51,21 @@ public class AnimalServiceTest {
         assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
         assertThat(actual.getGroup()).isEqualTo(animal.getGroup());
     }
+
+    @Test
+    public void updateShouldWork() {
+        //Arrange
+        Animal createdAnimal =  service.create(animal);
+        createdAnimal.setName("Tom");
+        createdAnimal.setDescription("Fluffy Cat");
+        createdAnimal.setColour("Black");
+        createdAnimal.setColour("Cat");
+        //Act
+        Animal actual = service.update(createdAnimal);
+        //Assert
+        assertThat(actual).isEqualTo(createdAnimal);
+        assertThat(actual.getName()).isEqualTo(createdAnimal.getName());
+        assertThat(actual.getDescription()).isEqualTo(createdAnimal.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(createdAnimal.getGroup());
+    }
 }

@@ -1,6 +1,7 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.Type;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -40,5 +41,17 @@ public class AnimalService implements IService {
     @Override
     public Animal get(String id) {
         return items.get(id);
+    }
+
+    @Override
+    public Animal update(Animal updateAnimal) {
+        Animal animal = items.get(updateAnimal.getId());
+        animal.setName(updateAnimal.getName());
+        animal.setDescription(updateAnimal.getDescription());
+        animal.setColour(updateAnimal.getColour());
+        animal.setType(updateAnimal.getType());
+        animal.setGroup(Type.valueOf(updateAnimal.getType().toUpperCase()).getGroup());
+        items.put(updateAnimal.getId(), animal);
+        return animal;
     }
 }
