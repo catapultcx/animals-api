@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
 public class AnimalServiceTest {
@@ -67,5 +69,14 @@ public class AnimalServiceTest {
         assertThat(actual.getName()).isEqualTo(createdAnimal.getName());
         assertThat(actual.getDescription()).isEqualTo(createdAnimal.getDescription());
         assertThat(actual.getGroup()).isEqualTo(createdAnimal.getGroup());
+    }
+
+    @Test
+    public void deleteShouldWork() {
+        Animal actual = service.create(animal);
+        assertNotNull(service.get(actual.getId()));
+
+        service.delete(actual.getId());
+        assertNull(service.get(actual.getId()));
     }
 }

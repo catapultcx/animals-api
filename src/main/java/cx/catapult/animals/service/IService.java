@@ -12,4 +12,6 @@ public interface IService {
     Animal get(String id);
 
     Animal update(Animal animal);
+
+    void delete(String id);
 }

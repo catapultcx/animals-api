@@ -57,7 +57,15 @@ public class AnimalControllerTest {
         Animal updateAnimal = objectMapper.readValue(content, Animal.class);
         updateAnimal.setColour("Black");
         mvc.perform(MockMvcRequestBuilders.put("/api/1/animals")
-                        .content(objectMapper.writeValueAsString(updateAnimal)).contentType(MediaType.APPLICATION_JSON_VALUE))
+                        .content(objectMapper.writeValueAsString(updateAnimal))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/123").content(json)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 }

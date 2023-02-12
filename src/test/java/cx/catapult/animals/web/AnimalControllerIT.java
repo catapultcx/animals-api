@@ -74,6 +74,14 @@ public class AnimalControllerIT {
         assertThat(response.getBody().getGroup()).isEqualTo(createdAnimal.getGroup());
     }
 
+    @Test
+    void deleteShouldWork() {
+        Animal createdAnimal = create("Test 1", "Sample Test", "Black", "Cat");
+        ResponseEntity<Void> response = template.exchange(base.toString() + "/" + createdAnimal.getId(),
+                HttpMethod.DELETE, null, Void.class);
+        assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+    }
+
     Animal create(String name, String description, String colour, String type) {
         Animal created = template.postForObject(base.toString(), new Animal(name, description, colour, type), Animal.class);
         assertThat(created.getId()).isNotEmpty();

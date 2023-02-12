@@ -45,4 +45,11 @@ public class AnimalController {
     update(@RequestBody Animal animal) {
         return service.update(animal);
     }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 }

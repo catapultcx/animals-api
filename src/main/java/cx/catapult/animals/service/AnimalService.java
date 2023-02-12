@@ -54,4 +54,9 @@ public class AnimalService implements IService {
         items.put(updateAnimal.getId(), animal);
         return animal;
     }
+
+    @Override
+    public void delete(String id) {
+        items.remove(id);
+    }
 }
