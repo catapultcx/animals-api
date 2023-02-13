@@ -8,12 +8,18 @@ public interface Animal {
 
     String getName();
 
-    void setName(String name);
+    void setName(String color);
+
+	String getColor();
+
+	void setColor(String color);
 
     String getDescription();
 
     void setDescription(String description);
 
     Group getGroup();
+
+	String getType();
 
 }
