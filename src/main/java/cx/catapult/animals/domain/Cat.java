@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Deprecated()
+@Deprecated
 public class Cat {
 
     private Animal animal;
