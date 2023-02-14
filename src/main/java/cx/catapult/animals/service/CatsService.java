@@ -2,7 +2,8 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -11,30 +12,27 @@ import java.util.Collection;
 @Service
 @Deprecated
 public class CatsService {
-    private final AnimalService animalService =
-            new AnimalService(Animal.AnimalType.CAT);
 
-    public CatsService() {
+    private final AnimalService animalService;
+
+    @Autowired
+    public CatsService(@Qualifier("cats") AnimalService animalService) {
+        this.animalService = animalService;
     }
 
     @PostConstruct
     public void initialize() {
-        try {
-            this.animalService.create(Animal.from("cat", "Tom", "Friend of Jerry"));
-            this.animalService.create(Animal.from("cat", "Jerry", "Not really a cat"));
-            this.animalService.create(Animal.from("cat", "Bili", "Furry cat"));
-            this.animalService.create(Animal.from("cat", "Smelly", "Cat with friends"));
-            this.animalService.create(Animal.from("cat", "Tiger", "Large cat"));
-            this.animalService.create(Animal.from("cat", "Tigger", "Not a scary cat"));
-            this.animalService.create(Animal.from("cat", "Garfield", "Lazy cat"));
-        } catch (UnsupportedAnimalTypeException e) {
-            throw new RuntimeException(e);
-        }
-
+        this.animalService.create(new Animal("Tom", "Friend of Jerry"));
+        this.animalService.create(new Animal("Jerry", "Not really a cat"));
+        this.animalService.create(new Animal("Bili", "Furry cat"));
+        this.animalService.create(new Animal("Smelly", "Cat with friends"));
+        this.animalService.create(new Animal("Tiger", "Large cat"));
+        this.animalService.create(new Animal("Tigger", "Not a scary cat"));
+        this.animalService.create(new Animal("Garfield", "Lazy cat"));
     }
 
-    public Cat create(Cat cat) throws UnsupportedAnimalTypeException {
-        Animal animal = Animal.from("cat", cat.getName(), cat.getDescription());
+    public Cat create(Cat cat) {
+        Animal animal = new Animal(cat.getName(), cat.getDescription());
         cat.setAnimal(this.animalService.create(animal));
         return cat;
     }

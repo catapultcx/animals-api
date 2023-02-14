@@ -11,11 +11,11 @@ public class Cat {
     private Animal animal;
 
     public Cat() {
-        this.animal = new Animal(Animal.AnimalType.CAT, "", "");
+        this.animal = new Animal("cat", "", "");
     }
 
     public Cat(String name, String description) {
-        this.animal = new Animal(Animal.AnimalType.CAT, name, description);
+        this.animal = new Animal("cat", name, description);
     }
 
     public Cat(Animal animal) {

@@ -1,60 +1,29 @@
 package cx.catapult.animals.domain;
 
-import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Animal implements Serializable {
-    public static Animal from(String type, String name, String description) throws UnsupportedAnimalTypeException {
-        AnimalType animalType;
-        try {
-            animalType = AnimalType.valueOf(type.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new UnsupportedAnimalTypeException(type);
-        }
-
-        return new Animal(animalType, name, description);
-
-    }
-    public enum AnimalType {
-        CAT(Group.MAMMALS),
-        DOG(Group.MAMMALS),
-        OWL(Group.BIRD),
-        PARROT(Group.BIRD),
-        SPIDER(Group.INVERTEBRATE),
-        TUNA(Group.FISH),
-        SALMON(Group.FISH),
-        FROG(Group.AMPHIBIAN),
-        IGUANA(Group.REPTILES);
-
-
-
-        private final Group group;
-        AnimalType(Group group) {
-            this.group = group;
-        }
-
-        public Group getGroup() {
-            return group;
-        }
-
-    }
-
 
     private String id;
     private String name;
     private String description;
-    private AnimalType type;
+    private String type;
+    private Group group;
 
-    public Animal(AnimalType type, String name, String description) {
+    public Animal(String name, String description) {
+        this(null, null, name, description);
+    }
+
+    public Animal(String type, String name, String description) {
         this(null, type, name, description);
     }
     public Animal() {
         this(null, null, "", "");
     }
 
-    public Animal(String id, AnimalType type, String name, String description) {
+    public Animal(String id, String type, String name, String description) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -62,10 +31,10 @@ public class Animal implements Serializable {
     }
 
     public String getType() {
-        return this.type.name();
+        return this.type;
     }
 
-    public void setType(AnimalType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -94,7 +63,11 @@ public class Animal implements Serializable {
     }
 
     public Group getGroup() {
-        return this.type.getGroup();
+        return this.group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     @Override

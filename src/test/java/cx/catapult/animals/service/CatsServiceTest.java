@@ -1,13 +1,14 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.Group;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
 
-    CatsService service = new CatsService();
+    CatsService service = new CatsService(new AnimalService("cat", Group.MAMMALS));
     Cat cat = new Cat("Tom", "Bob cat");
 
     @Test

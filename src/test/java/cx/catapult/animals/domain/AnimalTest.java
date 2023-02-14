@@ -1,29 +1,22 @@
 package cx.catapult.animals.domain;
 
-import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
+import cx.catapult.animals.service.AnimalService;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class AnimalTest {
 
+    AnimalService catsService = new AnimalService("cat", Group.MAMMALS);
     @Test
-    void animal_whenASupportedTypeProvided_shouldCreateAnimalInstance() throws UnsupportedAnimalTypeException {
-        Animal animal = Animal.from("cat", "Tom", "Tom and jerry");
-        assertThat(animal.getType()).isEqualTo("CAT");
+    void animal_whenASupportedTypeProvided_shouldCreateAnimalInstance() {
+        Animal animal = catsService.create(new Animal("Tom", "Tom and jerry"));
+        assertThat(animal.getType()).isEqualTo("cat");
         assertThat(animal.getName()).isEqualTo("Tom");
         assertThat(animal.getDescription()).isEqualTo("Tom and jerry");
         assertThat(animal.getGroup()).isEqualTo(Group.MAMMALS);
-    }
-
-    @Test
-    void animal_whenAnUnsupportedTypeProvided_shouldThrowException() {
-        assertThatExceptionOfType(UnsupportedAnimalTypeException.class)
-                .isThrownBy(() -> Animal.from("whale", "Tom", "Tom and jerry"))
-                .withMessage("Animal type whale is not supported.");
     }
 
     @Test
@@ -34,7 +27,7 @@ class AnimalTest {
         assertThat(animal).isNotNull();
 
         animal.setId(id);
-        animal.setType(Animal.AnimalType.PARROT);
+        animal.setType("PARROT");
         animal.setName("Carrot");
         animal.setDescription("Carrot Description");
 
@@ -51,10 +44,10 @@ class AnimalTest {
     }
 
     @Test
-    void animal_whenComparedWithOtherObjects_shouldWork() throws UnsupportedAnimalTypeException {
-        Animal animal = Animal.from("cat", "Tom", "Jerry");
-        Animal same = Animal.from("cat", "Tom", "Jerry");
-        Animal different = Animal.from("cat", "Tomi", "Jerry");
+    void animal_whenComparedWithOtherObjects_shouldWork() {
+        Animal animal = new Animal("cat", "Tom", "Jerry");
+        Animal same = new Animal("cat", "Tom", "Jerry");
+        Animal different = new Animal("cat", "Tomi", "Jerry");
 
         assertThat(animal).isEqualTo(same);
         assertThat(animal).isNotEqualTo(different);
