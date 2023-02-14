@@ -2,9 +2,11 @@ package cx.catapult.animals.domain;
 
 import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
 
-public interface Animal {
+import java.io.Serializable;
+import java.util.Objects;
 
-    static Animal from(String type, String name, String description) throws UnsupportedAnimalTypeException {
+public class Animal implements Serializable {
+    public static Animal from(String type, String name, String description) throws UnsupportedAnimalTypeException {
         AnimalType animalType;
         try {
             animalType = AnimalType.valueOf(type.toUpperCase());
@@ -12,10 +14,10 @@ public interface Animal {
             throw new UnsupportedAnimalTypeException(type);
         }
 
-        return new BaseAnimal(animalType, name, description);
+        return new Animal(animalType, name, description);
 
     }
-    enum AnimalType {
+    public enum AnimalType {
         CAT(Group.MAMMALS),
         DOG(Group.MAMMALS),
         OWL(Group.BIRD),
@@ -40,21 +42,84 @@ public interface Animal {
     }
 
 
-    String getType();
+    private String id;
+    private String name;
+    private String description;
+    private AnimalType type;
 
-    String getId();
+    public Animal(AnimalType type, String name, String description) {
+        this(null, type, name, description);
+    }
+    public Animal() {
+        this(null, null, "", "");
+    }
 
-    void setId(String id);
+    public Animal(String id, AnimalType type, String name, String description) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.description = description;
+    }
 
-    String getName();
+    public String getType() {
+        return this.type.name();
+    }
 
-    void setName(String name);
+    public void setType(AnimalType type) {
+        this.type = type;
+    }
 
-    String getDescription();
+    public String getId() {
+        return this.id;
+    }
 
-    void setDescription(String description);
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    Group getGroup();
+    public String getName() {
+        return this.name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Group getGroup() {
+        return this.type.getGroup();
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id:'" + id + '\'' +
+                ", name:'" + name + '\'' +
+                ", description:'" + description + '\'' +
+                ", type:" + type +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Animal)) return false;
+        Animal animal = (Animal) o;
+        return Objects.equals(getId(), animal.getId())
+                && Objects.equals(getName(), animal.getName())
+                && Objects.equals(getDescription(), animal.getDescription())
+                && Objects.equals(getType(), animal.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getType());
+    }
 }

@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
 import cx.catapult.animals.service.CatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
+@Deprecated
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
 
@@ -32,7 +34,7 @@ public class CatsController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     Cat
-    create(@RequestBody Cat cat) {
+    create(@RequestBody Cat cat) throws UnsupportedAnimalTypeException {
         return service.create(cat);
     }
 }
