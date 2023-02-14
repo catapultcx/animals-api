@@ -4,6 +4,7 @@ import cx.catapult.animals.service.AnimalService;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -45,9 +46,13 @@ class AnimalTest {
 
     @Test
     void animal_whenComparedWithOtherObjects_shouldWork() {
-        Animal animal = new Animal("cat", "Tom", "Jerry");
-        Animal same = new Animal("cat", "Tom", "Jerry");
-        Animal different = new Animal("cat", "Tomi", "Jerry");
+        Animal animal = new Animal("Tom", "Jerry");
+        Animal same = new Animal("Tom", "Jerry");
+        Animal different = new Animal("Tomi", "Jerry");
+        Stream.of(animal, same, different).forEach(it -> {
+            it.setGroup(Group.MAMMALS);
+            it.setType("cat");
+        });
 
         assertThat(animal).isEqualTo(same);
         assertThat(animal).isNotEqualTo(different);

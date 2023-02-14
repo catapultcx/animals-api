@@ -13,21 +13,19 @@ public class Animal implements Serializable {
     private Group group;
 
     public Animal(String name, String description) {
-        this(null, null, name, description);
+        this(null, null, name, description, null);
     }
 
-    public Animal(String type, String name, String description) {
-        this(null, type, name, description);
-    }
     public Animal() {
-        this(null, null, "", "");
+        this(null, null, "", "", null);
     }
 
-    public Animal(String id, String type, String name, String description) {
+    public Animal(String id, String type, String name, String description, Group group) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.description = description;
+        this.group = group;
     }
 
     public String getType() {

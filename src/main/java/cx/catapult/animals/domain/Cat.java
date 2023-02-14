@@ -11,11 +11,15 @@ public class Cat {
     private Animal animal;
 
     public Cat() {
-        this.animal = new Animal("cat", "", "");
+        this.animal = new Animal("", "");
+        this.animal.setType("cat");
+        this.animal.setGroup(Group.MAMMALS);
     }
 
     public Cat(String name, String description) {
-        this.animal = new Animal("cat", name, description);
+        this.animal = new Animal(name, description);
+        this.animal.setType("cat");
+        this.animal.setGroup(Group.MAMMALS);
     }
 
     public Cat(Animal animal) {
