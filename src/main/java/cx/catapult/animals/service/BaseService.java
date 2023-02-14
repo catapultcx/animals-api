@@ -8,6 +8,8 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     private HashMap<String, T> items = new HashMap<>();
 
+
+
     @Override
     public Collection<T> all() {
         return items.values();
