@@ -3,6 +3,7 @@ package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Type;
+import cx.catapult.animals.exception.ErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,6 +65,13 @@ public class AnimalControllerIT {
     }
 
     @Test
+    public void getShouldFail() throws Exception {
+        ResponseEntity<ErrorResponse> response = template.getForEntity(base.toString() + "/123", ErrorResponse.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Animal not found for id: 123");
+    }
+
+    @Test
     public void updateShouldWork() throws Exception {
         ResponseEntity<Animal> createResponse = template.postForEntity(base.toString(), animal, Animal.class);
         Animal updatedAnimal = createResponse.getBody();
@@ -85,10 +91,33 @@ public class AnimalControllerIT {
     }
 
     @Test
+    public void updateShouldFail() throws Exception {
+        ResponseEntity<Animal> createResponse = template.postForEntity(base.toString(), animal, Animal.class);
+        Animal updatedAnimal = createResponse.getBody();
+        updatedAnimal.setId("non-existing-id");
+        updatedAnimal.setName(animal.getName()+"-updated");
+        updatedAnimal.setDescription(animal.getDescription()+"-updated");
+        updatedAnimal.setColour(animal.getColour()+"-updated");
+        updatedAnimal.setType(Type.get("reptiles"));
+
+        HttpEntity<Animal> requestEntity = new HttpEntity<>(updatedAnimal);
+        ResponseEntity<ErrorResponse> updateResponse = template.exchange(base.toString(), HttpMethod.PUT, requestEntity, ErrorResponse.class);
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(updateResponse.getBody().getMessage()).isEqualTo("Animal not found for id: non-existing-id");
+    }
+
+    @Test
     public void deleteShouldWork() throws Exception {
         Animal created = create("Test 1");
         ResponseEntity<Void> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void deleteShouldFail() throws Exception {
+        ResponseEntity<ErrorResponse> response = template.exchange(base.toString() + "/123", HttpMethod.DELETE, HttpEntity.EMPTY, ErrorResponse.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).isEqualTo("Animal not found for id: 123");
     }
 
     @Test

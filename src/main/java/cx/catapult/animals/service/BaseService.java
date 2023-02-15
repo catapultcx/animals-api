@@ -2,6 +2,7 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.IAnimal;
 import cx.catapult.animals.domain.Type;
+import cx.catapult.animals.exception.OperationNotAllowedException;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.*;
@@ -20,7 +21,11 @@ public abstract class BaseService<T extends IAnimal> implements IService<T> {
 
     @Override
     public T get(String id) {
-        return items.get(id);
+        if (items.containsKey(id)) {
+            return items.get(id);
+        } else {
+            throw new OperationNotAllowedException(String.format("Animal not found for id: %s", id));
+        }
     }
 
     @Override
@@ -34,6 +39,8 @@ public abstract class BaseService<T extends IAnimal> implements IService<T> {
     @Override
     public T update(T animal) {
         T existingAnimal = items.get(animal.getId());
+        if (existingAnimal == null) throw new OperationNotAllowedException(String.format("Animal not found for id: %s", animal.getId()));
+
         existingAnimal.setName(animal.getName());
         existingAnimal.setDescription(animal.getDescription());
         existingAnimal.setColour(animal.getColour());
@@ -43,7 +50,11 @@ public abstract class BaseService<T extends IAnimal> implements IService<T> {
 
     @Override
     public void delete(String id) {
-        items.remove(id);
+        if (items.containsKey(id)) {
+            items.remove(id);
+        } else {
+            throw new OperationNotAllowedException(String.format("Animal not found for id: %s", id));
+        }
     }
 
     @Override

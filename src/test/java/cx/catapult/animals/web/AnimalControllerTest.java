@@ -38,9 +38,10 @@ public class AnimalControllerTest {
     }
 
     @Test
-    public void get() throws Exception {
+    public void getShouldFail() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/123").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Animal not found for id: 123"));
     }
 
     @Test
@@ -62,9 +63,10 @@ public class AnimalControllerTest {
     }
 
     @Test
-    public void deleteShouldWork() throws Exception {
+    public void deleteShouldFail() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/123").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Animal not found for id: 123"));
     }
 
     @Test

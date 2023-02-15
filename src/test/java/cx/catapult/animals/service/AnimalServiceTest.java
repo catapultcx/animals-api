@@ -2,12 +2,13 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Type;
+import cx.catapult.animals.exception.OperationNotAllowedException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AnimalServiceTest {
 
@@ -47,6 +48,15 @@ public class AnimalServiceTest {
     }
 
     @Test
+    public void getShouldFail() throws Exception {
+        Exception exception = assertThrows(OperationNotAllowedException.class, () -> {
+            service.create(animal);
+            service.get(animal.getId()+"-invalid");
+        });
+        assertTrue(exception.getMessage().contains(String.format("Animal not found for id: %s", animal.getId()+"-invalid")));
+    }
+
+    @Test
     public void updateShouldWork() throws Exception {
         service.create(animal);
         animal.setName("Jerry updated");
@@ -62,12 +72,38 @@ public class AnimalServiceTest {
     }
 
     @Test
+    public void updateShouldFail() throws Exception {
+        service.create(animal);
+        animal.setId("invalid-id");
+        animal.setName("Jerry updated");
+        animal.setDescription("Mouse Cat updated");
+        animal.setColour("black");
+        animal.setType(Type.get("invertebrate"));
+
+        Exception exception = assertThrows(OperationNotAllowedException.class, () -> {
+            service.update(animal);
+        });
+        assertTrue(exception.getMessage().contains(String.format("Animal not found for id: %s", "invalid-id")));
+    }
+
+    @Test
     public void deleteShouldWork() throws Exception {
         service.create(animal);
         assertNotNull(animal.getId());
 
         service.delete(animal.getId());
         assertThat(service.all().size()).isEqualTo(0);
+    }
+
+    @Test
+    public void deleteShouldFail() throws Exception {
+        service.create(animal);
+        assertNotNull(animal.getId());
+
+        Exception exception = assertThrows(OperationNotAllowedException.class, () -> {
+            service.delete("invalid-id");
+        });
+        assertTrue(exception.getMessage().contains("Animal not found for id: invalid-id"));
     }
 
     @Test
