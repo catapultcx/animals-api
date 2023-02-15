@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -71,6 +72,41 @@ public class AnimalsControllerIT {
     public void animalController_whenDeleteIsCalledForANotExistingItem_shouldFail() {
         ResponseEntity<Void> response = template.exchange(base.toString() + "/error", HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
         assertThat(response.getStatusCode()).isGreaterThanOrEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void animalController_whenUpdateIsCalled_shouldWork() {
+        Animal created = create("Test To Delete");
+        created.setName("Test to Update");
+        ResponseEntity<Animal> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.PUT, new HttpEntity<>(created), Animal.class);
+        assertThat(response.getStatusCode()).isBetween(HttpStatus.OK, HttpStatus.NO_CONTENT);
+        assertThat(Objects.requireNonNull(response.getBody()).getName()).isEqualTo("Test to Update");
+    }
+
+    @Test
+    public void animalController_whenUpdateIsCalledWithAnObjectWithDifferentId_shouldFail() {
+        Animal created = create("Test To Delete");
+        created.setName("Test to Update");
+        String realId = created.getId();
+        created.setId("wrong_id_value");
+        ResponseEntity<Animal> response = template.exchange(base.toString() + "/" + realId, HttpMethod.PUT, new HttpEntity<>(created), Animal.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void animalController_whenUpdateIsCalledWithAnInvalidAnimal_shouldFail() {
+        Animal created = create("Test To Delete");
+        created.setName(null);
+        ResponseEntity<Animal> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.PUT, new HttpEntity<>(created), Animal.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void animalController_whenUpdateIsCalledWithAnInvalidObject_shouldFail() {
+        Animal created = create("Test To Delete");
+        created.setName(null);
+        ResponseEntity<String> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.PUT, HttpEntity.EMPTY, String.class);
+        assertThat(response.getStatusCode()).isGreaterThan(HttpStatus.BAD_REQUEST);
     }
 
     Animal create(String name) {

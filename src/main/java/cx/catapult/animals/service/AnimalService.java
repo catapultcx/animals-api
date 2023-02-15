@@ -41,4 +41,11 @@ public class AnimalService {
         }
         return false;
     }
+
+    public Animal update(String id, Animal animal) {
+        if(!items.containsKey(id))
+            return null;
+        items.put(id, animal);
+        return items.get(id);
+    }
 }

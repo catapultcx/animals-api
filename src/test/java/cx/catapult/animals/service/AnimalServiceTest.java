@@ -112,4 +112,46 @@ public class AnimalServiceTest {
         boolean success = service.delete(animal.getId());
         assertThat(success).isFalse();
     }
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "cats,Tom,cat,MAMMALS,blue",
+            "dogs,Pluto,dog,MAMMALS,blue",
+            "parrots,Beethoven,parrot,BIRD,blue",
+            "frogs,MrGreen,frog,AMPHIBIAN,blue",
+            "iguanas,Shifter,iguana,REPTILES,blue",
+            "tunas,Tuna,tuna,FISH,blue",
+            "salmons,Salomon,salmon,FISH,blue",
+            "spiders,MissHairy,spider,INVERTEBRATE,blue"})
+    public void animalService_whenCalledForUpdate_shouldUpdate(String qualifier, String name, String type, Group group, String colorString) {
+        Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
+        AnimalService service = context.getBean(qualifier, AnimalService.class);
+        assertThat(service).isNotNull();
+
+        service.create(animal);
+        Animal result = service.update(animal.getId(),animal);
+        assertThat(result).isNotNull();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "cats,Tom,cat,MAMMALS,blue",
+            "dogs,Pluto,dog,MAMMALS,blue",
+            "parrots,Beethoven,parrot,BIRD,blue",
+            "frogs,MrGreen,frog,AMPHIBIAN,blue",
+            "iguanas,Shifter,iguana,REPTILES,blue",
+            "tunas,Tuna,tuna,FISH,blue",
+            "salmons,Salomon,salmon,FISH,blue",
+            "spiders,MissHairy,spider,INVERTEBRATE,blue"})
+    public void animalService_whenCalledForANotExistingAnimal_shouldReturnNull(String qualifier, String name, String type, Group group, String colorString) {
+        Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
+        String notExist = "not_exist";
+        animal.setId(notExist);
+        AnimalService service = context.getBean(qualifier, AnimalService.class);
+        assertThat(service).isNotNull();
+
+        Animal result = service.update(notExist,animal);
+        assertThat(result).isNull();
+    }
 }

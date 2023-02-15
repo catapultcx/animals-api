@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.exceptions.IdMismatchException;
 import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
 import cx.catapult.animals.service.AnimalService;
 import org.springframework.beans.BeansException;
@@ -46,6 +47,20 @@ public class AnimalController implements ApplicationContextAware {
     public @ResponseBody
     Animal create(@PathVariable String qualifier, @Valid @RequestBody Animal animal) {
         return getAnimalService(qualifier).create(animal);
+    }
+
+    @PutMapping(value = "/{qualifier}/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody
+    ResponseEntity<?> update(@PathVariable String qualifier, @PathVariable String id, @Valid @RequestBody Animal animal) {
+        if(!id.equals(animal.getId()))
+        {
+            throw new IdMismatchException();
+        }
+        Animal updated = getAnimalService(qualifier).update(id, animal);
+        if(updated == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @Override

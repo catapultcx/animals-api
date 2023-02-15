@@ -53,9 +53,26 @@ public class AnimalsControllerTest {
     }
 
     @Test
+    public void animalController_whenPutRequestSent_shouldUpdate() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.post("/api/2/cats")
+                        .content(jsonWithColor)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String id = JsonPath.read(result, "$.id");
+
+        mvc.perform(MockMvcRequestBuilders.put("/api/2/cats/"+ id).content(result)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
     public void animalController_whenColorIsNull_createShouldFail() throws Exception {
 
-        mvc.perform(MockMvcRequestBuilders.post("/api/2/cats/").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(MockMvcRequestBuilders.post("/api/2/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
     }
 
