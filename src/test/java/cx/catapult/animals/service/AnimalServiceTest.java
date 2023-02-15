@@ -1,6 +1,7 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.Type;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,10 +16,13 @@ public class AnimalServiceTest {
         Animal thisAnimal = new Animal();
         thisAnimal.setName("Jerry");
         thisAnimal.setDescription("Mouse Cat");
+        thisAnimal.setColour("grey");
+        thisAnimal.setType(Type.get("amphibian"));
         Animal actual = service.create(thisAnimal);
         assertThat(actual).isEqualTo(thisAnimal);
         assertThat(actual.getName()).isEqualTo(thisAnimal.getName());
         assertThat(actual.getDescription()).isEqualTo(thisAnimal.getDescription());
+        assertThat(actual.getColour()).isEqualTo(thisAnimal.getColour());
         assertThat(actual.getType()).isEqualTo(thisAnimal.getType());
     }
 
@@ -35,6 +39,7 @@ public class AnimalServiceTest {
         assertThat(actual).isEqualTo(animal);
         assertThat(actual.getName()).isEqualTo(animal.getName());
         assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
+        assertThat(actual.getColour()).isEqualTo(animal.getColour());
         assertThat(actual.getType()).isEqualTo(animal.getType());
     }
 }

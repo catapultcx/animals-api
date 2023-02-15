@@ -19,7 +19,7 @@ public class AnimalControllerTest {
     private MockMvc mvc;
 
     private Animal animal = new Animal("Tom", "Bob cat", "grey", "mammals");
-    private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
+    private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\", \"colour\": \"grey\", \"group\": \"amphibian\" }";
 
     @Test
     public void all() throws Exception {
