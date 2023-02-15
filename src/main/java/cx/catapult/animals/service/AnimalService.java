@@ -4,7 +4,6 @@ import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Group;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AnimalService {
 
@@ -61,23 +60,28 @@ public class AnimalService {
         return items
                 .values()
                 .stream()
-                .filter(data -> filterByName(names, data))
-                .filter(data -> filterByColor(colors, data))
-                .filter(data -> filterByDescription(descriptions, data))
-                .collect(Collectors.toList());
+                .filter(
+                        data -> filterByName(names, data)
+                                && filterByColor(colors, data)
+                                && filterByDescription(descriptions, data)
+                )
+                .toList();
     }
 
     private boolean filterByName(Optional<List<String>> query, Animal data) {
         return queryEquals(query, data.getName());
     }
+
     private boolean filterByColor(Optional<List<String>> query, Animal data) {
         return queryEquals(query, data.getColor());
     }
+
     private boolean filterByDescription(Optional<List<String>> query, Animal data) {
         return queryEquals(query, data.getDescription());
     }
+
     private static boolean queryEquals(Optional<List<String>> query, String data) {
-        return !query.isPresent()
+        return query.isEmpty()
                 || query.get().isEmpty()
                 || query.get().stream().anyMatch(data::contains);
     }

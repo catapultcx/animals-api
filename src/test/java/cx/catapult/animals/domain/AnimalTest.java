@@ -10,7 +10,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class AnimalTest {
 
-    AnimalService catsService = new AnimalService("cat", Group.MAMMALS);
+    private final AnimalService catsService = new AnimalService("cat", Group.MAMMALS);
     @Test
     void animal_whenASupportedTypeProvided_shouldCreateAnimalInstance() {
         Animal animal = catsService.create(new Animal("Tom", "Tom and jerry", "blue"));

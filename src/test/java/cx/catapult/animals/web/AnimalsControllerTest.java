@@ -20,7 +20,6 @@ public class AnimalsControllerTest {
     private MockMvc mvc;
     private final String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
     private final String jsonWithColor = "{ \"name\": \"Tom\", \"description\": \"Bob cat\", \"color\": \"red\" }";
-    private final String jsonWithInvalidColor = "{ \"name\": \"Tom\", \"description\": \"Bob cat\", \"color\": \"1312\" }";
 
     @Test
     public void all() throws Exception {
@@ -99,6 +98,7 @@ public class AnimalsControllerTest {
 
     @Test
     public void animalController_whenColorIsInvalid_createShouldFail() throws Exception {
+        String jsonWithInvalidColor = "{ \"name\": \"Tom\", \"description\": \"Bob cat\", \"color\": \"1312\" }";
         mvc.perform(MockMvcRequestBuilders.post("/api/2/cats")
                         .content(jsonWithInvalidColor)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))

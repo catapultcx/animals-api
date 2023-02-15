@@ -6,7 +6,6 @@ import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
 import cx.catapult.animals.service.AnimalFilterService;
 import cx.catapult.animals.service.AnimalService;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
@@ -24,8 +23,11 @@ import java.util.Optional;
 public class AnimalController implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
-    @Autowired
-    AnimalFilterService animalFilterService;
+    private final AnimalFilterService animalFilterService;
+
+    public AnimalController(AnimalFilterService animalFilterService) {
+        this.animalFilterService = animalFilterService;
+    }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody

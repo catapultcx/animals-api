@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -33,16 +34,13 @@ class AnimalFilterServiceTest {
 
     private static void createTestData() {
         Map<String, AnimalService> services = context.getBeansOfType(AnimalService.class);
-        Animal[] animals = {
-         new Animal("Kate", "A thing with some props", "black"),
-         new Animal("Mate", "Name some desc", "blue"),
-         new Animal("Sade", "A desc with props", "gray"),
-         new Animal("Manu", "A desc with props", "gray"),
-        };
-        services.values().forEach(animalService -> {
-            Animal[] clone = animals.clone();
-            Arrays.stream(clone).forEach(animalService::create);
-        });
+        List<Animal> animals = List.of(
+                new Animal("Kate", "A thing with some props", "black"),
+                new Animal("Mate", "Name some desc", "blue"),
+                new Animal("Sade", "A desc with props", "gray"),
+                new Animal("Manu", "A desc with props", "gray")
+        );
+        services.values().forEach(animalService -> animals.forEach(animalService::create));
     }
 
 
@@ -72,11 +70,14 @@ class AnimalFilterServiceTest {
             String descriptions,
             int result
     ) {
+        Function<String, Optional<List<String>>> filterExpression =
+                (String ex) -> Optional.ofNullable(ex).map(it -> Arrays.asList(it.split("\\|")));
+
         Collection<Animal> animals = filterService.filter(
-                Optional.ofNullable(types).map(it -> Arrays.asList(it.split("\\|"))),
-                Optional.ofNullable(names).map(it -> Arrays.asList(it.split("\\|"))),
-                Optional.ofNullable(colors).map(it -> Arrays.asList(it.split("\\|"))),
-                Optional.ofNullable(descriptions).map(it -> Arrays.asList(it.split("\\|")))
+                filterExpression.apply(types),
+                filterExpression.apply(names),
+                filterExpression.apply(colors),
+                filterExpression.apply(descriptions)
         );
         assertThat(animals.size()).isEqualTo(result);
     }

@@ -62,8 +62,7 @@ public class Cat {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Cat)) return false;
-        Cat cat = (Cat) o;
+        if (!(o instanceof Cat cat)) return false;
         return animal.equals(cat.animal);
     }
 
