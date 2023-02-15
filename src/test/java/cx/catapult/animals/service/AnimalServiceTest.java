@@ -19,7 +19,7 @@ public class AnimalServiceTest {
         assertThat(actual).isEqualTo(thisAnimal);
         assertThat(actual.getName()).isEqualTo(thisAnimal.getName());
         assertThat(actual.getDescription()).isEqualTo(thisAnimal.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(thisAnimal.getGroup());
+        assertThat(actual.getType()).isEqualTo(thisAnimal.getType());
     }
 
     @Test
@@ -35,6 +35,6 @@ public class AnimalServiceTest {
         assertThat(actual).isEqualTo(animal);
         assertThat(actual.getName()).isEqualTo(animal.getName());
         assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(animal.getGroup());
+        assertThat(actual.getType()).isEqualTo(animal.getType());
     }
 }

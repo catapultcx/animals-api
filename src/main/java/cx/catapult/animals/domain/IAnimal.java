@@ -18,6 +18,7 @@ public interface IAnimal {
 
     void setColour(String colour);
 
-    Group getGroup();
+    Type getType();
 
+    void setType(Type type);
 }

@@ -42,7 +42,7 @@ public class AnimalControllerIT {
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(animal.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(animal.getDescription());
-        assertThat(response.getBody().getGroup()).isEqualTo(animal.getGroup());
+        assertThat(response.getBody().getType()).isEqualTo(animal.getType());
     }
 
     @Test

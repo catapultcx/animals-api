@@ -8,18 +8,18 @@ public class BaseAnimal implements IAnimal, Serializable {
     private String name;
     private String description;
     private String colour;
-    private Group group;
+    private Type type;
 
-    public BaseAnimal(String name, String description, String colour, Group group) {
-        this(null, name, description, colour, group);
+    public BaseAnimal(String name, String description, String colour, Type type) {
+        this(null, name, description, colour, type);
     }
 
-    public BaseAnimal(String id, String name, String description, String colour, Group group) {
+    public BaseAnimal(String id, String name, String description, String colour, Type type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.colour = colour;
-        this.group = group;
+        this.type = type;
     }
 
     @Override
@@ -53,17 +53,22 @@ public class BaseAnimal implements IAnimal, Serializable {
     }
 
     @Override
-    public void setColour(String colour) {
-        this.colour = colour;
-    }
-
-    @Override
     public String getColour() {
         return this.colour;
     }
 
     @Override
-    public Group getGroup() {
-        return this.group;
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    @Override
+    public Type getType() {
+        return this.type;
+    }
+
+    @Override
+    public void setType(Type type) {
+        this.type = type;
     }
 }

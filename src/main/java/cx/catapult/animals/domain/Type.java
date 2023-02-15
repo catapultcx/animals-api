@@ -2,7 +2,7 @@ package cx.catapult.animals.domain;
 
 import java.util.Arrays;
 
-public enum Group {
+public enum Type {
 
     AMPHIBIAN("amphibian"),
     BIRD("bird"),
@@ -12,12 +12,12 @@ public enum Group {
     REPTILES("reptiles");
 
     private String val;
-    Group(String val) {
+    Type(String val) {
         this.val = val;
     }
 
-    public static Group get(String val) {
-        return Arrays.stream(Group.values())
+    public static Type get(String val) {
+        return Arrays.stream(Type.values())
                 .filter(item -> item.val.equals(val))
                 .findFirst().orElse(null);
     }

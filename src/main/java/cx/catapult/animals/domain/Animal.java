@@ -6,6 +6,6 @@ public class Animal extends BaseAnimal {
     }
 
     public Animal(String name, String description, String colour, String type) {
-        super(name, description, colour, Group.get(type));
+        super(name, description, colour, Type.get(type));
     }
 }

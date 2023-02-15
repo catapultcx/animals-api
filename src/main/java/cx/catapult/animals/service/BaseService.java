@@ -3,10 +3,11 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.IAnimal;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class BaseService<T extends IAnimal> implements IService<T> {
 
-    private HashMap<String, T> items = new HashMap<>();
+    private Map<String, T> items = new ConcurrentHashMap<>();
 
     @Override
     public Collection<T> all() {
