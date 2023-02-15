@@ -4,6 +4,8 @@ import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Type;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -66,5 +68,35 @@ public class AnimalServiceTest {
 
         service.delete(animal.getId());
         assertThat(service.all().size()).isEqualTo(0);
+    }
+
+    @Test
+    public void filterShouldReturnEmpty() throws Exception {
+        service.create(new Animal("tom", "lorem", "blue", "amphibian"));
+        service.create(new Animal("jerry", "ipsum", "grey", "bird"));
+        service.create(new Animal("lion", "test desc", "orange", "mammals"));
+
+        List<Animal> results = service.filter("tom2", "", "", "");
+        assertThat(results.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void filterShouldWork() throws Exception {
+        service.create(new Animal("tom", "lorem", "blue", "amphibian"));
+        service.create(new Animal("jerry", "ipsum", "grey", "bird"));
+        service.create(new Animal("lion", "test desc", "orange", "mammals"));
+        service.create(new Animal("rabbit", "desc", "red", "invertebrate"));
+
+        List<Animal> resultsByName = service.filter("tom", "", "", "");
+        assertThat(resultsByName.size()).isEqualTo(1);
+
+        List<Animal> resultsByDescription = service.filter("", "ipsum", "", "");
+        assertThat(resultsByDescription.size()).isEqualTo(1);
+
+        List<Animal> resultsByColour = service.filter("", "", "orange", "");
+        assertThat(resultsByColour.size()).isEqualTo(1);
+
+        List<Animal> resultsByType = service.filter("", "", "", "invertebrate");
+        assertThat(resultsByType.size()).isEqualTo(1);
     }
 }

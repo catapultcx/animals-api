@@ -1,9 +1,13 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.IAnimal;
+import cx.catapult.animals.domain.Type;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class BaseService<T extends IAnimal> implements IService<T> {
 
@@ -40,5 +44,33 @@ public abstract class BaseService<T extends IAnimal> implements IService<T> {
     @Override
     public void delete(String id) {
         items.remove(id);
+    }
+
+    @Override
+    public List<T> filter(String name, String description, String colour, String type) {
+        return items.values()
+                .stream()
+                .filter(
+                        searchByName(name)
+                                .and(searchByDescription(description))
+                                .and(searchByColour(colour))
+                                .and(searchByType(type))
+                ).collect(Collectors.toList());
+    }
+
+    private Predicate<T> searchByName(String name) {
+        return e -> Strings.isBlank(name) || e.getName().contains(name);
+    }
+
+    private Predicate<T> searchByDescription(String description) {
+        return e -> Strings.isBlank(description) || e.getDescription().contains(description);
+    }
+
+    private Predicate<T> searchByColour(String colour) {
+        return e -> Strings.isBlank(colour) || e.getColour().contains(colour);
+    }
+
+    private Predicate<T> searchByType(String type) {
+        return e -> Strings.isBlank(type) || e.getType().equals(Type.get(type));
     }
 }

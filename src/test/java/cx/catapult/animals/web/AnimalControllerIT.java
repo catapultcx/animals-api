@@ -13,9 +13,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -86,6 +89,26 @@ public class AnimalControllerIT {
         Animal created = create("Test 1");
         ResponseEntity<Void> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void filterShouldWorkWithEmptyResults() throws Exception {
+        String url = UriComponentsBuilder.fromHttpUrl(base.toString()+"/filter")
+                .queryParam("name", "test")
+                .encode().toUriString();
+
+        Collection items = template.getForObject(url, Collection.class);
+        assertThat(items.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void filterShouldWorkWithResults() throws Exception {
+        String url = UriComponentsBuilder.fromHttpUrl(base.toString()+"/filter")
+                .queryParam("name", "Tigger")
+                .encode().toUriString();
+
+        Collection items = template.getForObject(url, Collection.class);
+        assertThat(items.size()).isEqualTo(1);
     }
 
     Animal create(String name) {
