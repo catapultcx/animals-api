@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,6 +29,16 @@ public class AnimalController implements ApplicationContextAware {
     public @ResponseBody
     Animal get(@PathVariable String qualifier, @PathVariable String id) {
         return getAnimalService(qualifier).get(id);
+    }
+
+    @DeleteMapping(value = "/{qualifier}/{id}")
+    public @ResponseBody
+    ResponseEntity<?> delete(@PathVariable String qualifier, @PathVariable String id) {
+        boolean isRemoved = getAnimalService(qualifier).delete(id);
+        if (!isRemoved) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{qualifier}", consumes = MediaType.APPLICATION_JSON_VALUE)

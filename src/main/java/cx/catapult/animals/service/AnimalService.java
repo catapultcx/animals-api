@@ -35,6 +35,10 @@ public class AnimalService {
     }
 
     public boolean delete(String id) {
+        if(items.containsKey(id)) {
+            items.remove(id);
+            return true;
+        }
         return false;
     }
 }
