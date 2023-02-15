@@ -1,5 +1,6 @@
 package cx.catapult.animals;
 
+import cx.catapult.animals.util.ExcludeFromJacocoGeneratedReport;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 @SpringBootApplication
 public class AnimalsApiApplication {
 
+	@ExcludeFromJacocoGeneratedReport
 	public static void main(String[] args) {
 		SpringApplication.run(AnimalsApiApplication.class, args);
 	}
