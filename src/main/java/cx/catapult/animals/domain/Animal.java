@@ -1,30 +1,42 @@
 package cx.catapult.animals.domain;
 
 
+import cx.catapult.animals.validation.ColorCheck;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Animal implements Serializable {
 
     private String id;
+    @NotNull
+    @NotBlank(message = "Name cannot be empty.")
     private String name;
+
+    @ColorCheck(message = "Color value is invalid.")
+    private String color;
+    @NotNull
+    @NotBlank(message = "Description cannot be empty.")
     private String description;
     private String type;
     private Group group;
 
-    public Animal(String name, String description) {
-        this(null, null, name, description, null);
+    public Animal(String name, String description, String color) {
+        this(null, null, name, description, color, null);
     }
 
     public Animal() {
-        this(null, null, "", "", null);
+        this(null, null, "", "", null, null);
     }
 
-    public Animal(String id, String type, String name, String description, Group group) {
+    public Animal(String id, String type, String name, String description, String color, Group group) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.description = description;
+        this.color = color;
         this.group = group;
     }
 
@@ -68,6 +80,14 @@ public class Animal implements Serializable {
         this.group = group;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -93,4 +113,5 @@ public class Animal implements Serializable {
     public int hashCode() {
         return Objects.hash(getId(), getName(), getDescription(), getType());
     }
+
 }

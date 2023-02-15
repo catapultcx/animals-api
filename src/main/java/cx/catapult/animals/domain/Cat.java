@@ -7,17 +7,18 @@ import java.util.stream.Collectors;
 
 @Deprecated
 public class Cat {
-
+    // For backward compatibility we are using transparent to cat.
+    public static final String DEFAULT_COLOR = "#0000";
     private Animal animal;
 
     public Cat() {
-        this.animal = new Animal("", "");
+        this.animal = new Animal("", "", DEFAULT_COLOR);
         this.animal.setType("cat");
         this.animal.setGroup(Group.MAMMALS);
     }
 
     public Cat(String name, String description) {
-        this.animal = new Animal(name, description);
+        this.animal = new Animal(name, description, DEFAULT_COLOR);
         this.animal.setType("cat");
         this.animal.setGroup(Group.MAMMALS);
     }

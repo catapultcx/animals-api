@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -32,7 +33,7 @@ public class AnimalController implements ApplicationContextAware {
     @PostMapping(value = "/{qualifier}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Animal create(@PathVariable String qualifier, @RequestBody Animal animal) {
+    Animal create(@PathVariable String qualifier, @Valid @RequestBody Animal animal) {
         return getAnimalService(qualifier).create(animal);
     }
 

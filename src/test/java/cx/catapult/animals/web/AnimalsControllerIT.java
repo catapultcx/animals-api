@@ -26,7 +26,7 @@ public class AnimalsControllerIT {
 
     private URL base;
 
-    private final Animal animal = new Animal("Tom", "Bob cat");
+    private final Animal animal = new Animal("Tom", "Bob cat", "blue");
 
     @Autowired
     private TestRestTemplate template;
@@ -60,9 +60,10 @@ public class AnimalsControllerIT {
     }
 
     Animal create(String name) {
-        Animal created = template.postForObject(base.toString(), new Animal(name, name), Animal.class);
+        Animal created = template.postForObject(base.toString(), new Animal(name, name, "gray"), Animal.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;
     }
+
 }

@@ -13,7 +13,7 @@ class AnimalTest {
     AnimalService catsService = new AnimalService("cat", Group.MAMMALS);
     @Test
     void animal_whenASupportedTypeProvided_shouldCreateAnimalInstance() {
-        Animal animal = catsService.create(new Animal("Tom", "Tom and jerry"));
+        Animal animal = catsService.create(new Animal("Tom", "Tom and jerry", "blue"));
         assertThat(animal.getType()).isEqualTo("cat");
         assertThat(animal.getName()).isEqualTo("Tom");
         assertThat(animal.getDescription()).isEqualTo("Tom and jerry");
@@ -46,9 +46,9 @@ class AnimalTest {
 
     @Test
     void animal_whenComparedWithOtherObjects_shouldWork() {
-        Animal animal = new Animal("Tom", "Jerry");
-        Animal same = new Animal("Tom", "Jerry");
-        Animal different = new Animal("Tomi", "Jerry");
+        Animal animal = new Animal("Tom", "Jerry", "blue");
+        Animal same = new Animal("Tom", "Jerry", "blue");
+        Animal different = new Animal("Tomi", "Jerry", "blue");
         Stream.of(animal, same, different).forEach(it -> {
             it.setGroup(Group.MAMMALS);
             it.setType("cat");

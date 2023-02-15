@@ -22,17 +22,17 @@ public class CatsService {
 
     @PostConstruct
     public void initialize() {
-        this.animalService.create(new Animal("Tom", "Friend of Jerry"));
-        this.animalService.create(new Animal("Jerry", "Not really a cat"));
-        this.animalService.create(new Animal("Bili", "Furry cat"));
-        this.animalService.create(new Animal("Smelly", "Cat with friends"));
-        this.animalService.create(new Animal("Tiger", "Large cat"));
-        this.animalService.create(new Animal("Tigger", "Not a scary cat"));
-        this.animalService.create(new Animal("Garfield", "Lazy cat"));
+        this.animalService.create(new Animal("Tom", "Friend of Jerry", "blue"));
+        this.animalService.create(new Animal("Jerry", "Not really a cat", "blue"));
+        this.animalService.create(new Animal("Bili", "Furry cat", "black"));
+        this.animalService.create(new Animal("Smelly", "Cat with friends", "black"));
+        this.animalService.create(new Animal("Tiger", "Large cat", "yellow"));
+        this.animalService.create(new Animal("Tigger", "Not a scary cat", "pink"));
+        this.animalService.create(new Animal("Garfield", "Lazy cat", "yellow"));
     }
 
     public Cat create(Cat cat) {
-        Animal animal = new Animal(cat.getName(), cat.getDescription());
+        Animal animal = new Animal(cat.getName(), cat.getDescription(), Cat.DEFAULT_COLOR);
         cat.setAnimal(this.animalService.create(animal));
         return cat;
     }

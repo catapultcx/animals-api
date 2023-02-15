@@ -45,16 +45,16 @@ public class AnimalServiceTest {
 
     @ParameterizedTest
     @CsvSource({
-            "cats,Tom,cat,MAMMALS",
-            "dogs,Pluto,dog,MAMMALS",
-            "parrots,Beethoven,parrot,BIRD",
-            "frogs,MrGreen,frog,AMPHIBIAN",
-            "iguanas,Shifter,iguana,REPTILES",
-            "tunas,Tuna,tuna,FISH",
-            "salmons,Salomon,salmon,FISH",
-            "spiders,MissHairy,spider,INVERTEBRATE"})
-    public void allShouldWork(String qualifier, String name, String type, Group group) {
-        Animal animal = new Animal(name, String.format("%s is my buddy", name));
+            "cats,Tom,cat,MAMMALS,blue",
+            "dogs,Pluto,dog,MAMMALS,blue",
+            "parrots,Beethoven,parrot,BIRD,blue",
+            "frogs,MrGreen,frog,AMPHIBIAN,blue",
+            "iguanas,Shifter,iguana,REPTILES,blue",
+            "tunas,Tuna,tuna,FISH,blue",
+            "salmons,Salomon,salmon,FISH,blue",
+            "spiders,MissHairy,spider,INVERTEBRATE,blue"})
+    public void allShouldWork(String qualifier, String name, String type, Group group, String colorString) {
+        Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
         AnimalService service = context.getBean(qualifier, AnimalService.class);
         assertThat(service).isNotNull();
         service.create(animal);
@@ -64,16 +64,16 @@ public class AnimalServiceTest {
 
     @ParameterizedTest
     @CsvSource({
-            "cats,Tom,cat,MAMMALS",
-            "dogs,Pluto,dog,MAMMALS",
-            "parrots,Beethoven,parrot,BIRD",
-            "frogs,MrGreen,frog,AMPHIBIAN",
-            "iguanas,Shifter,iguana,REPTILES",
-            "tunas,Tuna,tuna,FISH",
-            "salmons,Salomon,salmon,FISH",
-            "spiders,MissHairy,spider,INVERTEBRATE"})
-    public void getShouldWork(String qualifier, String name, String type, Group group) {
-        Animal animal = new Animal(name, String.format("%s is my buddy", name));
+            "cats,Tom,cat,MAMMALS,blue",
+            "dogs,Pluto,dog,MAMMALS,blue",
+            "parrots,Beethoven,parrot,BIRD,blue",
+            "frogs,MrGreen,frog,AMPHIBIAN,blue",
+            "iguanas,Shifter,iguana,REPTILES,blue",
+            "tunas,Tuna,tuna,FISH,blue",
+            "salmons,Salomon,salmon,FISH,blue",
+            "spiders,MissHairy,spider,INVERTEBRATE,blue"})
+    public void getShouldWork(String qualifier, String name, String type, Group group, String colorString) {
+        Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
         AnimalService service = context.getBean(qualifier, AnimalService.class);
         assertThat(service).isNotNull();
         service.create(animal);
