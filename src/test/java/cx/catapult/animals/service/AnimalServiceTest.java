@@ -5,6 +5,7 @@ import cx.catapult.animals.domain.Type;
 import cx.catapult.animals.exception.OperationNotAllowedException;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +34,7 @@ public class AnimalServiceTest {
     @Test
     public void allShouldWork() throws Exception {
         service.create(animal);
-        assertThat(service.all().size()).isEqualTo(1);
+        assertThat(service.filter("", "", "", "").size()).isEqualTo(1);
     }
 
     @Test
@@ -92,7 +93,7 @@ public class AnimalServiceTest {
         assertNotNull(animal.getId());
 
         service.delete(animal.getId());
-        assertThat(service.all().size()).isEqualTo(0);
+        assertThat(service.filter("", "", "", "").size()).isEqualTo(0);
     }
 
     @Test
@@ -112,7 +113,7 @@ public class AnimalServiceTest {
         service.create(new Animal("jerry", "ipsum", "grey", "bird"));
         service.create(new Animal("lion", "test desc", "orange", "mammals"));
 
-        List<Animal> results = service.filter("tom2", "", "", "");
+        Collection<Animal> results = service.filter("tom2", "", "", "");
         assertThat(results.size()).isEqualTo(0);
     }
 
@@ -123,16 +124,16 @@ public class AnimalServiceTest {
         service.create(new Animal("lion", "test desc", "orange", "mammals"));
         service.create(new Animal("rabbit", "desc", "red", "invertebrate"));
 
-        List<Animal> resultsByName = service.filter("tom", "", "", "");
+        Collection<Animal> resultsByName = service.filter("tom", "", "", "");
         assertThat(resultsByName.size()).isEqualTo(1);
 
-        List<Animal> resultsByDescription = service.filter("", "ipsum", "", "");
+        Collection<Animal> resultsByDescription = service.filter("", "ipsum", "", "");
         assertThat(resultsByDescription.size()).isEqualTo(1);
 
-        List<Animal> resultsByColour = service.filter("", "", "orange", "");
+        Collection<Animal> resultsByColour = service.filter("", "", "orange", "");
         assertThat(resultsByColour.size()).isEqualTo(1);
 
-        List<Animal> resultsByType = service.filter("", "", "", "invertebrate");
+        Collection<Animal> resultsByType = service.filter("", "", "", "invertebrate");
         assertThat(resultsByType.size()).isEqualTo(1);
     }
 }

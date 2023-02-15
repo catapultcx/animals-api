@@ -15,8 +15,15 @@ public abstract class BaseService<T extends IAnimal> implements IService<T> {
     private Map<String, T> items = new ConcurrentHashMap<>();
 
     @Override
-    public Collection<T> all() {
-        return items.values();
+    public Collection<T> filter(String name, String description, String colour, String type) {
+        return items.values()
+                .stream()
+                .filter(
+                        searchByName(name)
+                                .and(searchByDescription(description))
+                                .and(searchByColour(colour))
+                                .and(searchByType(type))
+                ).collect(Collectors.toList());
     }
 
     @Override
@@ -55,18 +62,6 @@ public abstract class BaseService<T extends IAnimal> implements IService<T> {
         } else {
             throw new OperationNotAllowedException(String.format("Animal not found for id: %s", id));
         }
-    }
-
-    @Override
-    public List<T> filter(String name, String description, String colour, String type) {
-        return items.values()
-                .stream()
-                .filter(
-                        searchByName(name)
-                                .and(searchByDescription(description))
-                                .and(searchByColour(colour))
-                                .and(searchByType(type))
-                ).collect(Collectors.toList());
     }
 
     private Predicate<T> searchByName(String name) {

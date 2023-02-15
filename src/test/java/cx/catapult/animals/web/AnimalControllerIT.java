@@ -122,7 +122,7 @@ public class AnimalControllerIT {
 
     @Test
     public void filterShouldWorkWithEmptyResults() throws Exception {
-        String url = UriComponentsBuilder.fromHttpUrl(base.toString()+"/filter")
+        String url = UriComponentsBuilder.fromHttpUrl(base.toString())
                 .queryParam("name", "test")
                 .encode().toUriString();
 
@@ -132,7 +132,7 @@ public class AnimalControllerIT {
 
     @Test
     public void filterShouldWorkWithResults() throws Exception {
-        String url = UriComponentsBuilder.fromHttpUrl(base.toString()+"/filter")
+        String url = UriComponentsBuilder.fromHttpUrl(base.toString())
                 .queryParam("name", "Tigger")
                 .encode().toUriString();
 
