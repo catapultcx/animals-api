@@ -1,10 +1,10 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.IAnimal;
 
 import java.util.Collection;
 
-public interface Service<T extends Animal> {
+public interface IService<T extends IAnimal> {
 
     public Collection<T> all();
 

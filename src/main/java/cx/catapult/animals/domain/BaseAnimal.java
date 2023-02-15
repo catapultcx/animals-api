@@ -2,21 +2,23 @@ package cx.catapult.animals.domain;
 
 import java.io.Serializable;
 
-public class BaseAnimal implements Animal, Serializable {
+public class BaseAnimal implements IAnimal, Serializable {
 
     private String id;
     private String name;
     private String description;
+    private String colour;
     private Group group;
 
-    public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+    public BaseAnimal(String name, String description, String colour, Group group) {
+        this(null, name, description, colour, group);
     }
 
-    public BaseAnimal(String id, String name, String description, Group group) {
+    public BaseAnimal(String id, String name, String description, String colour, Group group) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.colour = colour;
         this.group = group;
     }
 
@@ -48,6 +50,16 @@ public class BaseAnimal implements Animal, Serializable {
     @Override
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    @Override
+    public String getColour() {
+        return this.colour;
     }
 
     @Override
