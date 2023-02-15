@@ -22,11 +22,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AnimalsControllerIT {
+public class AnimalsControllerIntegrationTest {
     @LocalServerPort
     private int port;
 
     private URL base;
+    private URL filterUrl;
 
     private final Animal animal = new Animal("Tom", "Bob cat", "blue");
 
@@ -36,6 +37,7 @@ public class AnimalsControllerIT {
     @BeforeEach
     public void setUp() throws Exception {
         this.base = new URL("http://localhost:" + port + "/api/2/cats");
+        this.filterUrl = new URL("http://localhost:" + port + "/api/2/filter");
     }
 
     @Test
@@ -104,9 +106,18 @@ public class AnimalsControllerIT {
     @Test
     public void animalController_whenUpdateIsCalledWithAnInvalidObject_shouldFail() {
         Animal created = create("Test To Delete");
-        created.setName(null);
-        ResponseEntity<String> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.PUT, HttpEntity.EMPTY, String.class);
-        assertThat(response.getStatusCode()).isGreaterThan(HttpStatus.BAD_REQUEST);
+        created.setId("unknown");
+        ResponseEntity<String> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.PUT, new HttpEntity<>(created), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void animalController_whenFilterIsCalled_shouldFilter() {
+        Collection result = template.getForObject(filterUrl + "?names=Tom,Jerry", Collection.class);
+        assertThat(result.size()).isEqualTo(2);
+
+        Collection dogs = template.getForObject(filterUrl + "?names=Tom,Jerry&types=dog", Collection.class);
+        assertThat(dogs.size()).isEqualTo(0);
     }
 
     Animal create(String name) {

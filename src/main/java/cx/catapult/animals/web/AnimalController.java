@@ -3,8 +3,10 @@ package cx.catapult.animals.web;
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.exceptions.IdMismatchException;
 import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
+import cx.catapult.animals.service.AnimalFilterService;
 import cx.catapult.animals.service.AnimalService;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
@@ -14,11 +16,27 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/2", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AnimalController implements ApplicationContextAware {
     private ApplicationContext applicationContext;
+
+    @Autowired
+    AnimalFilterService animalFilterService;
+
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    Collection<Animal> filter(
+            @RequestParam("types") Optional<List<String>> types,
+            @RequestParam("names") Optional<List<String>> names,
+            @RequestParam("colors") Optional<List<String>> colors,
+            @RequestParam("descriptions") Optional<List<String>> descriptions
+    ) {
+        return animalFilterService.filter(types, names, colors, descriptions);
+    }
 
     @GetMapping(value = "/{qualifier}", produces = "application/json")
     public @ResponseBody

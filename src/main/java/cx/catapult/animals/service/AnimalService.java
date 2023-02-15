@@ -4,6 +4,7 @@ import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Group;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AnimalService {
 
@@ -16,6 +17,9 @@ public class AnimalService {
         this.group = group;
     }
 
+    public String getAnimalType() {
+        return animalType;
+    }
 
     public Collection<Animal> all() {
         return items.values();
@@ -35,7 +39,7 @@ public class AnimalService {
     }
 
     public boolean delete(String id) {
-        if(items.containsKey(id)) {
+        if (items.containsKey(id)) {
             items.remove(id);
             return true;
         }
@@ -43,9 +47,38 @@ public class AnimalService {
     }
 
     public Animal update(String id, Animal animal) {
-        if(!items.containsKey(id))
+        if (!items.containsKey(id))
             return null;
         items.put(id, animal);
         return items.get(id);
+    }
+
+    public List<Animal> filter(
+            Optional<List<String>> names,
+            Optional<List<String>> colors,
+            Optional<List<String>> descriptions
+    ) {
+        return items
+                .values()
+                .stream()
+                .filter(data -> filterByName(names, data))
+                .filter(data -> filterByColor(colors, data))
+                .filter(data -> filterByDescription(descriptions, data))
+                .collect(Collectors.toList());
+    }
+
+    private boolean filterByName(Optional<List<String>> query, Animal data) {
+        return queryEquals(query, data.getName());
+    }
+    private boolean filterByColor(Optional<List<String>> query, Animal data) {
+        return queryEquals(query, data.getColor());
+    }
+    private boolean filterByDescription(Optional<List<String>> query, Animal data) {
+        return queryEquals(query, data.getDescription());
+    }
+    private static boolean queryEquals(Optional<List<String>> query, String data) {
+        return !query.isPresent()
+                || query.get().isEmpty()
+                || query.get().stream().anyMatch(data::contains);
     }
 }
