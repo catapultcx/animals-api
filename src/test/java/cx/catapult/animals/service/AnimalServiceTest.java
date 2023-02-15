@@ -5,6 +5,7 @@ import cx.catapult.animals.domain.Type;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AnimalServiceTest {
 
@@ -41,5 +42,14 @@ public class AnimalServiceTest {
         assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
         assertThat(actual.getColour()).isEqualTo(animal.getColour());
         assertThat(actual.getType()).isEqualTo(animal.getType());
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        service.create(animal);
+        assertNotNull(animal.getId());
+
+        service.delete(animal.getId());
+        assertThat(service.all().size()).isEqualTo(0);
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -37,5 +39,11 @@ public class AnimalControllerTest {
     public void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/animals").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/123").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
     }
 }

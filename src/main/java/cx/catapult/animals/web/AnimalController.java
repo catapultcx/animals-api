@@ -35,4 +35,12 @@ public class AnimalController {
     create(@RequestBody Animal animal) {
         return service.create(animal);
     }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    void delete(@PathVariable String id) {
+        service.delete(id);
+    }
+
 }

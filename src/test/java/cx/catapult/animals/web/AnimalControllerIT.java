@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -57,6 +59,13 @@ public class AnimalControllerIT {
         Animal created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Animal created = create("Test 1");
+        ResponseEntity<Void> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     Animal create(String name) {
