@@ -2,6 +2,7 @@ package cx.catapult.animals.web;
 
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.Type;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class AnimalControllerIT {
 
     private URL base;
 
-    private Animal animal = new Animal("Tom", "Bob cat", "grey", "mammals");
+    private Animal animal = new Animal("Tom", "Bob cat", "grey", "amphibian");
 
     @Autowired
     private TestRestTemplate template;
@@ -59,6 +60,25 @@ public class AnimalControllerIT {
         Animal created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        ResponseEntity<Animal> createResponse = template.postForEntity(base.toString(), animal, Animal.class);
+        Animal updatedAnimal = createResponse.getBody();
+        updatedAnimal.setName(animal.getName()+"-updated");
+        updatedAnimal.setDescription(animal.getDescription()+"-updated");
+        updatedAnimal.setColour(animal.getColour()+"-updated");
+        updatedAnimal.setType(Type.get("reptiles"));
+
+        HttpEntity<Animal> requestEntity = new HttpEntity<>(updatedAnimal);
+        ResponseEntity<Animal> updateResponse = template.exchange(base.toString(), HttpMethod.PUT, requestEntity, Animal.class);
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(updateResponse.getBody().getId()).isNotEmpty();
+        assertThat(updateResponse.getBody().getName()).isEqualTo(updatedAnimal.getName());
+        assertThat(updateResponse.getBody().getDescription()).isEqualTo(updatedAnimal.getDescription());
+        assertThat(updateResponse.getBody().getColour()).isEqualTo(updatedAnimal.getColour());
+        assertThat(updateResponse.getBody().getType()).isEqualTo(updatedAnimal.getType());
     }
 
     @Test

@@ -31,9 +31,15 @@ public class AnimalController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Animal
-    create(@RequestBody Animal animal) {
+    Animal create(@RequestBody Animal animal) {
         return service.create(animal);
+    }
+
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    Animal update(@RequestBody Animal animal) {
+        return service.update(animal);
     }
 
     @DeleteMapping(value = "/{id}")

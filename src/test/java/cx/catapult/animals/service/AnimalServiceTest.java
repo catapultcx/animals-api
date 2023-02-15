@@ -45,6 +45,21 @@ public class AnimalServiceTest {
     }
 
     @Test
+    public void updateShouldWork() throws Exception {
+        service.create(animal);
+        animal.setName("Jerry updated");
+        animal.setDescription("Mouse Cat updated");
+        animal.setColour("black");
+        animal.setType(Type.get("invertebrate"));
+        Animal actual = service.update(animal);
+        assertThat(actual).isEqualTo(animal);
+        assertThat(actual.getName()).isEqualTo(animal.getName());
+        assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
+        assertThat(actual.getColour()).isEqualTo(animal.getColour());
+        assertThat(actual.getType()).isEqualTo(animal.getType());
+    }
+
+    @Test
     public void deleteShouldWork() throws Exception {
         service.create(animal);
         assertNotNull(animal.getId());

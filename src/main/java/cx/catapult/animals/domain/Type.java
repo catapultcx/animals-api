@@ -1,5 +1,7 @@
 package cx.catapult.animals.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.Arrays;
 
 public enum Type {
@@ -16,9 +18,10 @@ public enum Type {
         this.val = val;
     }
 
+    @JsonCreator
     public static Type get(String val) {
         return Arrays.stream(Type.values())
-                .filter(item -> item.val.equals(val))
+                .filter(item -> item.val.equalsIgnoreCase(val))
                 .findFirst().orElse(null);
     }
 

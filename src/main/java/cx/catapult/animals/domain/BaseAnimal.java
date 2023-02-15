@@ -10,16 +10,16 @@ public class BaseAnimal implements IAnimal, Serializable {
     private String colour;
     private Type type;
 
-    public BaseAnimal(String name, String description, String colour, Type type) {
+    public BaseAnimal(String name, String description, String colour, String type) {
         this(null, name, description, colour, type);
     }
 
-    public BaseAnimal(String id, String name, String description, String colour, Type type) {
+    public BaseAnimal(String id, String name, String description, String colour, String type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.colour = colour;
-        this.type = type;
+        this.type = Type.get(type);
     }
 
     @Override
