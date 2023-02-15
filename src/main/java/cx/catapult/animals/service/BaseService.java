@@ -65,15 +65,15 @@ public abstract class BaseService<T extends IAnimal> implements IService<T> {
     }
 
     private Predicate<T> searchByName(String name) {
-        return e -> Strings.isBlank(name) || e.getName().contains(name);
+        return e -> Strings.isBlank(name) || e.getName().toLowerCase().contains(name.toLowerCase());
     }
 
     private Predicate<T> searchByDescription(String description) {
-        return e -> Strings.isBlank(description) || e.getDescription().contains(description);
+        return e -> Strings.isBlank(description) || e.getDescription().toLowerCase().contains(description.toLowerCase());
     }
 
     private Predicate<T> searchByColour(String colour) {
-        return e -> Strings.isBlank(colour) || e.getColour().contains(colour);
+        return e -> Strings.isBlank(colour) || e.getColour().toLowerCase().contains(colour.toLowerCase());
     }
 
     private Predicate<T> searchByType(String type) {
