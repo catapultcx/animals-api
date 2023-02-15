@@ -33,4 +33,8 @@ public class AnimalService {
     public Animal get(String id) {
         return items.get(id);
     }
+
+    public boolean delete(String id) {
+        return false;
+    }
 }

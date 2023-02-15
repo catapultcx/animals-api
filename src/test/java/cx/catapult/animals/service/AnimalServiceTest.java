@@ -83,4 +83,33 @@ public class AnimalServiceTest {
         assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
         assertThat(actual.getGroup()).isEqualTo(animal.getGroup());
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "cats,Tom,cat,MAMMALS,blue",
+            "dogs,Pluto,dog,MAMMALS,blue",
+            "parrots,Beethoven,parrot,BIRD,blue",
+            "frogs,MrGreen,frog,AMPHIBIAN,blue",
+            "iguanas,Shifter,iguana,REPTILES,blue",
+            "tunas,Tuna,tuna,FISH,blue",
+            "salmons,Salomon,salmon,FISH,blue",
+            "spiders,MissHairy,spider,INVERTEBRATE,blue"})
+    public void animalService_whenCalledForDelete_shouldWork(String qualifier, String name, String type, Group group, String colorString) {
+        Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
+        AnimalService service = context.getBean(qualifier, AnimalService.class);
+        assertThat(service).isNotNull();
+        service.create(animal);
+        boolean success = service.delete(animal.getId());
+        assertThat(success).isTrue();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"dogs,Pluto,dog,MAMMALS,blue"})
+    public void animalService_whenCalledForDeleteForANotExistingItem_shouldFail(String qualifier, String name, String type, Group group, String colorString) {
+        Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
+        AnimalService service = context.getBean(qualifier, AnimalService.class);
+        assertThat(service).isNotNull();
+        boolean success = service.delete(animal.getId());
+        assertThat(success).isFalse();
+    }
 }
