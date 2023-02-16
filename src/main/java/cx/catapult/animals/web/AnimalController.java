@@ -1,10 +1,12 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.Group;
 import cx.catapult.animals.exceptions.IdMismatchException;
 import cx.catapult.animals.exceptions.UnsupportedAnimalTypeException;
 import cx.catapult.animals.service.AnimalFilterService;
 import cx.catapult.animals.service.AnimalService;
+import cx.catapult.animals.service.TypeRegistrationService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -24,9 +26,11 @@ public class AnimalController implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     private final AnimalFilterService animalFilterService;
+    private final TypeRegistrationService typeRegistrationService;
 
-    public AnimalController(AnimalFilterService animalFilterService) {
+    public AnimalController(AnimalFilterService animalFilterService, TypeRegistrationService typeRegistrationService) {
         this.animalFilterService = animalFilterService;
+        this.typeRegistrationService = typeRegistrationService;
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,6 +42,31 @@ public class AnimalController implements ApplicationContextAware {
             @RequestParam("descriptions") Optional<List<String>> descriptions
     ) {
         return animalFilterService.filter(types, names, colors, descriptions);
+    }
+
+    @GetMapping(value = "/register/{group}/{type}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public @ResponseBody
+    ResponseEntity<Void> filter(
+            @PathVariable("type") String type,
+            @PathVariable("group") Group group
+    ) {
+        boolean success =  typeRegistrationService.registerType(type, group);
+        if(success) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping(value = "/types", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    List<String> types() {
+        return this.typeRegistrationService.getRegisteredTypes();
+    }
+
+    @GetMapping(value = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    List<Group> groups() {
+        return this.typeRegistrationService.getGroups();
     }
 
     @GetMapping(value = "/{qualifier}", produces = "application/json")

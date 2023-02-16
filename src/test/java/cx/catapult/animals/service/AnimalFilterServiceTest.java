@@ -1,22 +1,18 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
-import cx.catapult.animals.factory.AnimalFactory;
+import cx.catapult.animals.configuration.AnimalFactoryConfiguration;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import out.TestFactory;
 
 import java.util.*;
 import java.util.function.Function;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@Import({AnimalFactory.class, AnimalFilterService.class})
 class AnimalFilterServiceTest {
 
     private static AnimalFilterService filterService;
@@ -25,7 +21,7 @@ class AnimalFilterServiceTest {
     @BeforeAll
     public static void setUp() {
         context = new AnnotationConfigApplicationContext();
-        context.register(AnimalFactory.class, AnimalFilterService.class);
+        context.register(TestFactory.class, AnimalFactoryConfiguration.class, AnimalFilterService.class);
         context.refresh();
         filterService = context.getBean(AnimalFilterService.class);
         assertThat(filterService).isNotNull();

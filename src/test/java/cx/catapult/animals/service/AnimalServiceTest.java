@@ -2,11 +2,12 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Group;
-import cx.catapult.animals.factory.AnimalFactory;
+import cx.catapult.animals.configuration.AnimalFactoryConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import out.TestFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +17,7 @@ public class AnimalServiceTest {
     @BeforeEach
     public void setUp() {
         context = new AnnotationConfigApplicationContext();
-        context.scan(AnimalFactory.class.getPackage().getName());
+        context.register(TestFactory.class, AnimalFactoryConfiguration.class);
         context.refresh();
     }
 

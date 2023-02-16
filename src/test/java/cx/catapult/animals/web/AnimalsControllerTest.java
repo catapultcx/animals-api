@@ -106,7 +106,7 @@ public class AnimalsControllerTest {
     }
 
     @Test
-    public void animalController_whenCalledToAnUnsupportedEndpoint_ShouldThrowBadRequest() throws Exception {
+    public void animalController_whenCalledToAnUnsupportedEndpoint_shouldThrowBadRequest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/2/bees/124")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -114,11 +114,41 @@ public class AnimalsControllerTest {
     }
 
     @Test
-    public void animalController_whenCalledToFilter_ShouldFilter() throws Exception {
+    public void animalController_whenCalledToFilter_shouldFilter() throws Exception {
         String query = "?names=Tom,Jerry,gg&colors=blue&types=cat";
         mvc.perform(MockMvcRequestBuilders.get("/api/2/filter" + query).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
 
+    }
+
+    @Test
+    public void animalController_whenCalledToRegister_shouldRegisterANewType() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/2/register/mammals/monkey").accept(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void animalController_whenCalledToRegisterWithAnInvalidGroup_shouldReturnBadRequest() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/2/register/mamma/monkey").accept(MediaType.TEXT_PLAIN))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void animalController_whenCalledToRegisterWithAnExistingType_shouldReturnBadRequest() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/2/register/mammals/cat").accept(MediaType.TEXT_PLAIN))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void animalController_whenCalledTypes_shouldReturnRegisteredTypes() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/2/types").accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void animalController_whenCalledGroups_shouldReturnGroups() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/2/groups").accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
     }
 }

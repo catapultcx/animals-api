@@ -1,0 +1,12 @@
+springdoc:
+  api-docs:
+    path: /api-docs
+animal:
+  types:
+    MAMMALS: ["dog"]
+    BIRD: ["owl", "parrot"]
+    INVERTEBRATE: ["spider"]
+    FISH: ["tuna", "salmon"]
+    AMPHIBIAN: ["frog"]
+    REPTILES: ["iguana"]
+

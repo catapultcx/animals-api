@@ -1,4 +1,4 @@
-package cx.catapult.animals.factory;
+package out;
 
 import cx.catapult.animals.domain.Group;
 import cx.catapult.animals.service.AnimalService;
@@ -7,14 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AnimalFactory {
-
-    @Scope("singleton")
-    @Bean("cats")
-    public AnimalService getCatsService() {
-        return new AnimalService("cat", Group.MAMMALS);
-    }
-
+public class TestFactory {
 
     @Scope("singleton")
     @Bean("dogs")
