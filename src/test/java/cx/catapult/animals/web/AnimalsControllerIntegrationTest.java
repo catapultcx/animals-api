@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.net.URL;
 import java.util.Collection;
@@ -66,8 +63,9 @@ public class AnimalsControllerIntegrationTest {
     @Test
     public void animalController_whenDeleteIsCalled_shouldWork() {
         Animal created = create("Test To Delete");
-        ResponseEntity<Void> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
+        ResponseEntity<String> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
         assertThat(response.getStatusCode()).isBetween(HttpStatus.OK, HttpStatus.NO_CONTENT);
+        assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("text/plain;charset=UTF-8"));
     }
 
     @Test

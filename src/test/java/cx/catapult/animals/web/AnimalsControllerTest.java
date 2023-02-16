@@ -50,7 +50,7 @@ public class AnimalsControllerTest {
                 .getContentAsString();
         String id = JsonPath.read(result, "$.id");
 
-        mvc.perform(MockMvcRequestBuilders.delete("/api/2/cats/" + id).accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.delete("/api/2/cats/" + id).accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().is2xxSuccessful());
     }
 

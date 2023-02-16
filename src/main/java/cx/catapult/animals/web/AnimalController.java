@@ -52,7 +52,7 @@ public class AnimalController implements ApplicationContextAware {
         return getAnimalService(qualifier).get(id);
     }
 
-    @DeleteMapping(value = "/{qualifier}/{id}")
+    @DeleteMapping(value = "/{qualifier}/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
     public @ResponseBody
     ResponseEntity<?> delete(@PathVariable String qualifier, @PathVariable String id) {
         boolean isRemoved = getAnimalService(qualifier).delete(id);
