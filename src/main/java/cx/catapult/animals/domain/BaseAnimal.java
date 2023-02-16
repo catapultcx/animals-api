@@ -9,6 +9,9 @@ public class BaseAnimal implements Animal, Serializable {
     private String description;
     private Group group;
 
+
+    public BaseAnimal() {}
+
     public BaseAnimal(String name, String description, Group group) {
         this(null, name, description, group);
     }
