@@ -35,4 +35,10 @@ public class AnimalController {
     BaseAnimal create(@RequestBody BaseAnimal animal) {
         return service.create(animal);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public @ResponseBody
+    void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 }

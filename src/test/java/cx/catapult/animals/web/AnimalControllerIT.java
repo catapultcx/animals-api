@@ -12,6 +12,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 
@@ -64,6 +65,13 @@ public class AnimalControllerIT {
         BaseAnimal created = create("Shark", Group.FISH);
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        BaseAnimal created = create("Shark", Group.FISH);
+        ResponseEntity<Void> response = template.getForEntity(URI.create(base.toString() + "/" + created.getId()), Void.class);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
     }
 
     Cat create(String name) {

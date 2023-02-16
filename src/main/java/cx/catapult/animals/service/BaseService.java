@@ -25,4 +25,12 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     public T get(String id) {
         return items.get(id);
     }
+
+    public void delete(String id){
+        items.remove(id);
+    }
+
+    public boolean containsId(String id){
+        return items.containsKey(id);
+    }
 }

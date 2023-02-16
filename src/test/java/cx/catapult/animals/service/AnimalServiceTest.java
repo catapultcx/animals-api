@@ -5,12 +5,16 @@ import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Group;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnimalServiceTest {
 
     AnimalService service = new AnimalService();
     BaseAnimal cat = new Cat("Tom", "Bob cat");
+    BaseAnimal shark = new BaseAnimal("Bruce", "Finding Nemo", Group.FISH);
 
     @Test
     public void createShouldWork() throws Exception {
@@ -38,5 +42,36 @@ public class AnimalServiceTest {
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+    }
+
+    @Test
+    public void deleteShouldDeleteAnimalIfIdExists() throws Exception {
+        service.create(shark);
+        service.create(cat);
+
+        Collection<BaseAnimal> allAnimals = service.all();
+
+        assertThat(allAnimals).hasSize(2);
+        service.delete(cat.getId());
+
+        Collection<BaseAnimal> fishes = service.all();
+        assertThat(fishes).hasSize(1);
+        assertThat(fishes.contains(shark)).isTrue();
+    }
+
+    @Test
+    public void deleteShouldOnlyOnce() throws Exception {
+        service.create(shark);
+        service.create(cat);
+
+        Collection<BaseAnimal> allAnimals = service.all();
+
+        assertThat(allAnimals).hasSize(2);
+        service.delete(cat.getId());
+        service.delete(cat.getId());
+
+        Collection<BaseAnimal> fishes = service.all();
+        assertThat(fishes).hasSize(1);
+        assertThat(fishes.contains(shark)).isTrue();
     }
 }
