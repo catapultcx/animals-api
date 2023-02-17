@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 
 import java.net.URL;
@@ -64,14 +64,14 @@ public class AnimalsControllerIntegrationTest {
     public void animalController_whenDeleteIsCalled_shouldWork() {
         Animal created = create("Test To Delete");
         ResponseEntity<String> response = template.exchange(catsUrl.toString() + "/" + created.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
-        assertThat(response.getStatusCode()).isBetween(HttpStatus.OK, HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.NO_CONTENT);
         assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("text/plain;charset=UTF-8"));
     }
 
     @Test
     public void animalController_whenDeleteIsCalledForANotExistingItem_shouldFail() {
         ResponseEntity<Void> response = template.exchange(catsUrl.toString() + "/error", HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
-        assertThat(response.getStatusCode()).isGreaterThanOrEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class AnimalsControllerIntegrationTest {
         Animal created = create("Test To Delete");
         created.setName("Test to Update");
         ResponseEntity<Animal> response = template.exchange(catsUrl.toString() + "/" + created.getId(), HttpMethod.PUT, new HttpEntity<>(created), Animal.class);
-        assertThat(response.getStatusCode()).isBetween(HttpStatus.OK, HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.NO_CONTENT);
         assertThat(Objects.requireNonNull(response.getBody()).getName()).isEqualTo("Test to Update");
     }
 
