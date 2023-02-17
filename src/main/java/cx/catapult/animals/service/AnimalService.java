@@ -2,6 +2,8 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.entity.AnimalEntity;
+import cx.catapult.animals.repository.AnimalRepository;
 
 import java.util.*;
 
@@ -10,10 +12,12 @@ public class AnimalService {
     private final String animalType;
     private final HashMap<String, Animal> items = new HashMap<>();
     private final Group group;
+    private final AnimalRepository repository;
 
-    public AnimalService(String animalType, Group group) {
+    public AnimalService(String animalType, Group group, AnimalRepository repository) {
         this.animalType = animalType;
         this.group = group;
+        this.repository = repository;
     }
 
     public String getAnimalType() {
@@ -21,68 +25,42 @@ public class AnimalService {
     }
 
     public Collection<Animal> all() {
-        return items.values();
+        return Animal.fromEntity(repository.findAllByTypeIn(List.of(this.animalType)));
     }
 
     public Animal create(Animal animal) {
-        String id = UUID.randomUUID().toString();
-        animal.setId(id);
-        animal.setType(this.animalType);
-        animal.setGroup(this.group);
-        items.put(id, animal);
-        return animal;
+        AnimalEntity animalEntity = new AnimalEntity();
+        animalEntity.setColor(animal.getColor());
+        animalEntity.setDescription(animal.getDescription());
+        animalEntity.setName(animal.getName());
+        animalEntity.setType(this.animalType);
+        animalEntity.setGroup(this.group);
+        return Animal.fromEntity(repository.save(animalEntity));
     }
 
     public Animal get(String id) {
-        return items.get(id);
+        return repository.findById(id).map(Animal::fromEntity).orElse(null);
     }
 
     public boolean delete(String id) {
-        if (items.containsKey(id)) {
-            items.remove(id);
+        if(id == null) return false;
+        Optional<AnimalEntity> entity = repository.findById(id);
+        if (entity.isPresent()){
+            repository.deleteById(id);
             return true;
         }
         return false;
     }
 
     public Animal update(String id, Animal animal) {
-        if (!items.containsKey(id))
+        Optional<AnimalEntity> entity = repository.findById(id);
+        if (entity.isEmpty())
             return null;
-        items.put(id, animal);
-        return items.get(id);
+        AnimalEntity animalEntity = entity.get();
+        animalEntity.setColor(animal.getColor());
+        animalEntity.setDescription(animal.getDescription());
+        animalEntity.setName(animal.getName());
+        return Animal.fromEntity(repository.save(animalEntity));
     }
 
-    public List<Animal> filter(
-            Optional<List<String>> names,
-            Optional<List<String>> colors,
-            Optional<List<String>> descriptions
-    ) {
-        return items
-                .values()
-                .stream()
-                .filter(
-                        data -> filterByName(names, data)
-                                && filterByColor(colors, data)
-                                && filterByDescription(descriptions, data)
-                )
-                .toList();
-    }
-
-    private boolean filterByName(Optional<List<String>> query, Animal data) {
-        return queryEquals(query, data.getName());
-    }
-
-    private boolean filterByColor(Optional<List<String>> query, Animal data) {
-        return queryEquals(query, data.getColor());
-    }
-
-    private boolean filterByDescription(Optional<List<String>> query, Animal data) {
-        return queryEquals(query, data.getDescription());
-    }
-
-    private static boolean queryEquals(Optional<List<String>> query, String data) {
-        return query.isEmpty()
-                || query.get().isEmpty()
-                || query.get().stream().anyMatch(data::contains);
-    }
 }

@@ -1,6 +1,7 @@
 package cx.catapult.animals.configuration;
 
 import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.repository.AnimalRepository;
 import cx.catapult.animals.service.AnimalService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,8 @@ public class AnimalFactoryConfiguration {
     public void init() {
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) this.applicationContext.getAutowireCapableBeanFactory();
         types.keySet().forEach(group -> types.get(group).forEach(type -> {
-            AnimalService bean = new AnimalService(type, group);
+            AnimalRepository repository = this.applicationContext.getBean(AnimalRepository.class);
+            AnimalService bean = new AnimalService(type, group, repository);
             beanFactory.registerSingleton("%ss".formatted(type), bean);
         }));
 
@@ -37,8 +39,8 @@ public class AnimalFactoryConfiguration {
      */
     @Scope("singleton")
     @Bean("cats")
-    public AnimalService getCatsService() {
-        return new AnimalService("cat", Group.MAMMALS);
+    public AnimalService getCatsService(AnimalRepository animalRepository) {
+        return new AnimalService("cat", Group.MAMMALS, animalRepository);
     }
 
 

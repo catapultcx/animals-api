@@ -2,14 +2,30 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.repository.AnimalRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DataJpaTest
+@ExtendWith(SpringExtension.class)
 public class CatsServiceTest {
 
-    CatsService service = new CatsService(new AnimalService("cat", Group.MAMMALS));
+    @Autowired
+    AnimalRepository repository;
+    CatsService service;
     Cat cat = new Cat("Tom", "Bob cat");
+    @BeforeEach
+    public void setUp() {
+        repository.deleteAll();
+        service = new CatsService(new AnimalService("cat", Group.MAMMALS, repository));
+    }
+
 
     @Test
     public void createShouldWork() throws Exception {

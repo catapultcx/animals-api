@@ -1,15 +1,19 @@
 package cx.catapult.animals.web;
 
 
+import cx.catapult.animals.AnimalsApiApplication;
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.repository.AnimalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.URL;
 import java.util.Collection;
@@ -18,7 +22,9 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {AnimalsApiApplication.class})
 public class AnimalsControllerIntegrationTest {
     @LocalServerPort
     private int port;
@@ -30,6 +36,9 @@ public class AnimalsControllerIntegrationTest {
 
     @Autowired
     private TestRestTemplate template;
+
+    @Autowired
+    private AnimalRepository animalRepository;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -50,7 +59,7 @@ public class AnimalsControllerIntegrationTest {
     @Test
     public void allShouldWork() {
         Collection items = template.getForObject(catsUrl.toString(), Collection.class);
-        assertThat(items.size()).isGreaterThanOrEqualTo(7);
+        assertThat(items.size()).isGreaterThanOrEqualTo(1);
     }
 
     @Test
@@ -111,6 +120,11 @@ public class AnimalsControllerIntegrationTest {
 
     @Test
     public void animalController_whenFilterIsCalled_shouldFilter() {
+        create("Tom", "Friend of Jerry", "blue");
+        create("Jerry", "Not really a cat", "blue");
+        create("Bili", "Furry cat", "black");
+        create("Smelly", "Cat with friends", "black");
+        create("Tiger", "Large cat", "yellow");
         Collection result = template.getForObject(base + "/filter?names=Tom,Jerry", Collection.class);
         assertThat(result.size()).isEqualTo(2);
 
@@ -147,7 +161,10 @@ public class AnimalsControllerIntegrationTest {
     }
 
     Animal create(String name) {
-        Animal created = template.postForObject(catsUrl.toString(), new Animal(name, name, "gray"), Animal.class);
+        return create(name,name, "gray");
+    }
+    Animal create(String name, String desc, String color) {
+        Animal created = template.postForObject(catsUrl.toString(), new Animal(name, desc, color), Animal.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;

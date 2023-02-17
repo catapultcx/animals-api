@@ -1,32 +1,48 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
-import org.springframework.context.ApplicationContext;
+import cx.catapult.animals.entity.AnimalEntity;
+import cx.catapult.animals.repository.AnimalRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AnimalFilterService {
-    private final ApplicationContext applicationContext;
+    private final AnimalRepository repository;
 
-    public AnimalFilterService(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public AnimalFilterService(AnimalRepository repository) {
+        this.repository = repository;
     }
 
-    public Collection<Animal> filter(Optional<List<String>> types, Optional<List<String>> names, Optional<List<String>> colors, Optional<List<String>> descriptions) {
-        Collection<AnimalService> animalServices = applicationContext.getBeansOfType(AnimalService.class).values();
-        return animalServices.stream()
-                .filter(animalService ->
-                                  types.isEmpty()
-                                || types.get().isEmpty()
-                                || types.get().contains(animalService.getAnimalType()))
-                .parallel()
-                .map(animalService -> animalService.filter(names, colors, descriptions))
-                .flatMap(List::stream)
-                .toList();
+    public Collection<Animal> filter(
+            Optional<List<String>> types,
+            Optional<List<String>> names,
+            Optional<List<String>> colors,
+            Optional<List<String>> descriptions
+    ) {
+        return Animal.fromEntity(repository.findAll(
+                (Specification<AnimalEntity>) (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                        get(criteriaBuilder,root, types, "type"),
+                        get(criteriaBuilder,root, names, "name"),
+                        get(criteriaBuilder,root, colors, "color"),
+                        get(criteriaBuilder,root, descriptions, "description")
+                ))
+        );
     }
 
+    private Predicate get(
+            CriteriaBuilder cb,
+            Root<AnimalEntity> root ,
+            Optional<List<String>> ins ,
+            String property
+    ) {
+        return ins.filter(
+                strings -> !strings.isEmpty()
+        ).map(strings -> root.get(property).in(strings)).orElse(cb.conjunction());
+    }
 }

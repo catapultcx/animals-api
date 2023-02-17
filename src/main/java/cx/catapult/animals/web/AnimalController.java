@@ -41,7 +41,8 @@ public class AnimalController implements ApplicationContextAware {
             @RequestParam("colors") Optional<List<String>> colors,
             @RequestParam("descriptions") Optional<List<String>> descriptions
     ) {
-        return animalFilterService.filter(types, names, colors, descriptions);
+        Collection<Animal> filter = animalFilterService.filter(types, names, colors, descriptions);
+        return filter;
     }
 
     @GetMapping(value = "/register/{group}/{type}", produces = MediaType.TEXT_PLAIN_VALUE)

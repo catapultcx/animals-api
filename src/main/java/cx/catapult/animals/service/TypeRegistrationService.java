@@ -1,6 +1,7 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.repository.AnimalRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,8 @@ public class TypeRegistrationService {
 
     public boolean registerType(String type, Group group) {
         try {
-            AnimalService bean = new AnimalService(type, group);
+            AnimalRepository repository = this.applicationContext.getBean(AnimalRepository.class);
+            AnimalService bean = new AnimalService(type, group, repository);
             beanFactory.registerSingleton("%ss".formatted(type), bean);
             return true;
         } catch (Exception e) {

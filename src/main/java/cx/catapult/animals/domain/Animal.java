@@ -1,11 +1,14 @@
 package cx.catapult.animals.domain;
 
 
+import cx.catapult.animals.entity.AnimalEntity;
 import cx.catapult.animals.validation.ColorCheck;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.util.Streamable;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public class Animal implements Serializable {
@@ -111,6 +114,19 @@ public class Animal implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getName(), getDescription(), getType());
+    }
+    public static Animal fromEntity(AnimalEntity entity) {
+        Animal animal = new Animal();
+        animal.setId(entity.getId());
+        animal.setName(entity.getName());
+        animal.setGroup(entity.getGroup());
+        animal.setDescription(entity.getDescription());
+        animal.setType(entity.getType());
+        animal.setColor(entity.getColor());
+        return animal;
+    }
+    public static List<Animal> fromEntity(Iterable<AnimalEntity> entities) {
+        return Streamable.of(entities).map(Animal::fromEntity).toList();
     }
 
 }

@@ -2,24 +2,22 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.Group;
-import cx.catapult.animals.configuration.AnimalFactoryConfiguration;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import out.TestFactory;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AnimalServiceTest {
-    private AnnotationConfigApplicationContext context;
 
-    @BeforeEach
-    public void setUp() {
-        context = new AnnotationConfigApplicationContext();
-        context.register(TestFactory.class, AnimalFactoryConfiguration.class);
-        context.refresh();
-    }
+@ExtendWith(SpringExtension.class)
+@DataJpaTest
+public class AnimalServiceTest {
+    @Autowired
+    private AnnotationConfigApplicationContext context;
 
     @ParameterizedTest
     @CsvSource({
@@ -37,9 +35,8 @@ public class AnimalServiceTest {
         animal.setName(name);
         animal.setDescription(String.format("%s is my buddy", name));
         Animal actual = service.create(animal);
-        assertThat(actual).isEqualTo(animal);
-        assertThat(actual.getName()).isEqualTo(animal.getName());
-        assertThat(actual.getDescription()).isEqualTo(animal.getDescription());
+        assertThat(actual.getName()).isEqualTo(name);
+        assertThat(actual.getDescription()).isEqualTo(String.format("%s is my buddy", name));
         assertThat(actual.getGroup()).isEqualTo(group);
         assertThat(actual.getType()).isEqualTo(type);
     }
@@ -77,7 +74,7 @@ public class AnimalServiceTest {
         Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
         AnimalService service = context.getBean(qualifier, AnimalService.class);
         assertThat(service).isNotNull();
-        service.create(animal);
+        animal = service.create(animal);
         Animal actual = service.get(animal.getId());
         assertThat(actual).isEqualTo(animal);
         assertThat(actual.getName()).isEqualTo(animal.getName());
@@ -99,7 +96,7 @@ public class AnimalServiceTest {
         Animal animal = new Animal(name, String.format("%s is my buddy", name), colorString);
         AnimalService service = context.getBean(qualifier, AnimalService.class);
         assertThat(service).isNotNull();
-        service.create(animal);
+        animal = service.create(animal);
         boolean success = service.delete(animal.getId());
         assertThat(success).isTrue();
     }
@@ -130,7 +127,7 @@ public class AnimalServiceTest {
         AnimalService service = context.getBean(qualifier, AnimalService.class);
         assertThat(service).isNotNull();
 
-        service.create(animal);
+        animal = service.create(animal);
         Animal result = service.update(animal.getId(),animal);
         assertThat(result).isNotNull();
     }

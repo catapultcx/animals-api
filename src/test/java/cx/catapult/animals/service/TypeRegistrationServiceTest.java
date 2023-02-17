@@ -1,28 +1,24 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Group;
-import cx.catapult.animals.configuration.AnimalFactoryConfiguration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import out.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class TypeRegistrationServiceTest {
-    private static TypeRegistrationService typeService;
 
-    @BeforeAll
-    public static void setUp() {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.register(TestFactory.class, AnimalFactoryConfiguration.class, TypeRegistrationService.class);
-        context.refresh();
-        typeService = context.getBean(TypeRegistrationService.class);
-        assertThat(typeService).isNotNull();
-    }
+    @Autowired
+    TypeRegistrationService typeService;
+
 
     @Test
     void typeRegistrationService_whenCalledRegisterType_shouldRegisterANewType() {

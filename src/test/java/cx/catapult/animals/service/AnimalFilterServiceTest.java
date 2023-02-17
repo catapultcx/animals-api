@@ -1,34 +1,45 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.configuration.AnimalFactoryConfiguration;
-import org.junit.jupiter.api.BeforeAll;
+import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.repository.AnimalRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import out.TestFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 import java.util.function.Function;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@ExtendWith(SpringExtension.class)
+@DataJpaTest
+@EnableConfigurationProperties(AnimalFactoryConfiguration.class)
+@Import(AnimalFilterService.class)
 class AnimalFilterServiceTest {
 
-    private static AnimalFilterService filterService;
-    private static AnnotationConfigApplicationContext context;
+    @Autowired
+    ApplicationContext context;
 
-    @BeforeAll
-    public static void setUp() {
-        context = new AnnotationConfigApplicationContext();
-        context.register(TestFactory.class, AnimalFactoryConfiguration.class, AnimalFilterService.class);
-        context.refresh();
+    @Autowired
+    AnimalRepository animalRepository;
+    private AnimalFilterService filterService;
+
+    @BeforeEach
+    public void setUp() {
         filterService = context.getBean(AnimalFilterService.class);
         assertThat(filterService).isNotNull();
         createTestData();
     }
 
-    private static void createTestData() {
+    private void createTestData() {
         Map<String, AnimalService> services = context.getBeansOfType(AnimalService.class);
         List<Animal> animals = List.of(
                 new Animal("Kate", "A thing with some props", "black"),
@@ -43,21 +54,21 @@ class AnimalFilterServiceTest {
     @ParameterizedTest
     @CsvSource({
             ",,,,36",
-            "iguana,,,,4",
+            "cat,,,,4",
             "iguana|dog,,,,8",
-            ",te,,,18",
+            ",Kate|Mate,,,18",
             ",,gray,,18",
-            ",,,some,18",
-            "parrot|dog,te,,,4",
-            "spider|dog,te|Manu,,,6",
-            "parrot|dog,te|Manu,black,,2",
-            "parrot,te|Manu,black|gray,,2",
-            "iguana,te|Manu,black|gray,some,1",
-            "parrot,te|Manu,,some,2",
-            "parrot,te|Manu,,desc,2",
-            "parrot,te|Manu,,desc|props,3",
-            ",te|Manu,,desc|props,27",
-            ",te|Manu,gray,desc|props,9",
+            ",,,A thing with some props|Name some desc,18",
+            "parrot|dog,Kate|Mate,,,4",
+            "spider|dog,Kate|Mate|Manu,,,6",
+            "parrot|dog,Kate|Mate|Manu,black,,2",
+            "parrot,Kate|Mate|Manu,black|gray,,2",
+            "iguana,Kate|Mate|Manu,black|gray,A thing with some props|Name some desc,1",
+            "parrot,Kate|Mate|Manu,,A thing with some props|Name some desc,2",
+            "parrot,Kate|Mate|Manu,,Name some desc|A desc with props,2",
+            "parrot,Kate|Mate|Manu,,Name some desc|A desc with props|A thing with some props,3",
+            ",Kate|Mate|Manu,,Name some desc|A desc with props|A thing with some props,27",
+            ",Kate|Mate|Manu,gray,Name some desc|A desc with props|A thing with some props,9",
     })
     public void filterService_whenProvidedParameter_shouldFilter(
             String types,

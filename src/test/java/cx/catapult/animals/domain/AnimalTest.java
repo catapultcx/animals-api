@@ -1,16 +1,32 @@
 package cx.catapult.animals.domain;
 
+import cx.catapult.animals.repository.AnimalRepository;
 import cx.catapult.animals.service.AnimalService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+@DataJpaTest
+@ExtendWith(SpringExtension.class)
 class AnimalTest {
 
-    private final AnimalService catsService = new AnimalService("cat", Group.MAMMALS);
+    @Autowired
+    AnimalRepository repository;
+
+    private AnimalService catsService;
+    @BeforeEach
+    public void setUp() {
+        repository.deleteAll();
+        catsService = new AnimalService("cat", Group.MAMMALS, repository);
+    }
     @Test
     void animal_whenASupportedTypeProvided_shouldCreateAnimalInstance() {
         Animal animal = catsService.create(new Animal("Tom", "Tom and jerry", "blue"));
