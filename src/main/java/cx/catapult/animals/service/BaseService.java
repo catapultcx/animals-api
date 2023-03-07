@@ -25,4 +25,22 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     public T get(String id) {
         return items.get(id);
     }
+
+    @Override
+    public T remove(String id) {
+        if (items.containsKey(id)) {
+            return items.remove(id);
+        }
+        return null;
+    }
+
+    @Override
+    public T save(String id, String name, String desc) {
+        T entity = items.get(id);
+        entity.setName(name);
+        entity.setDescription(desc);
+        items.put(id, entity);
+        return entity;
+    }
+
 }
