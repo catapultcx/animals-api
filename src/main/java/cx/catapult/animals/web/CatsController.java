@@ -35,4 +35,16 @@ public class CatsController {
     create(@RequestBody Cat cat) {
         return service.create(cat);
     }
+
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void update(@RequestBody Cat cat) {
+        service.update(cat);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 }

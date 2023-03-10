@@ -37,7 +37,7 @@ public class AnimalsApiApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
 						.allowedOrigins("http://localhost:3000")
-						.allowedMethods("POST", "DELETE")
+						.allowedMethods("POST", "DELETE", "PUT")
 						.allowedHeaders("content-type");
             }
         };
