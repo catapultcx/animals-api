@@ -3,6 +3,8 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
@@ -36,5 +38,27 @@ public class CatsServiceTest {
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+    }
+
+    @Test
+    public void editShouldWork()  {
+        String name="MyCat";
+        Cat newCat = service.create(cat);
+        newCat.setName(name);
+        service.update(newCat);
+        Cat updatedCat = service.get(newCat.getId());
+        assertThat(updatedCat.getName()).isEqualTo(name);
+    }
+
+    @Test
+    public void deleteShouldWork()  {
+        Cat newCat = service.create(cat);
+        service.delete(newCat.getId());
+
+        Optional<Cat> actual = service.all().stream()
+                            .filter(c -> c.getId().equals(newCat.getId()))
+                            .findFirst();
+        assertThat(actual).isEmpty();
+
     }
 }

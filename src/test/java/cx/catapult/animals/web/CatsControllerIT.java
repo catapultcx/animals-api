@@ -46,6 +46,26 @@ public class CatsControllerIT {
     }
 
     @Test
+    public void editShouldWork() throws Exception {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        Cat newCat = response.getBody();
+        newCat.setName("MyCat");
+        template.put(base.toString(), newCat);
+        ResponseEntity<Cat> updatedResponse = template.getForEntity(base.toString() + "/" + newCat.getId(), Cat.class);
+        assertThat(updatedResponse.getBody().getName()).isEqualTo("MyCat");
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        Cat newCat = response.getBody();
+
+        template.delete(String.format("%s/%s", base.toString(),newCat.getId()));
+        ResponseEntity<String> updatedResponse = template.getForEntity(base.toString() + "/" + newCat.getId(), String.class);
+        assertThat(updatedResponse.getStatusCode() == HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     public void allShouldWork() throws Exception {
         Collection items = template.getForObject(base.toString(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(7);
