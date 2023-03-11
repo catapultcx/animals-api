@@ -52,4 +52,11 @@ public class CatsControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/123"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void search() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/search")
+                        .queryParam("name", "tim"))
+                        .andExpect(status().isOk());
+    }
 }

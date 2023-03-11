@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -76,6 +77,13 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void searchShouldWork() throws Exception {
+        create("Cat 007");
+        ResponseEntity<Cat[]> response = template.getForEntity(base.toString() + "/search?name=Cat 007", Cat[].class);
+        assertThat(response.getBody()).hasSize(1);
     }
 
     Cat create(String name) {

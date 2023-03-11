@@ -1,6 +1,8 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.domain.SearchRequest;
+import cx.catapult.animals.service.CatSearchService;
 import cx.catapult.animals.service.CatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -16,10 +19,20 @@ public class CatsController {
     @Autowired
     private CatsService service;
 
+    @Autowired
+    private CatSearchService catSearchService;
+
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody
     Collection<Cat> all() {
         return service.all();
+    }
+
+    @GetMapping(value = "/search", produces = "application/json")
+    public @ResponseBody
+    List<Cat> search(@RequestParam(required = false) String name,
+                     @RequestParam(required = false)  String desc) {
+        return catSearchService.search(new SearchRequest(name, desc));
     }
 
     @GetMapping(value = "/{id}")
