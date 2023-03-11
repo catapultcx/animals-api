@@ -21,6 +21,10 @@ public class CatSearchService {
         if(searchRequest == null){
             return Collections.EMPTY_LIST;
         }
+        if(StringUtils.isEmpty(searchRequest.getName()) && StringUtils.isEmpty(searchRequest.getDescription())){
+            return service.all().stream().collect(Collectors.toList());
+        }
+
         Function<String, Boolean> nameSearch = (String name)->{
             if(!StringUtils.isEmpty(searchRequest.getName())){
                 return searchRequest.getName().equalsIgnoreCase(name);

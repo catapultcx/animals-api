@@ -79,9 +79,9 @@ public class CatSearchServiceTest {
     }
 
     @Test
-    public void shouldReturnNoResultsForEmptySearch(){
+    public void shouldReturnAllResultsForEmptySearch(){
         List<Cat> results = catSearchService.search(new SearchRequest(null, null));
-        assertThat(results).hasSize(0);
+        assertThat(results).hasSize(3);
     }
 
     @Test
