@@ -2,7 +2,9 @@ package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
