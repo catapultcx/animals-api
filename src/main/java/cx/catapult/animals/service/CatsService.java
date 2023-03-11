@@ -14,7 +14,9 @@ public class CatsService extends BaseService<Cat> {
         this.create(new Cat("Jerry", "Not really a cat"));
         this.create(new Cat("Bili", "Furry cat"));
         this.create(new Cat("Smelly", "Cat with friends"));
+        this.create(new Cat("Smelly", "Phoebe Buffay's cat"));
         this.create(new Cat("Tiger", "Large cat"));
+        this.create(new Cat("Lion", "Large cat"));
         this.create(new Cat("Tigger", "Not a scary cat"));
         this.create(new Cat("Garfield", "Lazy cat"));
     }
