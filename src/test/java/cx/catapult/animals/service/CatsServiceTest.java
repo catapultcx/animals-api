@@ -1,40 +1,72 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.Cat;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import cx.catapult.animals.domain.Cat;
 
 public class CatsServiceTest {
 
-    CatsService service = new CatsService();
-    Cat cat = new Cat("Tom", "Bob cat");
+    CatsService service;
+    Cat cat;
 
-    @Test
-    public void createShouldWork() throws Exception {
-        Cat thisCat = new Cat();
-        thisCat.setName("Jerry");
-        thisCat.setDescription("Mouse Cat");
-        Cat actual = service.create(thisCat);
-        assertThat(actual).isEqualTo(thisCat);
-        assertThat(actual.getName()).isEqualTo(thisCat.getName());
-        assertThat(actual.getDescription()).isEqualTo(thisCat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(thisCat.getGroup());
+    @BeforeEach
+    public void initilize() {
+	service = new CatsService();
+	cat = new Cat("Tom", "Bob cat");
     }
 
     @Test
-    public void allShouldWork() throws Exception {
-        service.create(cat);
-        assertThat(service.all().size()).isEqualTo(1);
+    public void createShouldWork() {
+	Cat thisCat = new Cat();
+	thisCat.setName("Jerry");
+	thisCat.setDescription("Mouse Cat");
+	Cat actual = service.create(thisCat);
+	assertThat(actual).isEqualTo(thisCat);
+	assertThat(actual.getId()).isNotNull();
     }
 
     @Test
-    public void getShouldWork() throws Exception {
-        service.create(cat);
-        Cat actual = service.get(cat.getId());
-        assertThat(actual).isEqualTo(cat);
-        assertThat(actual.getName()).isEqualTo(cat.getName());
-        assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+    public void allShouldWork() {
+	service.create(cat);
+	assertThat(service.all().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void getShouldWork() {
+	service.create(cat);
+	Cat actual = service.get(cat.getId());
+	assertThat(actual).isNotNull().isEqualTo(cat);
+    }
+
+    @Test
+    public void getThatDoesNotExitsShouldWork() {
+	Cat actual = service.get("NotExist");
+	assertThat(actual).isNull();
+    }
+
+    @Test
+    public void updateShouldWork() {
+	Cat entity = service.create(cat);
+	Cat updated = entity.toBuilder().description("American Shorthair").build();
+	Cat actual = service.update(updated);
+	assertThat(actual).isNotNull().isEqualTo(updated);
+    }
+
+    @Test
+    public void removeShouldWork() {
+	final Cat created = service.create(cat);
+	final Cat removed = service.remove(created.getId());
+	assertThat(removed).isNotNull().isEqualTo(created);
+	Cat actual = service.get(cat.getId());
+	assertThat(actual).isNull();
+    }
+
+    @Test
+    public void removeThatDoesNotExitsShouldWork() {
+	final Cat removed = service.remove("NotExist");
+	assertThat(removed).isNull();
     }
 }

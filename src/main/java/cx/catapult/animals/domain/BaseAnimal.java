@@ -2,6 +2,11 @@ package cx.catapult.animals.domain;
 
 import java.io.Serializable;
 
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@SuperBuilder(toBuilder = true)
 public class BaseAnimal implements Animal, Serializable {
 
     private String id;
@@ -10,48 +15,48 @@ public class BaseAnimal implements Animal, Serializable {
     private Group group;
 
     public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+	this(null, name, description, group);
     }
 
     public BaseAnimal(String id, String name, String description, Group group) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.group = group;
+	this.id = id;
+	this.name = name;
+	this.description = description;
+	this.group = group;
     }
 
     @Override
     public String getId() {
-        return this.id;
+	return this.id;
     }
 
     @Override
     public void setId(String id) {
-        this.id = id;
+	this.id = id;
     }
 
     @Override
     public String getName() {
-        return this.name;
+	return this.name;
     }
 
     @Override
     public void setName(String name) {
-        this.name = name;
+	this.name = name;
     }
 
     @Override
     public String getDescription() {
-        return this.description;
+	return this.description;
     }
 
     @Override
     public void setDescription(String description) {
-        this.description = description;
+	this.description = description;
     }
 
     @Override
     public Group getGroup() {
-        return this.group;
+	return this.group;
     }
 }
