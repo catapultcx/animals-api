@@ -11,6 +11,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "*")
 public class CatsController {
 
     @Autowired
@@ -22,6 +23,12 @@ public class CatsController {
         return service.all();
     }
 
+    @GetMapping(value = "", produces = "application/json" ,params = "search")
+    public @ResponseBody
+    Collection<Cat> filter(@RequestParam("search") String searchString) {
+        return searchString.isEmpty() ? service.all() : service.filteredAll(searchString);
+    }
+
     @GetMapping(value = "/{id}")
     public @ResponseBody
     Cat get(@PathVariable String id) {
@@ -31,8 +38,21 @@ public class CatsController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Cat
-    create(@RequestBody Cat cat) {
+    Cat create(@RequestBody Cat cat) {
         return service.create(cat);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody
+    Cat update(@PathVariable String id, @RequestBody Cat cat) {
+        return service.update(id, cat);
+    }
+
+    @DeleteMapping(value="/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody
+    Cat delete(@PathVariable String id) {
+         return service.delete(id);
     }
 }
