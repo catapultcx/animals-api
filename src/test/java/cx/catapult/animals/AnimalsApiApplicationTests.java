@@ -10,4 +10,9 @@ class AnimalsApiApplicationTests {
 	void contextLoads() {
 	}
 
+    @Test
+    void main() {
+        AnimalsApiApplication.main(new String[] {});
+    }
+
 }

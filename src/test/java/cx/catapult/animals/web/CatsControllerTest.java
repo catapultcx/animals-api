@@ -9,8 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -22,6 +21,7 @@ public class CatsControllerTest {
 
     private Cat cat = new Cat("Tom", "Bob cat");
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
+    private String jsonForUpdate = "{ \"id\": \"123\", \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
     @Test
     public void all() throws Exception {
@@ -40,4 +40,32 @@ public class CatsControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
+
+
+    @Test
+    void givenValidCreateURL_whenMockMVC_thenReturnsStatusOK() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    void givenValidUpdateURL_whenMockMVC_thenReturnsStatusOK() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/cats").content(jsonForUpdate).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void givenValidDeleteURL_whenMockMVC_thenReturnsStatusOK() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/132"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void givenAllByFilterURLWithQueryParameter_whenMockMVC_thenReturnsStatusOK() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats")
+            .param("name","n")
+            .param("description","d")
+        ).andExpect(status().isOk());
+    }
+
 }
