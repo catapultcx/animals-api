@@ -1,13 +1,18 @@
 package cx.catapult.animals.web;
 
+import cx.catapult.animals.domain.BaseAnimal;
+import cx.catapult.animals.domain.Group;
+import cx.catapult.animals.service.AnimalsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -16,6 +21,9 @@ public class AnimalsControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @MockBean
+    private AnimalsService animalsService;
 
     @Test
     public void all() throws Exception {
@@ -31,8 +39,22 @@ public class AnimalsControllerTest {
 
     @Test
     public void create() throws Exception {
-        String json = "{ \"name\": \"Ginger\", \"description\": \"Cat\", \"type\": \"Cat\", \"colour\": \"red\", \"group\": \"MAMMALS\" }";
+        String json = "{ \"name\": \"Ginger\", \"description\": \"Cat\",  \"group\": \"MAMMALS\", \"colour\": \"red\", \"type\": \"Cat\" }";
         mvc.perform(MockMvcRequestBuilders.post("/api/1/animals").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void deleteValidId() throws Exception {
+        when(animalsService.delete("1")).thenReturn(new BaseAnimal("name", "desec", Group.AMPHIBIAN, "type"));
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/1").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteInvalidId() throws Exception {
+        when(animalsService.delete("1")).thenReturn(null);
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/1").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
     }
 }

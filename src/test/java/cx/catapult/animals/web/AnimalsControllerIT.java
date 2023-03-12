@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -25,7 +26,7 @@ public class AnimalsControllerIT {
 
     private URL base;
 
-    private final BaseAnimal patchy = new BaseAnimal("Patchy", "A donkey", Group.MAMMALS, "Donkey");
+    private final BaseAnimal patchy = new BaseAnimal("Patchy", "A donkey", Group.MAMMALS, "Brown and white", "Donkey");
 
     @Autowired
     private TestRestTemplate template;
@@ -58,16 +59,31 @@ public class AnimalsControllerIT {
         assertThat(response.getBody()).isNotEmpty();
     }
 
+    @Test
+    public void deleteShouldReturnOKForValidId() {
+        BaseAnimal created = create("Test 1");
+        ResponseEntity<Void> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void deleteShouldReturnNotFoundForInvalidId() {
+        ResponseEntity<Void> response = template.exchange(base.toString() + "/invalid-id", HttpMethod.DELETE, null, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     BaseAnimal create(String name) {
         final String type = "type";
         final String description = "description";
         final Group group = AMPHIBIAN;
-        BaseAnimal created = template.postForObject(base.toString(), new BaseAnimal(name, name, description, group, type), BaseAnimal.class);
+        final String colour = "blue";
+        BaseAnimal created = template.postForObject(base.toString(), new BaseAnimal(name, name, description, group, colour, type), BaseAnimal.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         assertThat(created.getType()).isEqualTo(type);
         assertThat(created.getDescription()).isEqualTo(description);
         assertThat(created.getGroup()).isEqualTo(group);
+        assertThat(created.getColour()).isEqualTo(colour);
         return created;
     }
 }

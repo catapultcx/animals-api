@@ -27,4 +27,11 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     public T get(String id) {
         return items.get(id);
     }
+
+    public T delete(String id) {
+        if (items.get(id) != null) {
+            return items.remove(id);
+        }
+        return null;
+    }
 }
