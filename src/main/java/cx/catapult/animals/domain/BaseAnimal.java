@@ -16,14 +16,14 @@ public class BaseAnimal implements Animal, Serializable {
     }
 
     public BaseAnimal(String name, String description, Group group, String type) {
-        this(null, name, description, group, null, type);
+        this(null, name, description, group, type, null);
     }
 
-    public BaseAnimal(String name, String description, Group group, String colour, String type) {
-        this(null, name, description, group, colour, type);
+    public BaseAnimal(String name, String description, Group group, String type, String colour) {
+        this(null, name, description, group, type, colour);
     }
 
-    public BaseAnimal(String id, String name, String description, Group group, String colour, String type) {
+    public BaseAnimal(String id, String name, String description, Group group, String type, String colour) {
         this.id = id;
         this.name = name;
         this.description = description;

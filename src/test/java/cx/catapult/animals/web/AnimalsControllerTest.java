@@ -45,6 +45,15 @@ public class AnimalsControllerTest {
     }
 
     @Test
+    public void update() throws Exception {
+        String json = "{ \"name\": \"Ginger\", \"description\": \"Cat\",  \"group\": \"MAMMALS\", \"colour\": \"red\", \"type\": \"Cat\" }";
+        when(animalsService.get("123")).thenReturn(new BaseAnimal("name", "desec", Group.AMPHIBIAN, "type"));
+
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/animals/123").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void deleteValidId() throws Exception {
         when(animalsService.delete("1")).thenReturn(new BaseAnimal("name", "desec", Group.AMPHIBIAN, "type"));
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/1").contentType(MediaType.APPLICATION_JSON_VALUE))

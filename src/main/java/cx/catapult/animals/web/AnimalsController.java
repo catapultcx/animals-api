@@ -7,8 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping(path = "/api/1/animals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,12 +39,22 @@ public class AnimalsController {
         return service.create(animal);
     }
 
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    BaseAnimal update(@PathVariable String id, @RequestBody BaseAnimal animal) {
+        if (service.get(id) == null) {
+            throw new ResponseStatusException(NOT_FOUND, "Unable to find animal to update");
+        }
+
+        return service.update(id, animal);
+    }
+
     @DeleteMapping(value = "/{id}")
     @ResponseStatus
     public ResponseEntity<Void> delete(@PathVariable String id) {
         if (service.delete(id) != null) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(NOT_FOUND).build();
     }
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
-    private HashMap<String, T> items = new HashMap<>();
+    private final HashMap<String, T> items = new HashMap<>();
 
     @Override
     public Collection<T> all() {
@@ -17,8 +17,20 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     @Override
     public T create(T animal) {
-        String id = UUID.randomUUID().toString();
-        animal.setId(id);
+        if (animal.getId() == null) {
+            String id = UUID.randomUUID().toString();
+            animal.setId(id);
+        }
+        items.put(animal.getId(), animal);
+        return animal;
+    }
+
+    @Override
+    public T update(String id, T animal) {
+        T currentItem = items.get(id);
+        if (currentItem == null) {
+            return null;
+        }
         items.put(id, animal);
         return animal;
     }

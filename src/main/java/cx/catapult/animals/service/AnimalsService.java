@@ -10,13 +10,13 @@ import javax.annotation.PostConstruct;
 public class AnimalsService extends BaseService<BaseAnimal> {
     @PostConstruct
     public void initialize() {
-        this.create(new BaseAnimal("Tom", "Tree frog", Group.AMPHIBIAN, "Green", "Frog"));
-        this.create(new BaseAnimal("Mary", "A bird", Group.BIRD, "Brown", "Kestrel"));
-        this.create(new BaseAnimal("Zeus", "Labrador x staffie", Group.MAMMALS, "Black", "Dog"));
-        this.create(new BaseAnimal("Josie", "Lurcher", Group.MAMMALS, "Grey", "Dog"));
-        this.create(new BaseAnimal("Romeo", "Welsh cob", Group.MAMMALS, "Brown", "Horse"));
-        this.create(new BaseAnimal("Kate", "House spider", Group.INVERTEBRATE, "Red", "Spider"));
-        this.create(new BaseAnimal("Jim", "Cod", Group.FISH, "White", "Fish"));
-        this.create(new BaseAnimal("Kim", "Reticulated python ", Group.FISH, "Brown", "Snake"));
+        this.create(new BaseAnimal("123", "Tom", "Tree frog", Group.AMPHIBIAN, "Frog", "Green"));
+        this.create(new BaseAnimal("Mary", "A bird", Group.BIRD,  "Kestrel", "Brown"));
+        this.create(new BaseAnimal("Zeus", "Labrador x staffie", Group.MAMMALS, "Dog", "Black"));
+        this.create(new BaseAnimal("Josie", "Lurcher", Group.MAMMALS, "Dog", "Grey"));
+        this.create(new BaseAnimal("Romeo", "Welsh cob", Group.MAMMALS, "Horse", "Brown"));
+        this.create(new BaseAnimal("Kate", "House spider", Group.INVERTEBRATE, "Spider", "Red"));
+        this.create(new BaseAnimal("Jim", "Cod", Group.FISH, "Fish", "White"));
+        this.create(new BaseAnimal("Kim", "Reticulated python ", Group.FISH, "Snake", "Brown"));
     }
 }

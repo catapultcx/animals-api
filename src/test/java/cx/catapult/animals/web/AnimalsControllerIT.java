@@ -26,8 +26,6 @@ public class AnimalsControllerIT {
 
     private URL base;
 
-    private final BaseAnimal patchy = new BaseAnimal("Patchy", "A donkey", Group.MAMMALS, "Brown and white", "Donkey");
-
     @Autowired
     private TestRestTemplate template;
 
@@ -38,6 +36,7 @@ public class AnimalsControllerIT {
 
     @Test
     public void createShouldWork() {
+        BaseAnimal patchy = new BaseAnimal("Patchy", "A donkey", Group.MAMMALS, "Donkey", "Brown and white");
         ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), patchy, BaseAnimal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
@@ -54,15 +53,15 @@ public class AnimalsControllerIT {
 
     @Test
     public void getShouldWork() {
-        BaseAnimal created = create("Test 1");
-        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        BaseAnimal animal = create("Test 1");
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + animal.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
     }
 
     @Test
     public void deleteShouldReturnOKForValidId() {
-        BaseAnimal created = create("Test 1");
-        ResponseEntity<Void> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Void.class);
+        BaseAnimal animal = create("Test 1");
+        ResponseEntity<Void> response = template.exchange(base.toString() + "/" + animal.getId(), HttpMethod.DELETE, null, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -72,12 +71,25 @@ public class AnimalsControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    public void updateShouldUpdateGivenValidId() {
+        final String updatedColour = "new colour";
+        BaseAnimal animal = create("Test 1");
+        animal.setColour(updatedColour);
+        template.put(base.toString() + "/" + animal.getId(), animal, BaseAnimal.class);
+
+        ResponseEntity<BaseAnimal> response = template.getForEntity(base.toString() + "/" + animal.getId(), BaseAnimal.class);
+        BaseAnimal updated = response.getBody();
+        assertThat(updated).isNotNull();
+        assertThat(updated.getColour()).isEqualTo(updatedColour);
+    }
+
     BaseAnimal create(String name) {
         final String type = "type";
         final String description = "description";
         final Group group = AMPHIBIAN;
         final String colour = "blue";
-        BaseAnimal created = template.postForObject(base.toString(), new BaseAnimal(name, name, description, group, colour, type), BaseAnimal.class);
+        BaseAnimal created = template.postForObject(base.toString(), new BaseAnimal(name, name, description, group, type, colour), BaseAnimal.class);
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         assertThat(created.getType()).isEqualTo(type);
