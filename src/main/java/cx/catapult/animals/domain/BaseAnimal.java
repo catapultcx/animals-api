@@ -1,11 +1,14 @@
 package cx.catapult.animals.domain;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class BaseAnimal implements Animal, Serializable {
 
     private String id;
+    @NotNull(message = "Name cannot be null")
     private String name;
+    @NotNull(message = "Description cannot be null")
     private String description;
     private Group group;
 
@@ -54,4 +57,6 @@ public class BaseAnimal implements Animal, Serializable {
     public Group getGroup() {
         return this.group;
     }
+
+
 }

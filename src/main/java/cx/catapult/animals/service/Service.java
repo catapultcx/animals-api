@@ -12,4 +12,11 @@ public interface Service<T extends Animal> {
 
     public T get(String id);
 
+
+    public T update(T animal);
+
+    public boolean delete(String id);
+
+    public Collection<T> getByFilter(String name, String description);
+
 }
