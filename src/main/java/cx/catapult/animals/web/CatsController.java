@@ -43,14 +43,14 @@ public class CatsController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
     Cat update(@PathVariable String id, @RequestBody Cat cat) {
         return service.update(id, cat);
     }
 
     @DeleteMapping(value="/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
     Cat delete(@PathVariable String id) {
          return service.delete(id);
