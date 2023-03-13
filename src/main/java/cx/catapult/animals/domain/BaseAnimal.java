@@ -3,7 +3,6 @@ package cx.catapult.animals.domain;
 import java.io.Serializable;
 
 public class BaseAnimal implements Animal, Serializable {
-
     private String id;
     private String name;
     private String description;

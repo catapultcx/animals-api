@@ -19,7 +19,7 @@ public class CatsController {
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody
     Collection<Cat> all() {
-        return service.all();
+        return service.all(null);
     }
 
     @GetMapping(value = "/{id}")

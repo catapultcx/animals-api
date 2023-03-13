@@ -17,6 +17,6 @@ public class AnimalsService extends BaseService<BaseAnimal> {
         this.create(new BaseAnimal("Romeo", "Welsh cob", Group.MAMMALS, "Horse", "Brown"));
         this.create(new BaseAnimal("Kate", "House spider", Group.INVERTEBRATE, "Spider", "Red"));
         this.create(new BaseAnimal("Jim", "Cod", Group.FISH, "Fish", "White"));
-        this.create(new BaseAnimal("Kim", "Reticulated python ", Group.FISH, "Snake", "Brown"));
+        this.create(new BaseAnimal("Kim", "Reticulated python ", Group.REPTILES, "Snake", "Brown"));
     }
 }

@@ -1,18 +1,42 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.FilterOptions;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
     private final HashMap<String, T> items = new HashMap<>();
 
     @Override
-    public Collection<T> all() {
-        return items.values();
+    public Collection<T> all(FilterOptions filterOptions) {
+        Collection<T> all = items.values();
+        if (filterOptions == null) {
+            return all;
+        }
+
+        if (StringUtils.hasText(filterOptions.getType())) {
+            all = all.stream().filter(item -> filterOptions.getType().equalsIgnoreCase(item.getType())).collect(Collectors.toList());
+        }
+
+        if (StringUtils.hasText(filterOptions.getName())) {
+            all = all.stream().filter(item -> filterOptions.getName().equalsIgnoreCase(item.getName())).collect(Collectors.toList());
+        }
+
+        if (StringUtils.hasText(filterOptions.getColour())) {
+            all = all.stream().filter(item -> filterOptions.getColour().equalsIgnoreCase(item.getColour())).collect(Collectors.toList());
+        }
+
+        if (StringUtils.hasText(filterOptions.getDescription())) {
+            all = all.stream().filter(item -> filterOptions.getDescription().equalsIgnoreCase(item.getDescription())).collect(Collectors.toList());
+        }
+
+        return all;
     }
 
     @Override

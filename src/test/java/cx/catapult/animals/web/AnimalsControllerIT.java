@@ -17,6 +17,7 @@ import java.util.Collection;
 
 import static cx.catapult.animals.domain.Group.AMPHIBIAN;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
@@ -39,6 +40,7 @@ public class AnimalsControllerIT {
         BaseAnimal patchy = new BaseAnimal("Patchy", "A donkey", Group.MAMMALS, "Donkey", "Brown and white");
         ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), patchy, BaseAnimal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertNotNull(response.getBody());
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(patchy.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(patchy.getDescription());
@@ -53,14 +55,14 @@ public class AnimalsControllerIT {
 
     @Test
     public void getShouldWork() {
-        BaseAnimal animal = create("Test 1");
+        BaseAnimal animal = create("Test get");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + animal.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
     }
 
     @Test
     public void deleteShouldReturnOKForValidId() {
-        BaseAnimal animal = create("Test 1");
+        BaseAnimal animal = create("Test delete");
         ResponseEntity<Void> response = template.exchange(base.toString() + "/" + animal.getId(), HttpMethod.DELETE, null, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
@@ -74,7 +76,7 @@ public class AnimalsControllerIT {
     @Test
     public void updateShouldUpdateGivenValidId() {
         final String updatedColour = "new colour";
-        BaseAnimal animal = create("Test 1");
+        BaseAnimal animal = create("Test update");
         animal.setColour(updatedColour);
         template.put(base.toString() + "/" + animal.getId(), animal, BaseAnimal.class);
 

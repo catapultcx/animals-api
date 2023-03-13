@@ -1,10 +1,12 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.BaseAnimal;
+import cx.catapult.animals.domain.FilterOptions;
 import cx.catapult.animals.domain.Group;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 public class AnimalsServiceTest {
 
     private final AnimalsService service = new AnimalsService();
@@ -40,7 +42,18 @@ public class AnimalsServiceTest {
     @Test
     public void allShouldWork() {
         service.create(ernest);
-        assertThat(service.all().size()).isEqualTo(1);
+        assertThat(service.all(null).size()).isEqualTo(1);
+    }
+
+    @Test
+    public void allFilteredShouldWork() {
+        service.create(ernest);
+        BaseAnimal updatedErnest = new BaseAnimal("different name", ernest.getDescription(), ernest.getGroup(), ernest.getType(), ernest.getColour());
+        service.create(updatedErnest);
+        service.create(new BaseAnimal("another name", "different description", Group.AMPHIBIAN, "type", "orange"));
+
+        FilterOptions filterOptions = new FilterOptions(ernest.getType(), ernest.getName(), ernest.getColour(), ernest.getDescription());
+        assertThat(service.all(filterOptions).size()).isEqualTo(1);
     }
 
     @Test
@@ -54,7 +67,7 @@ public class AnimalsServiceTest {
     }
 
     @Test
-    public void updateShouldWork() {
+    public void updateShouldUpdateAnimalWithId() {
         final String updatedDescription = "updated description";
         service.create(ernest);
         ernest.setDescription(updatedDescription);
@@ -78,7 +91,7 @@ public class AnimalsServiceTest {
     }
 
     @Test
-    public void deleteShouldReturnNullForInvalidAnimaml() {
+    public void deleteShouldReturnNullForInvalidAnimalId() {
         BaseAnimal thisAnimal = new BaseAnimal("id", "name", "desc", Group.MAMMALS, "type", "Brown");
         assertThat(service.delete(thisAnimal.getId())).isNull();
     }

@@ -25,7 +25,7 @@ public class CatsServiceTest {
     @Test
     public void allShouldWork() throws Exception {
         service.create(cat);
-        assertThat(service.all().size()).isEqualTo(1);
+        assertThat(service.all(null).size()).isEqualTo(1);
     }
 
     @Test

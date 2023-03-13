@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.BaseAnimal;
+import cx.catapult.animals.domain.FilterOptions;
 import cx.catapult.animals.service.AnimalsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,21 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequestMapping(path = "/api/1/animals", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AnimalsController {
 
+    private final AnimalsService service;
+
     @Autowired
-    private AnimalsService service;
+    public AnimalsController(AnimalsService service) {
+        this.service = service;
+    }
 
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody
-    Collection<BaseAnimal> all() {
-        return service.all();
+    Collection<BaseAnimal> all(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String colour,
+            @RequestParam(required = false) String description) {
+       return service.all(new FilterOptions(type, name, colour, description));
     }
 
     @GetMapping(value = "/{id}")

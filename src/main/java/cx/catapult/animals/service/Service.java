@@ -1,12 +1,13 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.FilterOptions;
 
 import java.util.Collection;
 
 public interface Service<T extends Animal> {
 
-    Collection<T> all();
+    Collection<T> all(FilterOptions filterOptions);
 
     T create(T animal);
 
