@@ -47,16 +47,15 @@ Publish to Docker Hub
 
 Once started the API will be available at:
 
- * http://localhost:8080
-
+* http://localhost:8080
 
 API docs can be found at:
 
 * http://localhost:8080/api-docs
 * http://localhost:8080/swagger-ui.html
 
-
 ### Reference Documentation
+
 For further reference, please consider the following sections:
 
 * [Swagger](https://www.baeldung.com/spring-rest-openapi-documentation)

@@ -1,15 +1,17 @@
 package cx.catapult.animals.service;
 
-import cx.catapult.animals.domain.Animal;
-
 import java.util.Collection;
+import cx.catapult.animals.domain.AnimalIf;
 
-public interface Service<T extends Animal> {
+public interface Service<T extends AnimalIf> {
 
-    public Collection<T> all();
+    Collection<T> filter(String name, String description, String colour, String type);
+
+    T get(String id);
 
     T create(T animal);
 
-    public T get(String id);
+    T update(T animal);
 
+    void delete(String id);
 }
