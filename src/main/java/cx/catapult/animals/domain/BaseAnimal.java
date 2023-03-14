@@ -7,17 +7,14 @@ public class BaseAnimal implements Animal, Serializable {
     private String id;
     private String name;
     private String description;
-    private Group group;
+    private String color;
+    private Type type;
 
-    public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
-    }
-
-    public BaseAnimal(String id, String name, String description, Group group) {
-        this.id = id;
+    public BaseAnimal(String name, String description, String color, Type type) {
         this.name = name;
         this.description = description;
-        this.group = group;
+        this.color = color;
+        this.type = type;
     }
 
     @Override
@@ -50,8 +47,19 @@ public class BaseAnimal implements Animal, Serializable {
         this.description = description;
     }
 
-    @Override
-    public Group getGroup() {
-        return this.group;
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 }

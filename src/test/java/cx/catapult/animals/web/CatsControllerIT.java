@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
 public class CatsControllerIT {
     @LocalServerPort
     private int port;
@@ -36,23 +35,23 @@ public class CatsControllerIT {
     }
 
     @Test
-    public void createShouldWork() throws Exception {
+    public void createShouldWork() {
         ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
-        assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
+        assertThat(response.getBody().getType()).isEqualTo(cat.getType());
     }
 
     @Test
-    public void allShouldWork() throws Exception {
+    public void allShouldWork() {
         Collection items = template.getForObject(base.toString(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(7);
     }
 
     @Test
-    public void getShouldWork() throws Exception {
+    public void getShouldWork() {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();

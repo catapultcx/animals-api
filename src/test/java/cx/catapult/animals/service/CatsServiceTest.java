@@ -11,7 +11,7 @@ public class CatsServiceTest {
     Cat cat = new Cat("Tom", "Bob cat");
 
     @Test
-    public void createShouldWork() throws Exception {
+    public void createShouldWork() {
         Cat thisCat = new Cat();
         thisCat.setName("Jerry");
         thisCat.setDescription("Mouse Cat");
@@ -19,22 +19,22 @@ public class CatsServiceTest {
         assertThat(actual).isEqualTo(thisCat);
         assertThat(actual.getName()).isEqualTo(thisCat.getName());
         assertThat(actual.getDescription()).isEqualTo(thisCat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(thisCat.getGroup());
+        assertThat(actual.getType()).isEqualTo(thisCat.getType());
     }
 
     @Test
-    public void allShouldWork() throws Exception {
+    public void allShouldWork() {
         service.create(cat);
         assertThat(service.all().size()).isEqualTo(1);
     }
 
     @Test
-    public void getShouldWork() throws Exception {
+    public void getShouldWork() {
         service.create(cat);
         Cat actual = service.get(cat.getId());
         assertThat(actual).isEqualTo(cat);
         assertThat(actual.getName()).isEqualTo(cat.getName());
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+        assertThat(actual.getType()).isEqualTo(cat.getType());
     }
 }
