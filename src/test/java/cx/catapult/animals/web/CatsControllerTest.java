@@ -36,14 +36,21 @@ public class CatsControllerTest {
     }
 
     @Test
+    public void create() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     public void delete() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
     }
 
     @Test
-    public void create() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated());
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats/123")
+            .content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isAccepted());
     }
 }

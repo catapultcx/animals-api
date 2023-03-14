@@ -64,8 +64,17 @@ public class CatsControllerIT {
     public void deleteShouldWork() throws Exception {
         Cat created = create("Test 1");
         template.delete(base.toString() + "/" + created.getId());
-        ResponseEntity<String> updatedResponse = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
-        assertThat(updatedResponse.getStatusCode() == HttpStatus.NOT_FOUND);
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getStatusCode() == HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        Cat created = create("Test 1");
+        template.postForObject(base.toString() + "/" + created.getId(), new Cat("updated", "updated"), Cat.class);
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(response.getStatusCode() == HttpStatus.ACCEPTED);
+        assertThat(response.getBody()).isNotEmpty();
     }
 
     Cat create(String name) {
