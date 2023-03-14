@@ -2,6 +2,8 @@ package cx.catapult.animals.web;
 
 
 import cx.catapult.animals.domain.Cat;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,14 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Cat created = create("Test 1");
+        template.delete(base.toString() + "/" + created.getId());
+        ResponseEntity<String> updatedResponse = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
+        assertThat(updatedResponse.getStatusCode() == HttpStatus.NOT_FOUND);
     }
 
     Cat create(String name) {
