@@ -42,7 +42,7 @@ public class CatsControllerTest {
     @Test
     public void delete() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk());
     }
 
     @Test

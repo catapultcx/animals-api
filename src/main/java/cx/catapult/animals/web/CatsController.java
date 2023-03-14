@@ -46,9 +46,8 @@ public class CatsController {
     }
 
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id) {
-        service.delete(id);
+    public Cat delete(@PathVariable String id) {
+        return service.delete(id);
     }
 
     @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
