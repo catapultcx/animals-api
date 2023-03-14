@@ -15,4 +15,5 @@ public interface Service<T extends Animal> {
 
     T update(String id, T animal);
 
+    Collection<T> find(String name, String description);
 }

@@ -2,8 +2,6 @@ package cx.catapult.animals.web;
 
 
 import cx.catapult.animals.domain.Cat;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +73,24 @@ public class CatsControllerIT {
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getStatusCode() == HttpStatus.ACCEPTED);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void findShouldWork1() throws Exception {
+        Collection items = template.getForObject(base.toString() + "/search?name=a&description=a", Collection.class);
+        assertThat(items.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void findShouldWork2() throws Exception {
+        Collection items = template.getForObject(base.toString() + "/search?name=e", Collection.class);
+        assertThat(items.size()).isEqualTo(5);
+    }
+
+    @Test
+    public void findShouldWork3() throws Exception {
+        Collection items = template.getForObject(base.toString() + "/search", Collection.class);
+        assertThat(items.size()).isEqualTo(7);
     }
 
     Cat create(String name) {

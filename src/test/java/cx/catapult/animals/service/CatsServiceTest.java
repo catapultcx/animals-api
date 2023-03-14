@@ -1,6 +1,7 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,5 +59,35 @@ public class CatsServiceTest {
         assertThat(actual.getName()).isEqualTo(newCat.getName());
         assertThat(actual.getDescription()).isEqualTo(newCat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(newCat.getGroup());
+    }
+
+    @Test
+    public void findShouldWork() throws Exception {
+        Cat newCat = service.create(cat);
+        service.create(cat);
+        service.create(cat);
+        Collection<Cat> results = service.find("t", "b");
+        Cat actual = (Cat) results.toArray()[0];
+        assertThat(actual).isEqualTo(newCat);
+        assertThat((actual).getName()).isEqualTo(newCat.getName());
+        assertThat(actual.getDescription()).isEqualTo(newCat.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(newCat.getGroup());
+        assertThat(results.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void findShouldWork2() throws Exception {
+        service.create(cat);
+        Collection<Cat> results = service.find("xyz", "");
+        assertThat(results.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void findShouldWork3() throws Exception {
+        service.create(cat);
+        service.create(cat);
+        service.create(cat);
+        Collection<Cat> results = service.find("", "");
+        assertThat(results.size()).isEqualTo(3);
     }
 }

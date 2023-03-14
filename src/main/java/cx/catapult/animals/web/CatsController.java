@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,5 +56,14 @@ public class CatsController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Cat update(@PathVariable String id, @RequestBody Cat cat) {
         return service.update(id, cat);
+    }
+
+    @GetMapping(value = "/search", produces = "application/json")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Cat> find(
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String description) {
+        return service.find(name, description);
     }
 }
