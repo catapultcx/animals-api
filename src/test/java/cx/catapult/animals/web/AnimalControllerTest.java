@@ -44,4 +44,10 @@ public class AnimalControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void testDelete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }
