@@ -1,5 +1,6 @@
 package cx.catapult.animals.web;
 
+import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Type;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,7 @@ public class AnimalControllerIT {
 
     private URL base;
 
-    private BaseAnimal baseAnimal = new BaseAnimal("MM1", "a mammal one", "white", Type.MAMMALS);
+    private Animal animal = new BaseAnimal("MM1", "a mammal one", "white", Type.MAMMALS);
 
     @Autowired
     private TestRestTemplate template;
@@ -35,14 +36,30 @@ public class AnimalControllerIT {
 
     @Test
     public void createShouldWork() {
-        ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), baseAnimal, BaseAnimal.class);
+        ResponseEntity<BaseAnimal> response = template.postForEntity(base.toString(), animal, BaseAnimal.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getId()).isNotEmpty();
-        assertThat(response.getBody().getName()).isEqualTo(baseAnimal.getName());
-        assertThat(response.getBody().getDescription()).isEqualTo(baseAnimal.getDescription());
-        assertThat(response.getBody().getType()).isEqualTo(baseAnimal.getType());
-        assertThat(response.getBody().getColor()).isEqualTo(baseAnimal.getColor());
+        assertThat(response.getBody().getName()).isEqualTo(animal.getName());
+        assertThat(response.getBody().getDescription()).isEqualTo(animal.getDescription());
+        assertThat(response.getBody().getType()).isEqualTo(animal.getType());
+        assertThat(response.getBody().getColor()).isEqualTo(animal.getColor());
     }
 
+    @Test
+    public void testGetAnimal() {
+        final String animalName = "carey";
+        Animal created = create(animalName);
+        ResponseEntity<BaseAnimal> response = template.getForEntity(base.toString() + "/" + created.getId(), BaseAnimal.class);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).isEqualToIgnoringGivenFields(created, "id");
+    }
+
+    private Animal create(String name) {
+        Animal animal = new BaseAnimal(name, name, "brown", Type.INVERTEBRATE);
+        Animal created = template.postForObject(base.toString(), animal, BaseAnimal.class);
+        assertThat(created.getId()).isNotEmpty();
+        assertThat(created.getName()).isEqualTo(name);
+        return created;
+    }
 
 }

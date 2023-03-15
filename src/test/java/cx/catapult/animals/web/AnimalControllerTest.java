@@ -32,4 +32,10 @@ public class AnimalControllerTest {
                 .andExpect(jsonPath("$.type", is("MAMMALS")));
     }
 
+    @Test
+    public void testGet() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

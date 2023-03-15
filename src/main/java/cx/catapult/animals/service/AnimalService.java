@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
-public class BaseAnimalService extends BaseService<BaseAnimal> {
+public class AnimalService extends BaseService<BaseAnimal> {
 
     @PostConstruct
     public void initialize() {
