@@ -15,16 +15,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+
 @RestController
 @RequestMapping(path = "/api/1/animals", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AnimalsController {
 
     @Autowired
-    AnimalService animalService;
+    private AnimalService animalService;
+
+    @GetMapping(value = "", produces = "application/json")
+    public @ResponseBody Collection<? extends Animal> all() {
+        return animalService.all();
+    }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody BaseAnimal create(@RequestBody BaseAnimal animal) {
+    public @ResponseBody Animal create(@RequestBody BaseAnimal animal) {
         return animalService.create(animal);
     }
 

@@ -38,4 +38,10 @@ public class AnimalControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void testAll() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/animals").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

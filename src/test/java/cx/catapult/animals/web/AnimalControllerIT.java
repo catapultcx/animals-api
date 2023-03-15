@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,4 +65,9 @@ public class AnimalControllerIT {
         return created;
     }
 
+    @Test
+    public void testAll() {
+        ResponseEntity<Collection<BaseAnimal>> animals = template.exchange(base.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Collection<BaseAnimal>>() {});
+        assertThat(animals.getBody().size()).isGreaterThanOrEqualTo(7);
+    }
 }
