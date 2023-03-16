@@ -46,8 +46,21 @@ public class AnimalControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/animals/123").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals/123").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        String json = "{ \"name\": \"scare\", \"description\": \"a fish\", \"color\": \"red\", \"type\": \"FISH\" }";
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/animals/123").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    public void testDeleteAll() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/animals").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 
 }

@@ -13,4 +13,7 @@ public interface Service<T extends Animal> {
     T get(String id);
 
     void delete(String id);
+
+    T update(String id, T animal);
+
 }

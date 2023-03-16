@@ -21,4 +21,7 @@ public class AnimalService extends BaseService<BaseAnimal> {
         this.create(new BaseAnimal("Malli", "an good insect", "black", Type.INVERTEBRATE));
     }
 
+    public void deleteAll() {
+        getAnimalStore().clear();
+    }
 }

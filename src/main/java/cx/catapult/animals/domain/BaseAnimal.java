@@ -10,6 +10,8 @@ public class BaseAnimal implements Animal, Serializable {
     private String color;
     private Type type;
 
+    public BaseAnimal(){}
+
     public BaseAnimal(String name, String description, String color, Type type) {
         this.name = name;
         this.description = description;
