@@ -1,11 +1,18 @@
 package cx.catapult.animals.service;
 
+import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.domain.BaseAnimal;
 import cx.catapult.animals.domain.Type;
+import cx.catapult.animals.web.AnimalFilter;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
+import java.util.stream.Stream;
 
+import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnimalServiceTest {
@@ -74,6 +81,38 @@ public class AnimalServiceTest {
         animalService.create(animal);
         HashMap<String, BaseAnimal> animalStore = animalService.getAnimalStore();
         assertThat(animalStore.size()).isEqualTo(2);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideOptionsForAnimalFilter")
+    public void testAnimalFilter(AnimalFilter filter, int expected) {
+        final String animalName = "Trace";
+        create(animalName, "brown", Type.AMPHIBIAN);
+        create(animalName + nextInt(), "brown", Type.MAMMALS);
+        create(animalName + nextInt(), "white", Type.MAMMALS);
+        create(animalName + nextInt(), "red",   Type.REPTILES);
+        create(animalName + nextInt(), "green", Type.INVERTEBRATE);
+        create(animalName + nextInt(), "grey",  Type.FISH);
+        create(animalName + nextInt(), "blue",  Type.FISH);
+        create(animalName + nextInt(), "white", Type.BIRD);
+
+        assertThat(animalService.search(filter).size()).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> provideOptionsForAnimalFilter() {
+        return Stream.of(
+                Arguments.of(new AnimalFilter(null, null, "white", null), 2),
+                Arguments.of(new AnimalFilter(null, "MAMMALS", "white", null), 1),
+                Arguments.of(new AnimalFilter("Trace", null, null, null), 1),
+                Arguments.of(new AnimalFilter(null, null, null, "Trace"), 1),
+                Arguments.of(new AnimalFilter(null, "FISH", null, null), 2)
+        );
+    }
+
+    private Animal create(String name, String color, Type type) {
+        BaseAnimal animal = new BaseAnimal(name, name, color, type);
+        return animalService.create(animal);
     }
 
 }

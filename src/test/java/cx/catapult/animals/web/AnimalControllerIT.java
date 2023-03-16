@@ -66,15 +66,12 @@ public class AnimalControllerIT {
         return createAnimal(animal);
     }
 
-    private Animal createAnimal(Animal animal) {
-        return template.postForObject(base.toString(), animal, BaseAnimal.class);
-    }
 
     @Test
     public void testAll() {
         final String animalName = "Trace";
-        create(animalName + nextInt(), "brown", Type.MAMMALS);
-        create(animalName + nextInt(), "white", Type.BIRD);
+        create(animalName + nextInt());
+        create(animalName + nextInt());
         ResponseEntity<Collection<BaseAnimal>> animals = template.exchange(base.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<Collection<BaseAnimal>>() {});
         assertThat(animals.getBody().size()).isGreaterThanOrEqualTo(2);
     }
@@ -100,9 +97,17 @@ public class AnimalControllerIT {
         assertThat(response.getBody().getType().name()).isEqualTo("FISH");
     }
 
-    private Animal create(String name, String color, Type type) {
-        Animal animal = new BaseAnimal(name, name, color, type);
-        return createAnimal(animal);
+    @Test
+    public void testAnimalFilter() {
+        final String animalName = "Trace";
+        create(animalName);
+        Collection<BaseAnimal> baseAnimals = template.exchange(base.toString() + "?name=" + animalName, HttpMethod.GET, null, new ParameterizedTypeReference<Collection<BaseAnimal>>() {}).getBody();
+        assertThat(baseAnimals).isNotNull();
+        assertThat(baseAnimals.size()).isEqualTo(1);
+    }
+
+    private Animal createAnimal(Animal animal) {
+        return template.postForObject(base.toString(), animal, BaseAnimal.class);
     }
 
 }

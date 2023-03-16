@@ -1,8 +1,12 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import cx.catapult.animals.domain.BaseAnimal;
+import cx.catapult.animals.web.AnimalFilter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 

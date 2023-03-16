@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,13 @@ public class AnimalController {
     private AnimalService animalService;
 
     @GetMapping(value = "", produces = "application/json")
-    public @ResponseBody Collection<? extends Animal> all() {
+    public @ResponseBody Collection<? extends Animal> all(@RequestParam(required = false) String name,
+                                                          @RequestParam(required = false) String type,
+                                                          @RequestParam(required = false) String color,
+                                                          @RequestParam(required = false) String description) {
+        AnimalFilter filter = new AnimalFilter(name, type, color, description);
+        if(filter.hasParameters())
+            return animalService.search(filter);
         return animalService.all();
     }
 

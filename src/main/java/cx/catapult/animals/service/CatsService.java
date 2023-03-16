@@ -1,9 +1,11 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.web.AnimalFilter;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 
 @Service
 public class CatsService extends BaseService<Cat> {
@@ -19,4 +21,8 @@ public class CatsService extends BaseService<Cat> {
         this.create(new Cat("Garfield", "Lazy cat"));
     }
 
+    @Override
+    public <T> Collection<T> search(AnimalFilter filter) {
+        return null;
+    }
 }
