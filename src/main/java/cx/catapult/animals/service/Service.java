@@ -12,4 +12,6 @@ public interface Service<T extends Animal> {
 
     public T get(String id);
 
+    public void remove(String id);
+
 }

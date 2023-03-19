@@ -54,4 +54,9 @@ public class BaseAnimal implements Animal, Serializable {
     public Group getGroup() {
         return this.group;
     }
+
+    @Override
+    public String toString() {
+        return "BaseAnimal [id=" + id + ", name=" + name + ", description=" + description + ", group=" + group + "]";
+    }
 }
