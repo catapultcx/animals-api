@@ -1,40 +1,71 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
 
-    CatsService service = new CatsService();
-    Cat cat = new Cat("Tom", "Bob cat");
+    private CatsService service;
+    private final Cat TOM_CAT = new Cat("Tom", "Bob cat");
+    private final Cat GARFIELD_CAT = new Cat("Garfield", "Cool cat");
 
-    @Test
-    public void createShouldWork() throws Exception {
-        Cat thisCat = new Cat();
-        thisCat.setName("Jerry");
-        thisCat.setDescription("Mouse Cat");
-        Cat actual = service.create(thisCat);
-        assertThat(actual).isEqualTo(thisCat);
-        assertThat(actual.getName()).isEqualTo(thisCat.getName());
-        assertThat(actual.getDescription()).isEqualTo(thisCat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(thisCat.getGroup());
+    @BeforeEach
+    public void setUp() {
+        service = new CatsService();
     }
 
     @Test
-    public void allShouldWork() throws Exception {
-        service.create(cat);
+    public void shouldCreate() {
+        Cat actual = service.create(TOM_CAT);
+
+        assertThat(actual).isEqualTo(TOM_CAT);
+        assertThat(actual.getName()).isEqualTo(TOM_CAT.getName());
+        assertThat(actual.getDescription()).isEqualTo(TOM_CAT.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(TOM_CAT.getGroup());
+    }
+
+    @Test
+    public void shouldLoadAll() {
+        service.create(TOM_CAT);
+        service.create(GARFIELD_CAT);
+
+        Collection<Cat> cats = service.all();
+
+        assertThat(cats.size()).isEqualTo(2);
+        assertThat(cats.contains(TOM_CAT)).isTrue();
+        assertThat(cats.contains(GARFIELD_CAT)).isTrue();
+    }
+
+    @Test
+    public void shouldLoadById() {
+        service.create(TOM_CAT);
+
+        Cat actual = service.get(TOM_CAT.getId());
+
+        assertThat(actual).isEqualTo(TOM_CAT);
+        assertThat(actual.getName()).isEqualTo(TOM_CAT.getName());
+        assertThat(actual.getDescription()).isEqualTo(TOM_CAT.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(TOM_CAT.getGroup());
+    }
+
+    @Test
+    public void shouldDeleteById() {
+        service.create(TOM_CAT);
+        service.create(GARFIELD_CAT);
+
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(TOM_CAT).isEqualTo(service.get(TOM_CAT.getId()));
+        assertThat(GARFIELD_CAT).isEqualTo(service.get(GARFIELD_CAT.getId()));
+
+        service.delete(TOM_CAT.getId());
+
         assertThat(service.all().size()).isEqualTo(1);
-    }
-
-    @Test
-    public void getShouldWork() throws Exception {
-        service.create(cat);
-        Cat actual = service.get(cat.getId());
-        assertThat(actual).isEqualTo(cat);
-        assertThat(actual.getName()).isEqualTo(cat.getName());
-        assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
+        assertThat(service.get(TOM_CAT.getId())).isNull();
+        assertThat(GARFIELD_CAT).isEqualTo(service.get(GARFIELD_CAT.getId()));
     }
 }

@@ -6,7 +6,7 @@ import java.util.*;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
-    private HashMap<String, T> items = new HashMap<>();
+    private final HashMap<String, T> items = new LinkedHashMap<>();
 
     @Override
     public Collection<T> all() {
@@ -15,14 +15,18 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     @Override
     public T create(T animal) {
-        String id = UUID.randomUUID().toString();
-        animal.setId(id);
-        items.put(id, animal);
+        animal.setId(UUID.randomUUID().toString());
+        this.items.put(animal.getId(), animal);
         return animal;
     }
 
     @Override
     public T get(String id) {
-        return items.get(id);
+        return this.items.get(id);
+    }
+
+    @Override
+    public T delete(String id) {
+        return this.items.remove(id);
     }
 }

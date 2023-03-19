@@ -9,30 +9,41 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+import static cx.catapult.animals.web.CatsMappping.CATS_API_V1;
+
 @RestController
-@RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = CATS_API_V1, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
 
     @Autowired
-    private CatsService service;
+    private final CatsService service;
 
-    @GetMapping(value = "", produces = "application/json")
-    public @ResponseBody
-    Collection<Cat> all() {
+    public CatsController(CatsService service) {
+        this.service = service;
+    }
+
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Collection<Cat> getAll() {
         return service.all();
     }
 
     @GetMapping(value = "/{id}")
-    public @ResponseBody
-    Cat get(@PathVariable String id) {
+    @ResponseBody
+    public Cat getById(@PathVariable String id) {
         return service.get(id);
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody
-    Cat
-    create(@RequestBody Cat cat) {
+    @ResponseBody
+    public Cat create(@RequestBody Cat cat) {
         return service.create(cat);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Cat deleteById(@PathVariable String id) {
+        return service.delete(id);
     }
 }
