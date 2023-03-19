@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,6 +57,15 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Cat expected = create("Test 2");
+        ResponseEntity<Cat> response = template.getForEntity(base.toString() + "/" + expected.getId(), Cat.class);
+        assertThat(response.getBody()).isNotNull();
+        assertEquals(expected,response.getBody());
+
     }
 
     Cat create(String name) {
