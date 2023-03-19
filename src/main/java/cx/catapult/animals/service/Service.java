@@ -9,7 +9,7 @@ public interface Service<T extends Animal> {
     public Collection<T> all();
 
     T create(T animal);
-
+    public T update(String id, T animal);
     public T get(String id);
-
+    public Collection<T> delete(String id);
 }

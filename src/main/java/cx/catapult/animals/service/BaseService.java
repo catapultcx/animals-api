@@ -22,7 +22,19 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     }
 
     @Override
+    public T update(String id, T animal) {
+        items.put(id, animal);
+        return items.get(id);
+    }
+
+    @Override
     public T get(String id) {
         return items.get(id);
+    }
+
+    @Override
+    public Collection<T> delete(String id) {
+        items.remove(id);
+        return items.values();
     }
 }
