@@ -28,6 +28,13 @@ public class CatsController {
         return service.all();
     }
 
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Collection<Cat> filterBy(@RequestParam(value = "query", required = false) String query) {
+        return service.filterBy(query);
+    }
+
     @GetMapping(value = "/{id}")
     @ResponseBody
     public Cat getById(@PathVariable String id) {

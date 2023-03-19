@@ -84,4 +84,74 @@ public class CatsServiceTest {
         assertThat(service.get(TOM_CAT.getId())).isNull();
         assertThat(GARFIELD_CAT).isEqualTo(service.get(GARFIELD_CAT.getId()));
     }
+
+    @Test
+    public void shouldFilterByNullAndReturnAll() {
+        service.create(TOM_CAT);
+        service.create(GARFIELD_CAT);
+        assertThat(service.all().size()).isEqualTo(2);
+
+        Collection<Cat> filtered = service.filterBy(null);
+
+        assertThat(filtered.size()).isEqualTo(2);
+        assertThat(filtered.contains(TOM_CAT)).isTrue();
+        assertThat(filtered.contains(GARFIELD_CAT)).isTrue();
+    }
+
+    @Test
+    public void shouldFilterByEmptyStringAndReturnAll() {
+        service.create(TOM_CAT);
+        service.create(GARFIELD_CAT);
+        assertThat(service.all().size()).isEqualTo(2);
+
+        Collection<Cat> filtered = service.filterBy("");
+
+        assertThat(filtered.size()).isEqualTo(2);
+        assertThat(filtered.contains(TOM_CAT)).isTrue();
+        assertThat(filtered.contains(GARFIELD_CAT)).isTrue();
+    }
+
+    @Test
+    public void shouldFilterByCommonDescriptionAndReturnAll() {
+        service.create(TOM_CAT);
+        service.create(GARFIELD_CAT);
+        assertThat(service.all().size()).isEqualTo(2);
+
+        Collection<Cat> filtered = service.filterBy("cat");
+
+        assertThat(filtered.size()).isEqualTo(2);
+        assertThat(filtered.contains(TOM_CAT)).isTrue();
+        assertThat(filtered.contains(GARFIELD_CAT)).isTrue();
+    }
+
+    @Test
+    public void shouldFilterAndReturnTomCat() {
+        service.create(TOM_CAT);
+        service.create(GARFIELD_CAT);
+        assertThat(service.all().size()).isEqualTo(2);
+
+        Collection<Cat> filteredByName = service.filterBy("Tom");
+        assertThat(filteredByName.size()).isEqualTo(1);
+        assertThat(filteredByName.contains(TOM_CAT)).isTrue();
+
+        Collection<Cat> filteredByDescription = service.filterBy("Bob cat");
+        assertThat(filteredByDescription.size()).isEqualTo(1);
+        assertThat(filteredByDescription.contains(TOM_CAT)).isTrue();
+    }
+
+    @Test
+    public void shouldFilterAndReturnGarfieldCat() {
+        service.create(TOM_CAT);
+        service.create(GARFIELD_CAT);
+        assertThat(service.all().size()).isEqualTo(2);
+
+        Collection<Cat> filteredByName = service.filterBy("Garfield");
+        assertThat(filteredByName.size()).isEqualTo(1);
+        assertThat(filteredByName.contains(GARFIELD_CAT)).isTrue();
+
+        Collection<Cat> filteredByDescription = service.filterBy("Cool cat");
+        assertThat(filteredByDescription.size()).isEqualTo(1);
+        assertThat(filteredByDescription.contains(GARFIELD_CAT)).isTrue();
+    }
+
 }

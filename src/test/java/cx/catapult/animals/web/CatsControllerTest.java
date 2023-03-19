@@ -22,41 +22,51 @@ public class CatsControllerTest {
 
     @Test
     public void shouldLoadAll() throws Exception {
-        mvc.perform(
-                        MockMvcRequestBuilders.get(CATS_API_V1)
-                                .accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get(CATS_API_V1)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void shouldLoadById() throws Exception {
-        mvc.perform(
-                MockMvcRequestBuilders.get(CATS_API_V1 + "/123")
+        mvc.perform(MockMvcRequestBuilders.get(CATS_API_V1 + "/123")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void shouldCreate() throws Exception {
-        mvc.perform(
-                MockMvcRequestBuilders.post(CATS_API_V1)
+        mvc.perform(MockMvcRequestBuilders.post(CATS_API_V1)
                         .content(TOM_CAT_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void shouldUpdate() throws Exception {
-        mvc.perform(
-                MockMvcRequestBuilders.post(CATS_API_V1+ "/123")
+        mvc.perform(MockMvcRequestBuilders.post(CATS_API_V1 + "/123")
                         .content(TOM_CAT_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void shouldDeleteById() throws Exception {
-        mvc.perform(
-                MockMvcRequestBuilders.delete(CATS_API_V1 + "/123")
+        mvc.perform(MockMvcRequestBuilders.delete(CATS_API_V1 + "/123")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldFilterWithoutParams() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get(CATS_API_V1 + "/filter")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldFilterWithQueryParams() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get(CATS_API_V1 + "/filter")
+                        .param("query", "some query")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

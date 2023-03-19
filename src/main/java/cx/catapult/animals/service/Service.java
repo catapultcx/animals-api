@@ -8,6 +8,8 @@ public interface Service<T extends Animal> {
 
     Collection<T> all();
 
+    Collection<T> filterBy(String filter);
+
     T create(T animal);
 
     T get(String id);
@@ -15,5 +17,4 @@ public interface Service<T extends Animal> {
     T delete(String id);
 
     T update(String id, T animal);
-
 }

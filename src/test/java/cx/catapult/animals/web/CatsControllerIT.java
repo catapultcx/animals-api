@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -94,6 +96,69 @@ public class CatsControllerIT {
         assertThat(response.getBody()).isNull();
     }
 
+    @Test
+    public void shouldFilterByEmptyStringAndReturnAll() {
+        Collection allItems = template.getForObject(getBaseUrl(), Collection.class);
+        assertThat(allItems.size()).isGreaterThanOrEqualTo(7);
+
+        Collection filtered = template.getForObject(getBaseUrl() + "/filter?query=", Collection.class);
+        assertThat(filtered.size()).isEqualTo(allItems.size());
+    }
+
+    @Test
+    public void shouldFilterByCommonNameAndReturnFiltered() {
+        ResponseEntity<Collection<Cat>> filteredResponseEntity = template.exchange(getBaseUrl() + "/filter?query=TIG", HttpMethod.GET, null, getCollectionOfCatsResponseType());
+        assertThat(filteredResponseEntity.getBody()).isNotNull();
+
+        Cat[] filteredArray = filteredResponseEntity.getBody().toArray(new Cat[0]);
+        assertThat(filteredArray.length).isEqualTo(2);
+
+        assertThat(filteredArray[0].getName()).isEqualTo("Tiger");
+        assertThat(filteredArray[0].getDescription()).isEqualTo("Large cat");
+
+        assertThat(filteredArray[1].getName()).isEqualTo("Tigger");
+        assertThat(filteredArray[1].getDescription()).isEqualTo("Not a scary cat");
+    }
+
+    @Test
+    public void shouldFilterByNameAndReturnGarfieldCat() {
+        ResponseEntity<Collection<Cat>> filteredResponseEntity = template.exchange(getBaseUrl() + "/filter?query=garfield", HttpMethod.GET, null, getCollectionOfCatsResponseType());
+        assertThat(filteredResponseEntity.getBody()).isNotNull();
+
+        Cat[] filteredArray = filteredResponseEntity.getBody().toArray(new Cat[0]);
+        assertThat(filteredArray.length).isEqualTo(1);
+
+        assertThat(filteredArray[0].getName()).isEqualTo("Garfield");
+        assertThat(filteredArray[0].getDescription()).isEqualTo("Lazy cat");
+    }
+
+    @Test
+    public void shouldFilterByDescriptionAndReturnSmellyCat() {
+        ResponseEntity<Collection<Cat>> filteredResponseEntity = template.exchange(getBaseUrl() + "/filter?query=Cat+with+friends", HttpMethod.GET, null, getCollectionOfCatsResponseType());
+        assertThat(filteredResponseEntity.getBody()).isNotNull();
+
+        Cat[] filteredArray = filteredResponseEntity.getBody().toArray(new Cat[0]);
+        assertThat(filteredArray.length).isEqualTo(1);
+
+        assertThat(filteredArray[0].getName()).isEqualTo("Smelly");
+        assertThat(filteredArray[0].getDescription()).isEqualTo("Cat with friends");
+    }
+
+    @Test
+    public void shouldFilterByNameAndDescriptionAndReturnFiltered() {
+        ResponseEntity<Collection<Cat>> filteredResponseEntity = template.exchange(getBaseUrl() + "/filter?query=JERRY", HttpMethod.GET, null, getCollectionOfCatsResponseType());
+        assertThat(filteredResponseEntity.getBody()).isNotNull();
+
+        Cat[] filteredArray = filteredResponseEntity.getBody().toArray(new Cat[0]);
+        assertThat(filteredArray.length).isEqualTo(2);
+
+        assertThat(filteredArray[0].getName()).isEqualTo("Tom");
+        assertThat(filteredArray[0].getDescription()).isEqualTo("Friend of Jerry");
+
+        assertThat(filteredArray[1].getName()).isEqualTo("Jerry");
+        assertThat(filteredArray[1].getDescription()).isEqualTo("Not really a cat");
+    }
+
     private Cat create(Cat cat) {
         final Cat created = template.postForObject(getBaseUrl(), cat, Cat.class);
         assertThat(created.getId()).isNotEmpty();
@@ -104,5 +169,10 @@ public class CatsControllerIT {
 
     private String getBaseUrl() {
         return base.toString();
+    }
+
+    private ParameterizedTypeReference<Collection<Cat>> getCollectionOfCatsResponseType() {
+        return new ParameterizedTypeReference<Collection<Cat>>() {
+        };
     }
 }
