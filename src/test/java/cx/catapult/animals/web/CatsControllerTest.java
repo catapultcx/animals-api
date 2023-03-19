@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static cx.catapult.animals.web.CatsMappping.CATS_API_V1;
+import static cx.catapult.animals.web.CatsMapping.CATS_API_V1;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -42,6 +42,14 @@ public class CatsControllerTest {
                 MockMvcRequestBuilders.post(CATS_API_V1)
                         .content(TOM_CAT_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void shouldUpdate() throws Exception {
+        mvc.perform(
+                MockMvcRequestBuilders.post(CATS_API_V1+ "/123")
+                        .content(TOM_CAT_JSON).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
     }
 
     @Test

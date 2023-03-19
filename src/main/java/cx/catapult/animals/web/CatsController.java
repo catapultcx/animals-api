@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
-import static cx.catapult.animals.web.CatsMappping.CATS_API_V1;
+import static cx.catapult.animals.web.CatsMapping.CATS_API_V1;
 
 @RestController
 @RequestMapping(path = CATS_API_V1, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,6 +39,13 @@ public class CatsController {
     @ResponseBody
     public Cat create(@RequestBody Cat cat) {
         return service.create(cat);
+    }
+
+    @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Cat update(@PathVariable String id, @RequestBody Cat cat) {
+        return service.update(id, cat);
     }
 
     @DeleteMapping(value = "/{id}")

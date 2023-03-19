@@ -20,16 +20,6 @@ public class CatsServiceTest {
     }
 
     @Test
-    public void shouldCreate() {
-        Cat actual = service.create(TOM_CAT);
-
-        assertThat(actual).isEqualTo(TOM_CAT);
-        assertThat(actual.getName()).isEqualTo(TOM_CAT.getName());
-        assertThat(actual.getDescription()).isEqualTo(TOM_CAT.getDescription());
-        assertThat(actual.getGroup()).isEqualTo(TOM_CAT.getGroup());
-    }
-
-    @Test
     public void shouldLoadAll() {
         service.create(TOM_CAT);
         service.create(GARFIELD_CAT);
@@ -45,12 +35,38 @@ public class CatsServiceTest {
     public void shouldLoadById() {
         service.create(TOM_CAT);
 
-        Cat actual = service.get(TOM_CAT.getId());
+        final Cat actual = service.get(TOM_CAT.getId());
 
         assertThat(actual).isEqualTo(TOM_CAT);
         assertThat(actual.getName()).isEqualTo(TOM_CAT.getName());
         assertThat(actual.getDescription()).isEqualTo(TOM_CAT.getDescription());
         assertThat(actual.getGroup()).isEqualTo(TOM_CAT.getGroup());
+    }
+
+    @Test
+    public void shouldCreate() {
+        final Cat actual = service.create(TOM_CAT);
+
+        assertThat(actual).isEqualTo(TOM_CAT);
+        assertThat(actual.getName()).isEqualTo(TOM_CAT.getName());
+        assertThat(actual.getDescription()).isEqualTo(TOM_CAT.getDescription());
+        assertThat(actual.getGroup()).isEqualTo(TOM_CAT.getGroup());
+    }
+
+    @Test
+    public void shouldUpdate() {
+        final Cat created = service.create(TOM_CAT);
+        assertThat(created).isEqualTo(TOM_CAT);
+
+        final Cat TOM_CAT_UPDATE = new Cat("Tom Sawyer", "The bobcat");
+
+        final Cat updated = service.update(TOM_CAT.getId(), TOM_CAT_UPDATE);
+
+        assertThat(updated).isNotEqualTo(TOM_CAT);
+        assertThat(updated).isEqualTo(TOM_CAT_UPDATE);
+        assertThat(updated.getName()).isEqualTo(TOM_CAT_UPDATE.getName());
+        assertThat(updated.getDescription()).isEqualTo(TOM_CAT_UPDATE.getDescription());
+        assertThat(updated.getGroup()).isEqualTo(TOM_CAT_UPDATE.getGroup());
     }
 
     @Test

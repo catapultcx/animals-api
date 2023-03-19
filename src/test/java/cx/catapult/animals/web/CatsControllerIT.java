@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URL;
 import java.util.Collection;
 
-import static cx.catapult.animals.web.CatsMappping.CATS_API_V1;
+import static cx.catapult.animals.web.CatsMapping.CATS_API_V1;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -37,6 +37,19 @@ public class CatsControllerIT {
     }
 
     @Test
+    public void shouldLoadAll() {
+        Collection items = template.getForObject(getBaseUrl(), Collection.class);
+        assertThat(items.size()).isGreaterThanOrEqualTo(7);
+    }
+
+    @Test
+    public void shouldLoadById() {
+        final Cat created = create(new Cat("Test 1 name", "Test 1 description"));
+        ResponseEntity<String> response = template.getForEntity(getBaseUrl() + "/" + created.getId(), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
     public void shouldCreate() {
         ResponseEntity<Cat> response = template.postForEntity(getBaseUrl(), TOM_CAT, Cat.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -48,16 +61,19 @@ public class CatsControllerIT {
     }
 
     @Test
-    public void shouldLoadAll() {
-        Collection items = template.getForObject(getBaseUrl(), Collection.class);
-        assertThat(items.size()).isGreaterThanOrEqualTo(7);
-    }
+    public void shouldUpdate() {
+        final Cat created = create(new Cat("Test 2 name", "Test 2 description"));
 
-    @Test
-    public void shouldLoadById() {
-        final Cat created = create("Test 1");
-        ResponseEntity<String> response = template.getForEntity(getBaseUrl() + "/" + created.getId(), String.class);
-        assertThat(response.getBody()).isNotEmpty();
+        final Cat updatedObject = new Cat("Test 2 name - updated", "Test 2 description - updated");
+        ResponseEntity<Cat> response = template.postForEntity(getBaseUrl() + "/" + created.getId(), updatedObject, Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+
+        final Cat updated = response.getBody();
+        assertThat(updated.getId()).isEqualTo(created.getId());
+        assertThat(updated.getName()).isEqualTo(updatedObject.getName());
+        assertThat(updated.getDescription()).isEqualTo(updatedObject.getDescription());
+        assertThat(updated.getGroup()).isEqualTo(updatedObject.getGroup());
     }
 
     @Test
@@ -78,11 +94,11 @@ public class CatsControllerIT {
         assertThat(response.getBody()).isNull();
     }
 
-    private Cat create(String name) {
-        final Cat created = template.postForObject(getBaseUrl(), new Cat(name, name + " description"), Cat.class);
+    private Cat create(Cat cat) {
+        final Cat created = template.postForObject(getBaseUrl(), cat, Cat.class);
         assertThat(created.getId()).isNotEmpty();
-        assertThat(created.getName()).isEqualTo(name);
-        assertThat(created.getDescription()).isEqualTo(name + " description");
+        assertThat(created.getName()).isEqualTo(cat.getName());
+        assertThat(created.getDescription()).isEqualTo(cat.getDescription());
         return created;
     }
 
