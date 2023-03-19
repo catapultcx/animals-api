@@ -31,8 +31,7 @@ public class CatsController {
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Cat
-    create(@RequestBody Cat cat) {
+    Cat create(@RequestBody Cat cat) {
         return service.create(cat);
     }
 }
