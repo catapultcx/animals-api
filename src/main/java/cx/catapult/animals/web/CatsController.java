@@ -42,4 +42,9 @@ public class CatsController {
         return service.update(cat);
     }
 
+    @GetMapping(value = "/filter", produces = "application/json")
+    public @ResponseBody Collection<Cat> filter(@RequestParam String text) {
+        return service.filter(text);
+    }
+
 }

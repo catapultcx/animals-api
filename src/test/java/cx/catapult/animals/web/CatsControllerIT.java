@@ -78,6 +78,13 @@ public class CatsControllerIT {
         assertEquals(expected,response.getBody());
     }
 
+    @Test
+    public void filterShouldWork() throws Exception {
+        create("UniqueCat");
+        Collection filteredItems = template.getForObject(base.toString() + "/filter?text=unique", Collection.class);
+        assertThat(filteredItems.size()).isEqualTo(1);
+    }
+
     Cat create(String name) {
         Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
         assertThat(created.getId()).isNotEmpty();

@@ -52,4 +52,10 @@ public class CatsControllerTest {
         mvc.perform(MockMvcRequestBuilders.put("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void filter() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/filter?text=test").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

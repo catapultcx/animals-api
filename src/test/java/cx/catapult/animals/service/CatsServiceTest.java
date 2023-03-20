@@ -60,4 +60,44 @@ public class CatsServiceTest {
         assertThat(updated.getDescription()).isEqualTo("Gorgeous Ginger");
         assertThat(updated.getGroup()).isEqualTo(Group.MAMMALS);
     }
+
+    @Test
+    public void filterShouldWorkForName() throws Exception {
+        service.create(cat);
+        service.create(new Cat("Ginger Cat", "Gorgeous Ginger"));
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(service.filter("Tom").size()).isEqualTo(1);
+    }
+
+    @Test
+    public void filterShouldWorkForDescription() throws Exception {
+        service.create(cat);
+        service.create(new Cat("Ginger Cat", "Gorgeous Ginger"));
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(service.filter("Gorgeous").size()).isEqualTo(1);
+    }
+
+    @Test
+    public void filterShouldWorkForBothFields() throws Exception {
+        service.create(cat);
+        service.create(new Cat("Ginger Cat", "Gorgeous Ginger"));
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(service.filter("Cat").size()).isEqualTo(2);
+    }
+
+    @Test
+    public void filterShouldWorkForBlank() throws Exception {
+        service.create(cat);
+        service.create(new Cat("Ginger Cat", "Gorgeous Ginger"));
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(service.filter("").size()).isEqualTo(2);
+    }
+
+    @Test
+    public void filterShouldWorkCaseInsensitive() throws Exception {
+        service.create(cat);
+        service.create(new Cat("Ginger Cat", "Gorgeous Ginger"));
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(service.filter("ginger").size()).isEqualTo(1);
+    }
 }
