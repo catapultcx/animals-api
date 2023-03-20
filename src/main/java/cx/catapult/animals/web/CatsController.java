@@ -12,7 +12,7 @@ import java.util.Collection;
 import static cx.catapult.animals.web.CatsMapping.CATS_API_V1;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"}, allowedHeaders = "*")
+@CrossOrigin
 @RequestMapping(path = CATS_API_V1, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
 
