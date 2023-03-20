@@ -17,27 +17,29 @@ public class CatsController {
     private CatsService service;
 
     @GetMapping(value = "", produces = "application/json")
-    public @ResponseBody
-    Collection<Cat> all() {
+    public @ResponseBody Collection<Cat> all() {
         return service.all();
     }
 
     @GetMapping(value = "/{id}")
-    public @ResponseBody
-    Cat get(@PathVariable String id) {
+    public @ResponseBody Cat get(@PathVariable String id) {
         return service.get(id);
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody
-    Cat create(@RequestBody Cat cat) {
+    public @ResponseBody Cat create(@RequestBody Cat cat) {
         return service.create(cat);
     }
 
     @DeleteMapping(value = "/{id}")
-    public @ResponseBody
-    Cat delete(@PathVariable String id) {
+    public @ResponseBody Cat delete(@PathVariable String id) {
         return service.delete(id);
     }
+
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Cat update(@RequestBody Cat cat) {
+        return service.update(cat);
+    }
+
 }

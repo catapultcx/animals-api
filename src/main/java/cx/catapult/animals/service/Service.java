@@ -14,4 +14,6 @@ public interface Service<T extends Animal> {
     T get(String id);
 
     T delete(String id);
+
+    T update(T animal);
 }

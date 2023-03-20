@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,7 +65,17 @@ public class CatsControllerIT {
         ResponseEntity<Cat> response = template.getForEntity(base.toString() + "/" + expected.getId(), Cat.class);
         assertThat(response.getBody()).isNotNull();
         assertEquals(expected,response.getBody());
+    }
 
+    @Test
+    public void updateShouldWork() throws Exception {
+        Cat expected = create("Test 3");
+        expected.setName("Test 3 updated name");
+        expected.setDescription("Test 3 updated desc");
+        RequestEntity<Cat> requestEntity = new RequestEntity<>(expected, HttpMethod.PUT,base.toURI());
+        ResponseEntity<Cat> response = template.exchange(requestEntity, Cat.class);
+        assertThat(response.getBody()).isNotNull();
+        assertEquals(expected,response.getBody());
     }
 
     Cat create(String name) {
