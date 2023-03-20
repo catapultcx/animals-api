@@ -40,14 +40,14 @@ public class CatsServiceTest {
     }
 
     @Test
-    public void testDeleteCats() {
+    public void deleteShouldWork() {
         // When
         service.remove(cat.getId());
         assertThat(service.all().size()).isEqualTo(0);
     }
 
     @Test
-    public void testDeleteCats_ValueNotFound() {
+    public void deleteShouldWork_ValueNotFound() {
         // Given
         service.create(cat);
         assertThat(service.all().size()).isEqualTo(1);
@@ -58,7 +58,7 @@ public class CatsServiceTest {
     }
 
     @Test
-    public void testUpdateCats() {
+    public void updateShouldWork() {
         // Given
         service.create(cat);
         assertThat(service.all().size()).isEqualTo(1);
@@ -77,7 +77,7 @@ public class CatsServiceTest {
     }
 
     @Test
-    public void testUpdateCats_ValueNotFound() {
+    public void updateShouldWork_ValueNotFound() {
         // Given
         service.create(cat);
         assertThat(service.all().size()).isEqualTo(1);
@@ -95,6 +95,23 @@ public class CatsServiceTest {
         Assertions.assertThrows(NullPointerException.class, () -> {
             result.getId();
         });
+    }
+
+    @Test
+    public void filterShouldWork_ByName() {
+        service.create(cat);
+        service.create(new Cat("Garfield", "Lazy Cat"));
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(service.filter("Lazy").size()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void filterShouldWork_ByDescription() {
+        service.create(cat);
+        service.create(new Cat("Garfield", "Lazy Cat"));
+        assertThat(service.all().size()).isEqualTo(2);
+        assertThat(service.filter("Lazy Cat").size()).isEqualTo(1);
     }
 
 }
