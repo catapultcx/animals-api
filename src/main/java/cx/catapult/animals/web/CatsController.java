@@ -18,7 +18,7 @@ public class CatsController {
 
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody
-    Collection<Cat> all(@RequestParam(required = false) String keyWords) {
+    Collection<Cat> all(@RequestParam(required = false, name = "keyWords") String keyWords) {
         return service.all(keyWords);
     }
 
