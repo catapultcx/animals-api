@@ -25,7 +25,9 @@ public class CatsServiceTest {
     @Test
     public void allShouldWork() throws Exception {
         service.create(cat);
-        assertThat(service.all().size()).isEqualTo(1);
+        assertThat(service.all("").size()).isEqualTo(1);
+        assertThat(service.all("To").size()).isEqualTo(1);
+        assertThat(service.all("Hello").size()).isEqualTo(0);
     }
 
     @Test
@@ -50,7 +52,9 @@ public class CatsServiceTest {
 
     @Test
     public void deleteShouldWork() throws Exception {
+        service.create(cat);
+        assertThat(service.all("").size()).isEqualTo(1);
         service.delete(cat.getId());
-        assertThat(service.all().size()).isEqualTo(0);
+        assertThat(service.all("").size()).isEqualTo(0);
     }
 }

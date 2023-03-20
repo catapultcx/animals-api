@@ -3,14 +3,24 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.Animal;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
     private HashMap<String, T> items = new HashMap<>();
 
     @Override
-    public Collection<T> all() {
-        return items.values();
+    public Collection<T> all(String keyWords) {
+        if (keyWords == null || keyWords.length() == 0) {
+            return items.values();    
+        }
+
+        return items.values().stream().filter(item -> {
+            String name = item.getName();
+            String description = item.getDescription();
+            return name.contains(keyWords) || description.contains(keyWords);  
+        }).collect(Collectors.toList());
     }
 
     @Override

@@ -18,8 +18,8 @@ public class CatsController {
 
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody
-    Collection<Cat> all() {
-        return service.all();
+    Collection<Cat> all(@RequestParam(required = false) String keyWords) {
+        return service.all(keyWords);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")
