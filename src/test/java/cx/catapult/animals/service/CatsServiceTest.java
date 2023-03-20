@@ -1,8 +1,9 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
-import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
@@ -40,11 +41,60 @@ public class CatsServiceTest {
 
     @Test
     public void testDeleteCats() {
-        // Step 1
-        service.create(cat);
-        assertThat(service.all().size()).isEqualTo(1);
-        // Step 2
+        // When
         service.remove(cat.getId());
         assertThat(service.all().size()).isEqualTo(0);
     }
+
+    @Test
+    public void testDeleteCats_ValueNotFound() {
+        // Given
+        service.create(cat);
+        assertThat(service.all().size()).isEqualTo(1);
+
+        // When
+        service.remove("Dummy");
+        assertThat(service.all().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testUpdateCats() {
+        // Given
+        service.create(cat);
+        assertThat(service.all().size()).isEqualTo(1);
+
+        Cat existingCat = service.get(cat.getId());
+        existingCat.setName("Pussy Cat");
+        existingCat.setDescription("Pussy Cat");
+
+        // When
+        service.update(existingCat);
+        Cat result = service.get(cat.getId());
+
+        // Then
+        assertThat(result.getName()).isEqualTo(existingCat.getName());
+        assertThat(result.getDescription()).isEqualTo(existingCat.getDescription());
+    }
+
+    @Test
+    public void testUpdateCats_ValueNotFound() {
+        // Given
+        service.create(cat);
+        assertThat(service.all().size()).isEqualTo(1);
+
+        Cat existingCat = service.get(cat.getId());
+        existingCat.setName("Pussy Cat");
+        existingCat.setDescription("Pussy Cat");
+        existingCat.setId("Dummy");
+
+        // When
+        service.update(existingCat);
+        Cat result = service.get(cat.getId());
+
+        // Then
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            result.getId();
+        });
+    }
+
 }

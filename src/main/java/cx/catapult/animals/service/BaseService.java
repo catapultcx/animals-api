@@ -1,7 +1,6 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
-
 import java.util.*;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
@@ -28,7 +27,24 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 
     @Override
     public void remove(String id) {
-        items.remove(id);
+        items.computeIfPresent(id, (k, v) -> {
+            items.remove(id);
+            return v;
+        });
+    }
+
+    @Override
+    public T update(T animal) {
+        T result = items.computeIfPresent(animal.getId(), (key, value) -> {
+            if (value == null) {
+                return null;
+            }
+            T updatedValue = (T) value;
+            updatedValue.setName(animal.getName());
+            updatedValue.setDescription(animal.getDescription());
+            return updatedValue;
+        });
+        return result;
     }
 
 }

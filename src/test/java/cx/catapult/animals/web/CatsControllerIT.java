@@ -1,6 +1,5 @@
 package cx.catapult.animals.web;
 
-
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import java.net.URL;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 

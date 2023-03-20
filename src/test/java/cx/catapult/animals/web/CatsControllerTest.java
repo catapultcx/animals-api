@@ -37,7 +37,22 @@ public class CatsControllerTest {
 
     @Test
     public void create() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(
+                MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void remove() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/removeCat").content(json)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/updateCat").content(json)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
     }
 }

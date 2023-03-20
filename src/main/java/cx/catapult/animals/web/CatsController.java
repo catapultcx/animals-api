@@ -7,12 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "http://localhost:3000")
 public class CatsController {
 
     @Autowired
@@ -35,6 +34,7 @@ public class CatsController {
     }
 
     @DeleteMapping(value = "/removeCat", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> remove(@RequestBody Cat cat) {
         try {
             service.remove(cat.getId());
@@ -44,4 +44,9 @@ public class CatsController {
         }
     }
 
+    @PutMapping(value = "/updateCat", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody Cat update(@RequestBody Cat cat) {
+        return service.update(cat);
+    }
 }
