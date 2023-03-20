@@ -19,7 +19,7 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
         return items.values().stream().filter(item -> {
             String name = item.getName();
             String description = item.getDescription();
-            return name.contains(keyWords) || description.contains(keyWords);  
+            return name.toLowerCase().contains(keyWords.toLowerCase()) || description.toLowerCase().contains(keyWords.toLowerCase());  
         }).collect(Collectors.toList());
     }
 
