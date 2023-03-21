@@ -51,4 +51,21 @@ public class CatsControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/" + cat.getId()).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void update() throws Exception {
+        Cat cat = new Cat("Tom", "Bob cat");
+        catsService.create(cat);
+        String json = String.format("""
+            {
+                "id": "%s",
+                "name": "%s",
+                "description": "%s",
+                "group": "%s"
+            }
+        """, cat.getId(), "Modified", cat.getDescription(), cat.getGroup());
+        catsService.create(cat);
+        mvc.perform(MockMvcRequestBuilders.put("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
 }

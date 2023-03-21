@@ -49,4 +49,19 @@ public class CatsServiceTest {
         Cat deleted = service.get(cat.getId());
         assertThat(deleted).isNull();
     }
+
+    @Test
+    public void updateShouldWorkForExistingCat() throws Exception {
+        service.create(cat);
+        cat.setName("Modified");
+        Cat result = service.update(cat).orElseThrow(() -> new RuntimeException("Shouldn't be empty"));
+        assertThat(result).isEqualTo(cat);
+    }
+
+    @Test
+    public void updateShouldWorkForNonExistingCat() throws Exception {
+        cat.setName("Modified");
+        Cat result = service.update(cat).orElse(null);
+        assertThat(result).isNull();
+    }
 }

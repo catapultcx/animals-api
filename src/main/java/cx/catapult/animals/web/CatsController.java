@@ -43,4 +43,13 @@ public class CatsController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<Cat>
+    update(@RequestBody Cat cat) {
+        return service.update(cat)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
