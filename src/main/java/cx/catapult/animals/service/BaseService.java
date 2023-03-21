@@ -3,6 +3,8 @@ package cx.catapult.animals.service;
 import cx.catapult.animals.domain.Animal;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
@@ -11,6 +13,25 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     @Override
     public Collection<T> all() {
         return items.values();
+    }
+
+    @Override
+    public Collection<T> all(String name, String description) {
+        List<Predicate<T>> predicates = new ArrayList<>();
+
+        predicates.add(animal -> animal.getName().equals(name));
+        predicates.add(animal -> animal.getDescription().equals(description));
+
+        Predicate<T> predicate = predicates
+                .stream()
+                .reduce(Predicate::and)
+                .get();
+
+        return items
+                .values()
+                .stream()
+                .filter(predicate)
+                .collect(Collectors.toList());
     }
 
     @Override

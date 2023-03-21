@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URL;
 import java.util.Collection;
@@ -42,6 +43,8 @@ public class CatsControllerIT {
         assertThat(response.getBody().getName()).isEqualTo(cat.getName());
         assertThat(response.getBody().getDescription()).isEqualTo(cat.getDescription());
         assertThat(response.getBody().getGroup()).isEqualTo(cat.getGroup());
+
+        delete(cat.getId());
     }
 
     @Test
@@ -73,10 +76,57 @@ public class CatsControllerIT {
     }
 
     @Test
+    public void allWithNameAndDescriptionFilterShouldWork() throws Exception {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(base.toString())
+                .queryParam("name", "Tom")
+                .queryParam("description", "Friend of Jerry");
+
+        Collection items = template.getForObject(builder.build().toUri(), Collection.class);
+        assertThat(items.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void allWithNameOnlyInFilterShouldWork() throws Exception {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(base.toString())
+                .queryParam("name", "Tom");
+
+        Collection items = template.getForObject(builder.build().toUri(), Collection.class);
+
+        // filtering on "/all" endpoint is only applied if valid name *and* description are specified
+        // otherwise all items are returned
+        assertThat(items.size()).isEqualTo(7);
+    }
+
+    @Test
+    public void allWithDescriptionOnlyInFilterShouldWork() throws Exception {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(base.toString())
+                .queryParam("description", "Friend of Jerry");
+
+        Collection items = template.getForObject(builder.build().toUri(), Collection.class);
+
+        // filtering on "/all" endpoint is only applied if valid name *and* description are specified
+        // otherwise all items are returned
+        assertThat(items.size()).isEqualTo(7);
+    }
+
+    @Test
+    public void allWithUnkownFilterShouldWork() throws Exception {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(base.toString())
+                .queryParam("name", "Name")
+                .queryParam("description", "Friend");
+
+        Collection items = template.getForObject(builder.build().toUri(), Collection.class);
+
+        assertThat(items.size()).isEqualTo(0);
+    }
+
+    @Test
     public void getShouldWork() throws Exception {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+
+        delete(created.getId());
     }
 
     @Test

@@ -28,6 +28,24 @@ public class CatsControllerTest {
     }
 
     @Test
+    public void allWithNameAndDescriptionParameters() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats?name=Tom&description=Friend+of+Jerry").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void allWithNameParameter() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats?name=Tom").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void allWithDescriptionParameter() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats?description=Friend+of+Jerry").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void get() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -18,8 +19,11 @@ public class CatsController {
 
     @GetMapping(value = "", produces = "application/json")
     public @ResponseBody
-    Collection<Cat> all() {
-        return service.all();
+    Collection<Cat> all(@RequestParam Optional<String> name, @RequestParam Optional<String> description) {
+        if (name.isPresent() && description.isPresent())
+            return service.all(name.get(), description.get());
+        else
+            return service.all();
     }
 
     @GetMapping(value = "/{id}")

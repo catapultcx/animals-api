@@ -45,6 +45,18 @@ public class CatsServiceTest {
     }
 
     @Test
+    public void allShouldWorkWithNameAndDescriptionFilter() throws Exception {
+        service.create(cat);
+        assertThat(service.all(cat.getName(), cat.getDescription()).size()).isEqualTo(1);
+    }
+
+    @Test
+    public void allShouldWorkWithUnknownNameAndDescriptionFilter() throws Exception {
+        service.create(cat);
+        assertThat(service.all("", "").size()).isEqualTo(0);
+    }
+
+    @Test
     public void getShouldWork() throws Exception {
         service.create(cat);
         Cat actual = service.get(cat.getId());
