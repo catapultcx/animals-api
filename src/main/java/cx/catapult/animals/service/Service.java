@@ -17,4 +17,6 @@ public interface Service<T extends Animal> {
 
     public Optional<T> update(T animal);
 
+    public Collection<T> filter(String search);
+
 }

@@ -1,14 +1,22 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Cat;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CatsServiceTest {
 
-    CatsService service = new CatsService();
+    CatsService service;
     Cat cat = new Cat("Tom", "Bob cat");
+
+    @BeforeEach
+    public void init() {
+        service = new CatsService();
+    }
 
     @Test
     public void createShouldWork() throws Exception {
@@ -63,5 +71,13 @@ public class CatsServiceTest {
         cat.setName("Modified");
         Cat result = service.update(cat).orElse(null);
         assertThat(result).isNull();
+    }
+
+    @Test
+    public void filterShouldWork() throws Exception {
+        service.initialize();
+        assertThat(service.all().size()).isEqualTo(7);
+        Collection<Cat> result = service.filter("Bili");
+        assertThat(result.size()).isEqualTo(1);
     }
 }
