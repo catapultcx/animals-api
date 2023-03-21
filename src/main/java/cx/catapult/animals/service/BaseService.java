@@ -25,4 +25,9 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     public T get(String id) {
         return items.get(id);
     }
+
+    @Override
+    public Optional<T> delete(String id) {
+        return Optional.ofNullable(items.remove(id));
+    }
 }

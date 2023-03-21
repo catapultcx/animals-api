@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Cat;
+import cx.catapult.animals.service.CatsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +21,9 @@ public class CatsControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private Cat cat = new Cat("Tom", "Bob cat");
+    @Autowired
+    private CatsService catsService;
+
     private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
     @Test
@@ -39,5 +42,13 @@ public class CatsControllerTest {
     public void create() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        Cat cat = new Cat("Tom", "Bob cat");
+        catsService.create(cat);
+        mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/" + cat.getId()).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
     }
 }
