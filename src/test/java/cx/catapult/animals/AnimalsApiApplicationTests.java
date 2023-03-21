@@ -10,4 +10,10 @@ class AnimalsApiApplicationTests {
 	void contextLoads() {
 	}
 
+	// required to cover main method coverage
+	@Test
+	public void main() {
+		AnimalsApiApplication.main(new String[] {});
+	}
+
 }

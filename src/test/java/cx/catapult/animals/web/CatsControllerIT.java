@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.net.URL;
 import java.util.Collection;
@@ -56,6 +55,29 @@ public class CatsControllerIT {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);
         assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Cat created = create("Test 1");
+
+        Cat deleted = delete(created.getId());
+
+        assertThat(deleted).isNotNull();
+        assertThat(deleted.getId()).isNotEmpty();
+        assertThat(deleted.getId()).isEqualTo(created.getId());
+        assertThat(deleted.getName()).isEqualTo("Test 1");
+        assertThat(deleted.getDescription()).isEqualTo("Test 1");
+    }
+
+    Cat delete(String id) {
+        HttpHeaders headers = new HttpHeaders();
+
+        HttpEntity<Cat> requestEntity = new HttpEntity<>(headers);
+
+        HttpEntity<Cat> response = template.exchange(base.toString() + "/" + id, HttpMethod.DELETE, requestEntity, Cat.class);
+
+        return response.getBody();
     }
 
     Cat create(String name) {
