@@ -42,4 +42,14 @@ public class CatsController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Cat> update(@PathVariable String id, @RequestBody Cat cat) {
+        Cat updatedCat = service.update(id, cat);
+        if (updatedCat == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(updatedCat);
+        }
+    }
 }

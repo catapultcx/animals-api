@@ -22,4 +22,14 @@ public class CatsService extends BaseService<Cat> {
     public Cat delete(String id) {
         return this.items.remove(id);
     }
+
+    public Cat update(String id, Cat updatedCat) {
+        Cat existingCat = this.items.get(id);
+        if (existingCat == null) {
+            return null;
+        }
+        existingCat.setName(updatedCat.getName());
+        existingCat.setDescription(updatedCat.getDescription());
+        return existingCat;
+    }
 }

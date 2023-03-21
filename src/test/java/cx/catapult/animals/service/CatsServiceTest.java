@@ -44,4 +44,16 @@ public class CatsServiceTest {
         Cat actual = service.get(cat.getId());
         assertThat(actual).isNull();
     }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        service.create(cat);
+
+        Cat updatedCat = new Cat("Rain", "A stormy cat");
+        updatedCat.setId(cat.getId());
+
+        Cat actual = service.update(cat.getId(), updatedCat);
+        assertThat(actual.getName()).isEqualTo("Rain");
+        assertThat(actual.getDescription()).isEqualTo("A stormy cat");
+    }
 }

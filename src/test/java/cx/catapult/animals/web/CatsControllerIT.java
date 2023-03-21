@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,5 +72,27 @@ public class CatsControllerIT {
         Cat created = create("Test 2");
         ResponseEntity<Void> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        // Create a new cat
+        ResponseEntity<Cat> createResponse = template.postForEntity(base.toString(), cat, Cat.class);
+        Cat createdCat = createResponse.getBody();
+
+        // Update the cat
+        String newName = "Updated name";
+        String newDescription = "Updated description";
+        createdCat.setName(newName);
+        createdCat.setDescription(newDescription);
+
+        ResponseEntity<Cat> updateResponse = template.exchange(base.toString() + "/" + createdCat.getId(), HttpMethod.PUT, new HttpEntity<>(createdCat), Cat.class);
+
+        // Verify the response
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(updateResponse.getBody().getId()).isEqualTo(createdCat.getId());
+        assertThat(updateResponse.getBody().getName()).isEqualTo(newName);
+        assertThat(updateResponse.getBody().getDescription()).isEqualTo(newDescription);
+
     }
 }
