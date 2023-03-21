@@ -23,6 +23,22 @@ public class CatsServiceTest {
     }
 
     @Test
+    public void updateShouldWork() throws Exception {
+        service.create(cat);
+
+        Cat toUpdate = new Cat("Updated name", "Updated description");
+
+        Cat updated = service.update(cat.getId(), toUpdate);
+
+        assertThat(updated.getName()).isEqualTo("Updated name");
+        assertThat(updated.getDescription()).isEqualTo("Updated description");
+
+        assertThat(service.all().size()).isEqualTo(1);
+        assertThat(service.get(updated.getId()).getName()).isEqualTo("Updated name");
+        assertThat(service.get(updated.getId()).getDescription()).isEqualTo("Updated description");
+    }
+
+    @Test
     public void allShouldWork() throws Exception {
         service.create(cat);
         assertThat(service.all().size()).isEqualTo(1);

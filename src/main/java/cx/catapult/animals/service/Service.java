@@ -10,6 +10,8 @@ public interface Service<T extends Animal> {
 
     T create(T animal);
 
+    T update(String id, T animal);
+
     T delete(String id);
 
     public T get(String id);

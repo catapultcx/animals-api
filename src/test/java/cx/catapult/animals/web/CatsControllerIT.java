@@ -45,6 +45,28 @@ public class CatsControllerIT {
     }
 
     @Test
+    public void updateShouldWork() throws Exception {
+        Cat created = create("Test 1");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpEntity<Cat> requestEntity = new HttpEntity<>(new Cat("Test name", "Test description"), headers);
+
+        HttpEntity<Cat> response = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.PUT, requestEntity, Cat.class);
+
+        Cat updated = response.getBody();
+
+        assertThat(updated).isNotNull();
+        assertThat(updated.getId()).isNotEmpty();
+        assertThat(updated.getId()).isEqualTo(created.getId());
+        assertThat(updated.getName()).isEqualTo("Test name");
+        assertThat(updated.getDescription()).isEqualTo("Test description");
+
+        delete(updated.getId());
+    }
+
+    @Test
     public void allShouldWork() throws Exception {
         Collection items = template.getForObject(base.toString(), Collection.class);
         assertThat(items.size()).isGreaterThanOrEqualTo(7);
