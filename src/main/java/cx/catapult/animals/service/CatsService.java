@@ -19,4 +19,7 @@ public class CatsService extends BaseService<Cat> {
         this.create(new Cat("Garfield", "Lazy cat"));
     }
 
+    public Cat delete(String id) {
+        return this.items.remove(id);
+    }
 }

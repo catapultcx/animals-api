@@ -6,7 +6,7 @@ import java.util.*;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
-    private HashMap<String, T> items = new HashMap<>();
+    protected HashMap<String, T> items = new HashMap<>();
 
     @Override
     public Collection<T> all() {
