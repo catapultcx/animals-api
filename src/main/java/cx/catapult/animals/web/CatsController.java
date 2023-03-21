@@ -35,13 +35,8 @@ public class CatsController {
 
     @DeleteMapping(value = "/removeCat", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> remove(@RequestBody Cat cat) {
-        try {
-            service.remove(cat.getId());
-            return new ResponseEntity<String>("Cat is removed", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<String>("Cat not found", HttpStatus.NOT_FOUND);
-        }
+    public @ResponseBody Cat remove(@RequestBody Cat cat) {
+        return service.remove(cat.getId());
     }
 
     @PutMapping(value = "/updateCat", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -29,11 +29,9 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
     }
 
     @Override
-    public void remove(String id) {
-        items.computeIfPresent(id, (k, v) -> {
-            items.remove(id);
-            return v;
-        });
+    public T remove(String id) {
+        return items.remove(id);
+
     }
 
     @Override
