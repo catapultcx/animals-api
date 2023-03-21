@@ -57,7 +57,7 @@ public class CatsController {
     }
 
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public Cat deleteById(@PathVariable String id) {
         return service.delete(id);
     }

@@ -52,7 +52,7 @@ public class CatsControllerTest {
     public void shouldDeleteById() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete(CATS_API_V1 + "/123")
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test
