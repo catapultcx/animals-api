@@ -37,4 +37,14 @@ public class CatsServiceTest {
         assertThat(actual.getDescription()).isEqualTo(cat.getDescription());
         assertThat(actual.getGroup()).isEqualTo(cat.getGroup());
     }
+    
+    @Test
+    public void deleteShouldWork() throws Exception {
+        service.create(cat);
+
+        service.delete(cat.getId());
+
+        assertThat(service.get(cat.getId())).isNull();
+        assertThat(service.all().size()).isEqualTo(0);
+    }
 }
