@@ -1,9 +1,12 @@
 package cx.catapult.animals.service;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import cx.catapult.animals.domain.Animal;
 import cx.catapult.animals.exception.AnimalNotFoundException;
-
-import java.util.*;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
@@ -45,4 +48,36 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
 			throw new AnimalNotFoundException(id);
 		}
 	}
+	
+	@Override
+	public T update(String id, T animal) {
+	    T existingAnimal = items.get(id);
+	    if (existingAnimal == null) {
+	        throw new AnimalNotFoundException(id);
+	    }
+
+
+	    animal.setId(existingAnimal.getId());
+	    items.put(id, animal);
+	    
+	    return animal;
+	}
+	
+	@Override
+    public Collection<T> getByName(String name) {
+        return items.values()
+                .stream()
+                .filter(a -> a.getName().equals(name))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<T> getByDescription(String description) {
+        return items.values()
+                .stream()
+                .filter(a -> a.getDescription().equals(description))
+                .collect(Collectors.toList());
+    }
+	
+	
 }
