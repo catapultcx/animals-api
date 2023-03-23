@@ -11,5 +11,7 @@ public interface Service<T extends Animal> {
     T create(T animal);
 
     public T get(String id);
+    
+    void delete(String id);
 
 }
