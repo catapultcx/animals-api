@@ -3,8 +3,11 @@ package cx.catapult.animals.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.web.server.ResponseStatusException;
 
 import cx.catapult.animals.domain.Cat;
 import cx.catapult.animals.exception.AnimalNotFoundException;
@@ -13,6 +16,8 @@ public class CatsServiceTest {
 
 	CatsService service = new CatsService();
 	Cat cat = new Cat("Tom", "Bob cat");
+	Cat cat2 = new Cat("Mat", "Mat cat");
+	Cat cat3 = new Cat("Pat", "Pat cat");
 
 	@Test
 	public void createShouldWork() throws Exception {
@@ -70,5 +75,55 @@ public class CatsServiceTest {
 		String id = "id";
 		assertThatThrownBy(() -> service.delete(id)).isInstanceOf(AnimalNotFoundException.class)
 				.hasMessageContaining(String.format("Animal not found with id: %s", id));
+	}
+	
+	@Test
+	public void updateShouldWork() throws Exception{
+		service.create(cat);
+		String id = cat.getId();
+		
+		Cat newDetails = new Cat("John","Johnny Cat");
+		service.update(id, newDetails);
+		
+		Cat updatedCat = service.get(id);
+		assertThat(updatedCat.getName()).isEqualTo("John");
+		assertThat(updatedCat.getDescription()).isEqualTo("Johnny Cat");
+	}
+	
+	@Test
+	public void updateShouldFail() throws Exception{
+		String id = "id";
+		service.create(cat);
+		
+		Cat newDetails = new Cat("John","Johnny Cat");
+		
+		assertThatThrownBy(() -> service.update(id,newDetails)).isInstanceOf(AnimalNotFoundException.class)
+		.hasMessageContaining(String.format("Animal not found with id: %s", id));
+	}
+	
+	@Test
+	public void getByNameShouldWork() throws Exception{
+		service.create(cat);
+		service.create(cat2);
+		service.create(cat3);
+		
+		Collection<Cat> filteredCats = service.getByName("Tom");
+		
+		assertThat(filteredCats)
+        .extracting(Cat::getName)
+        .contains("Tom");
+	}
+	
+	@Test
+	public void getByDescriptionShouldWork() throws Exception{
+		service.create(cat);
+		service.create(cat2);
+		service.create(cat3);
+		
+		Collection<Cat> filteredCats = service.getByDescription("Pat cat");
+		
+		assertThat(filteredCats)
+        .extracting(Cat::getDescription)
+        .contains("Pat cat");
 	}
 }

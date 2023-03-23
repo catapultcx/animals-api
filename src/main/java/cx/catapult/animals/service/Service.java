@@ -13,5 +13,11 @@ public interface Service<T extends Animal> {
     public T get(String id);
     
     void delete(String id);
+    
+    public T update(String id, T animal);
+    
+    public Collection<T> getByName(String name);
+    
+    public Collection<T> getByDescription(String description);
 
 }
