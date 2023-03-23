@@ -26,74 +26,67 @@ import cx.catapult.animals.service.CatsService;
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
 
-    @Autowired
-    private CatsService service;
+	@Autowired
+	private CatsService service;
 
-    @GetMapping(value = "", produces = "application/json")
-    public @ResponseBody
-    Collection<Cat> all() {
-        return service.all();
-    }
+	@GetMapping(value = "", produces = "application/json")
+	public @ResponseBody Collection<Cat> all() {
+		return service.all();
+	}
 
-    @GetMapping(value = "/{id}")
-    public @ResponseBody
-    Cat get(@PathVariable String id) {
-    	try {
-            return service.get(id);
-        } catch (AnimalNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-    
-    @GetMapping(value = "/search", produces = "application/json")
-    public @ResponseBody Collection<Cat> search(
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "description", required = false) String description) {
+	@GetMapping(value = "/{id}")
+	public @ResponseBody Cat get(@PathVariable String id) {
+		try {
+			return service.get(id);
+		} catch (AnimalNotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
 
-        if (name != null) {
-            return service.getByName(name);
-        }
+	@GetMapping(value = "/search", produces = "application/json")
+	public @ResponseBody Collection<Cat> search(@RequestParam(name = "name", required = false) String name,
+			@RequestParam(name = "description", required = false) String description) {
 
-        if (description != null) {
-            return service.getByDescription(description);
-        }
+		if (name != null) {
+			return service.getByName(name);
+		}
 
-        // Return all cats if no search criteria is specified
-        return service.all();
-    }
+		if (description != null) {
+			return service.getByDescription(description);
+		}
 
-    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody
-    Cat
-    create(@RequestBody Cat cat) {
-    	try {
-            return service.create(cat);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-        
-    }
-    
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id) {
-    	try {
-            service.delete(id);
-        } catch (AnimalNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
+		// Return all cats if no search criteria is specified
+		return service.all();
+	}
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    Cat update(@PathVariable String id, @RequestBody Cat cat) {
-    	 try {
-             return service.update(id, cat);
-         } catch (AnimalNotFoundException e) {
-             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-         }
-    }
+	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.CREATED)
+	public @ResponseBody Cat create(@RequestBody Cat cat) {
+		try {
+			return service.create(cat);
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
 
-    
+	}
+
+	@DeleteMapping(value = "/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable String id) {
+		try {
+			service.delete(id);
+		} catch (AnimalNotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
+	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Cat update(@PathVariable String id, @RequestBody Cat cat) {
+		try {
+			return service.update(id, cat);
+		} catch (AnimalNotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
 }
