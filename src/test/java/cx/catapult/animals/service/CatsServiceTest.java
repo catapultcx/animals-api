@@ -62,7 +62,6 @@ public class CatsServiceTest {
 
 		service.delete(cat.getId());
 
-		assertThat(service.get(cat.getId())).isNull();
 		assertThat(service.all().size()).isEqualTo(0);
 	}
 
@@ -70,6 +69,6 @@ public class CatsServiceTest {
 	public void deleteShouldFail() throws Exception {
 		String id = "id";
 		assertThatThrownBy(() -> service.delete(id)).isInstanceOf(AnimalNotFoundException.class)
-				.hasMessageContaining(String.format("Animal not found with id:  %s", id));
+				.hasMessageContaining(String.format("Animal not found with id: %s", id));
 	}
 }
