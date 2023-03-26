@@ -40,4 +40,9 @@ public class CatsController {
     public @ResponseBody Cat delete(@PathVariable String id) {
         return service.delete(id);
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Cat update(@PathVariable String id, @RequestBody Cat cat) {
+        return service.update(id, cat);
+    }
 }
