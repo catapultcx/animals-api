@@ -58,6 +58,13 @@ public class CatsControllerIT {
         assertThat(response.getBody()).isNotEmpty();
     }
 
+    @Test
+    public void deleteShouldWork() throws Exception {
+        Cat deleted = create("Test Delete");
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + deleted.getId(), String.class);
+        assertThat(response.getBody()).isNotEmpty();
+    }
+
     Cat create(String name) {
         Cat created = template.postForObject(base.toString(), new Cat(name, name), Cat.class);
         assertThat(created.getId()).isNotEmpty();
