@@ -17,11 +17,10 @@ public class CatsController {
     private CatsService service;
 
     @GetMapping(value = "", produces = "application/json")
-    public @ResponseBody
-    Collection<Cat> all() {
-        return service.all();
+    public @ResponseBody Collection<Cat> all(@RequestParam(name = "name", required = false) String name,
+                                             @RequestParam(name = "description", required = false) String description) {
+        return service.all(name, description);
     }
-
     @GetMapping(value = "/{id}")
     public @ResponseBody
     Cat get(@PathVariable String id) {

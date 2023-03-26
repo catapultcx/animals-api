@@ -30,6 +30,12 @@ public class CatsControllerTest {
     }
 
     @Test
+    public void allFilters() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats?name=test&description=test").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
     public void get() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
