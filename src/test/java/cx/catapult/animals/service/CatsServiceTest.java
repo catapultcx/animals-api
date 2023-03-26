@@ -9,6 +9,8 @@ public class CatsServiceTest {
 
     CatsService service = new CatsService();
     Cat cat = new Cat("Tom", "Bob cat");
+    Cat cat2 = new Cat("Cute Cat", "A cute cat");
+    Cat cat3 = new Cat("Adorable Kitten", "An adorable kitten");
 
     @Test
     public void createShouldWork() throws Exception {
@@ -25,8 +27,49 @@ public class CatsServiceTest {
     @Test
     public void allShouldWork() throws Exception {
         service.create(cat);
-        assertThat(service.all().size()).isEqualTo(1);
+        service.create(cat2);
+        service.create(cat3);
+        assertThat(service.all(null, null).size()).isEqualTo(3);
     }
+    @Test
+    public void allFilterByNameShouldWork() throws Exception {
+        service.create(cat);
+        service.create(cat2);
+        service.create(cat3);
+        assertThat(service.all("Cute", null).size()).isEqualTo(1);
+    }
+
+    @Test
+    public void allFilterByDescriptionShouldWork() throws Exception {
+        service.create(cat);
+        service.create(cat2);
+        service.create(cat3);
+        assertThat(service.all(null, "adorable").size()).isEqualTo(1);
+    }
+
+    @Test
+    public void allFilterByNameAndDescriptionShouldWork() throws Exception {
+        service.create(cat);
+        service.create(cat2);
+        service.create(cat3);
+        assertThat(service.all("Adorable", "kitten").size()).isEqualTo(1);
+    }
+
+    @Test
+    public void allFilterByUnknownNameAndDescriptionShouldWork() throws Exception {
+        service.create(cat);
+        service.create(cat2);
+        service.create(cat3);
+        assertThat(service.all("Missing", "Cat").size()).isEqualTo(0);
+    }
+    @Test
+    public void allFilterByUppercaseNameAndDescriptionShouldWork() throws Exception {
+        service.create(cat);
+        service.create(cat2);
+        service.create(cat3);
+        assertThat(service.all("CUTE", "CAT").size()).isEqualTo(1);
+    }
+
 
     @Test
     public void getShouldWork() throws Exception {

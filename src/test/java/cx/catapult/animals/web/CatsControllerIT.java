@@ -54,6 +54,13 @@ public class CatsControllerIT {
     }
 
     @Test
+    public void allFilterShouldWork() throws Exception {
+        create("FilteredCat");
+        Collection filteredItems = template.getForObject(base.toString() + "?name=Filtered&description=Cat", Collection.class);
+        assertThat(filteredItems.size()).isEqualTo(1);
+    }
+
+    @Test
     public void getShouldWork() throws Exception {
         Cat created = create("Test 1");
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + created.getId(), String.class);

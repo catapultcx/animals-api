@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface Service<T extends Animal> {
 
-    public Collection<T> all();
+    public Collection<T> all(String name, String description);
 
     T create(T animal);
 
