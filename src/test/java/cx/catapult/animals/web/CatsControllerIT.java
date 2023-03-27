@@ -18,6 +18,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import cx.catapult.animals.domain.Cat;
 
@@ -50,17 +52,32 @@ public class CatsControllerIT {
 	}
 
 	@Test
-	public void createShouldFail() throws Exception {
-	    // Create a JSON object with a missing "name" field
-	    JSONObject json = new JSONObject();
-	    json.put("description", "Cat without name");
-	    
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_JSON);
-	    HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
+	public void createFormShouldWork() throws Exception {
+		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+		formData.add("name", "Fluffy");
+		formData.add("description", "Persian cat");
 
-	    ResponseEntity<String> response = template.postForEntity(base.toString(), request, String.class);
-	    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(formData, headers);
+
+		ResponseEntity<Cat> response = template.postForEntity(base.toString() + "/form", request, Cat.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
+	}
+
+	@Test
+	public void createShouldFail() throws Exception {
+		JSONObject json = new JSONObject();
+		json.put("description", "Cat without name");
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
+
+		ResponseEntity<String> response = template.postForEntity(base.toString(), request, String.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
 
 	@Test
@@ -92,6 +109,21 @@ public class CatsControllerIT {
 	}
 
 	@Test
+	public void deleteFormShouldWork() throws Exception {
+		Cat created = create("Test Cat");
+
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("_method", "DELETE");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		ResponseEntity<Cat> response = template.exchange(base.toString() + "/form/" + created.getId(), HttpMethod.POST,
+				request, Cat.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
+	}
+
+	@Test
 	public void deleteShouldFail() throws Exception {
 		ResponseEntity<Void> response = template.exchange(base.toString() + "/" + "invalid id",
 				org.springframework.http.HttpMethod.DELETE, null, Void.class);
@@ -109,6 +141,23 @@ public class CatsControllerIT {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody().getName()).isEqualTo(catToUpdate.getName());
 		assertThat(response.getBody().getDescription()).isEqualTo(catToUpdate.getDescription());
+	}
+
+	@Test
+	public void updateFormShouldWork() throws Exception {
+		Cat created = create("Test Cat");
+
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("name", "Updated Cat");
+		map.add("description", "Updated Description");
+		map.add("_method", "PUT");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		ResponseEntity<Cat> response = template.exchange(base.toString() + "/form/" + created.getId(), HttpMethod.POST,
+				request, Cat.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
 	}
 
 	@Test
