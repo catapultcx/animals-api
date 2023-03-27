@@ -1,10 +1,13 @@
 package cx.catapult.animals.web;
 
+import java.net.URI;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -57,7 +61,6 @@ public class CatsController {
 			return service.getByDescription(description);
 		}
 
-		// Return all cats if no search criteria is specified
 		return service.all();
 	}
 
@@ -69,7 +72,6 @@ public class CatsController {
 		} catch (IllegalArgumentException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-
 	}
 
 	@DeleteMapping(value = "/{id}")
@@ -88,6 +90,41 @@ public class CatsController {
 			return service.update(id, cat);
 		} catch (AnimalNotFoundException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
+	@RequestMapping(value = "/form/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ResponseEntity handleFormPutAndDelete(@PathVariable String id, @RequestParam("_method") String method,
+			@RequestParam(name = "name", required = false) String name,
+			@RequestParam(name = "description", required = false) String description) {
+		try {
+			if ("PUT".equals(method)) {
+				service.update(id, new Cat(name, description));
+				HttpHeaders headers = new HttpHeaders();
+				headers.setLocation(URI.create("http://localhost:3000/cats"));
+				return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+			} else if ("DELETE".equals(method)) {
+				service.delete(id);
+				HttpHeaders headers = new HttpHeaders();
+				headers.setLocation(URI.create("http://localhost:3000/cats"));
+				return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+			}
+		} catch (AnimalNotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "/form", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ResponseEntity handleFormPost(@RequestParam("name") String name,
+			@RequestParam("description") String description) {
+		try {
+			service.create(new Cat(name, description));
+			HttpHeaders headers = new HttpHeaders();
+			headers.setLocation(URI.create("http://localhost:3000/cats"));
+			return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}
 
