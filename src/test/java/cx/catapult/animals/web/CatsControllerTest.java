@@ -17,27 +17,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class CatsControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
-    private Cat cat = new Cat("Tom", "Bob cat");
-    private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
+  private Cat cat = new Cat("Tom", "Bob cat");
+  private String json = "{ \"name\": \"Tom\", \"description\": \"Bob cat\" }";
 
-    @Test
-    public void all() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+  @Test
+  public void all() throws Exception {
+    mvc.perform(MockMvcRequestBuilders.get("/api/1/cats").accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk());
+  }
 
-    @Test
-    public void get() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+  @Test
+  public void get() throws Exception {
+    mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/123").accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk());
+  }
 
-    @Test
-    public void create() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated());
-    }
+  @Test
+  public void create() throws Exception {
+    mvc.perform(MockMvcRequestBuilders.post("/api/1/cats").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+      .andExpect(status().isCreated());
+  }
+
+  @Test
+  public void update() throws Exception {
+    mvc.perform(MockMvcRequestBuilders.put("/api/1/cats/123").content(json).contentType(MediaType.APPLICATION_JSON_VALUE))
+      .andExpect(status().isOk());
+  }
+
+  @Test
+  public void delete() throws Exception {
+    mvc.perform(MockMvcRequestBuilders.delete("/api/1/cats/123").contentType(MediaType.APPLICATION_JSON_VALUE))
+      .andExpect(status().isOk());
+  }
+
+  @Test
+  public void filteredAll() throws Exception {
+    mvc.perform(MockMvcRequestBuilders.get("/api/1/cats?search=cat").accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk());
+  }
 }

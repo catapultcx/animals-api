@@ -9,30 +9,51 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
 
-    @Autowired
-    private CatsService service;
+  @Autowired
+  private CatsService service;
 
-    @GetMapping(value = "", produces = "application/json")
-    public @ResponseBody
-    Collection<Cat> all() {
-        return service.all();
-    }
+  @GetMapping(value = "", produces = "application/json")
+  public @ResponseBody
+  Collection<Cat> all() {
+    return service.all();
+  }
 
-    @GetMapping(value = "/{id}")
-    public @ResponseBody
-    Cat get(@PathVariable String id) {
-        return service.get(id);
-    }
+  @GetMapping(value = "/{id}")
+  public @ResponseBody
+  Cat get(@PathVariable String id) {
+    return service.get(id);
+  }
 
-    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody
-    Cat
-    create(@RequestBody Cat cat) {
-        return service.create(cat);
-    }
+  @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.CREATED)
+  public @ResponseBody
+  Cat
+  create(@RequestBody Cat cat) {
+    return service.create(cat);
+  }
+
+  @GetMapping(value = "", produces = "application/json", params = "searchString")
+  public @ResponseBody
+  Collection<Cat> filter(@RequestParam("searchString") String searchString) {
+    return searchString.isEmpty() ? service.all() : service.filteredAll(searchString);
+  }
+
+  @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  public @ResponseBody
+  Cat update(@PathVariable String id, @RequestBody Cat cat) {
+    return service.update(id, cat);
+  }
+
+  @DeleteMapping(value = "/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public @ResponseBody
+  Cat delete(@PathVariable String id) {
+    return service.delete(id);
+  }
 }
