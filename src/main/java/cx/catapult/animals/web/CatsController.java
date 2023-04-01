@@ -58,11 +58,11 @@ public class CatsController {
     }
 
 
-    @PostMapping(value = "/search")
+    @GetMapping(value = "/search")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
-    Collection<Cat> search(@RequestBody Cat cat) {
-        return service.search(cat.getName(), cat.getDescription());
+    Collection<Cat> search(@RequestParam(name = "name", required = false) String name, @RequestParam(name = "desc", required = false) String desc) {
+        return service.search(name, desc);
     }
 
 }

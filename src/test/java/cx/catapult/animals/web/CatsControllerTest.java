@@ -80,9 +80,10 @@ public class CatsControllerTest {
         String response = mvc.perform(MockMvcRequestBuilders.get("/api/1/cats").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         Collection<Cat> cats = objectMapper.readValue(response, Collection.class);
-
-        String searchJson = "{ \"name\": \"Tiger\", \"description\": \"\" }";
-        String searchResponse = mvc.perform(MockMvcRequestBuilders.post("/api/1/cats/search").content(searchJson).contentType(MediaType.APPLICATION_JSON_VALUE))
+        String nameQueryString = "Tiger";
+        String descQueryString = "";
+        String searchResponse = mvc.perform(MockMvcRequestBuilders.get("/api/1/cats/search")
+                        .param("name", nameQueryString).param("desc", descQueryString))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         Collection<Cat> searchedCats = objectMapper.readValue(searchResponse, new TypeReference<Collection<Cat>>() {
         });
