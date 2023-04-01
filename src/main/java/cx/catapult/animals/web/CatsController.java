@@ -5,10 +5,12 @@ import cx.catapult.animals.service.CatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
@@ -35,4 +37,32 @@ public class CatsController {
     create(@RequestBody Cat cat) {
         return service.create(cat);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public @ResponseBody
+    ResponseEntity delete(@PathVariable String id) {
+        boolean deleted = service.delete(id);
+        return ResponseEntity.ok().body(deleted);
+//        if (deleted) {
+//            return ResponseEntity.noContent().build();
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+    }
+
+    @PutMapping(value = "/update")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    boolean edit(@RequestBody Cat cat) {
+        return service.update(cat);
+    }
+
+
+    @GetMapping(value = "/search")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    Collection<Cat> search(@RequestParam(name = "name", required = false) String name, @RequestParam(name = "desc", required = false) String desc) {
+        return service.search(name, desc);
+    }
+
 }
