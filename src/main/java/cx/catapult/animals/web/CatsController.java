@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
