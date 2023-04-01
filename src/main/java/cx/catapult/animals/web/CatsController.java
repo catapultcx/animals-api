@@ -5,6 +5,7 @@ import cx.catapult.animals.service.CatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -36,4 +37,17 @@ public class CatsController {
     create(@RequestBody Cat cat) {
         return service.create(cat);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public @ResponseBody
+    ResponseEntity delete(@PathVariable String id) {
+        boolean deleted = service.delete(id);
+        return ResponseEntity.ok().body(deleted);
+//        if (deleted) {
+//            return ResponseEntity.noContent().build();
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+    }
+
 }
