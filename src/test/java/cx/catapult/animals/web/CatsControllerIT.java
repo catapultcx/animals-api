@@ -1,6 +1,7 @@
 package cx.catapult.animals.web;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cx.catapult.animals.domain.Cat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +30,8 @@ public class CatsControllerIT {
 
     @Autowired
     private TestRestTemplate template;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -63,5 +66,90 @@ public class CatsControllerIT {
         assertThat(created.getId()).isNotEmpty();
         assertThat(created.getName()).isEqualTo(name);
         return created;
+    }
+
+
+
+    @Test
+    public void updateShouldWork() throws Exception {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        Cat created = response.getBody();
+        created.setName("updatedName");
+        created.setDescription("updatedDesc");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Cat> requestEntity = new HttpEntity<>(created, headers);
+        ResponseEntity<Boolean> responseEntity = template.exchange(base.toString() + "/update", HttpMethod.PUT, requestEntity, Boolean.class, created.getId());
+        boolean updated = responseEntity.getBody();
+        assertThat(updated).isTrue();
+
+        response = template.getForEntity(base.toString() + "/" + created.getId(), Cat.class);
+        assertThat(response.getBody().getName()).isEqualTo(created.getName());
+        assertThat(response.getBody().getDescription()).isEqualTo(created.getDescription());
+    }
+
+    @Test
+    public void updateShouldNotWork() throws Exception {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        Cat created = response.getBody();
+        created.setId("invalid id");
+        created.setName("updatedName");
+        created.setDescription("updatedDesc");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Cat> requestEntity = new HttpEntity<>(created, headers);
+        ResponseEntity<Boolean> responseEntity = template.exchange(base.toString() + "/update", HttpMethod.PUT, requestEntity, Boolean.class, created.getId());
+        boolean updated = responseEntity.getBody();
+        assertThat(updated).isFalse();
+    }
+
+    @Test
+    public void deleteShouldWork() throws Exception {
+        ResponseEntity<Cat> response = template.postForEntity(base.toString(), cat, Cat.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody().getId()).isNotEmpty();
+        Cat created = response.getBody();
+
+        ResponseEntity<Void> deleted = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Void.class);
+        assertThat(deleted.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(deleted.getBody()).isNull();
+
+        response = template.getForEntity(base.toString() + "/" + created.getId(), Cat.class);
+        assertThat(response.getBody()).isNull();
+    }
+
+    @Test
+    public void searchShouldWork() throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Cat searchCat = new Cat("", "");
+        String requestBodyJson = objectMapper.writeValueAsString(searchCat);
+        HttpEntity<String> entity = new HttpEntity<>(requestBodyJson, headers);
+
+        ResponseEntity<Collection> response = template.exchange(
+                base.toString() + "/search",
+                HttpMethod.POST,
+                entity,
+                Collection.class);
+        assertThat(response.getBody().size()).isGreaterThanOrEqualTo(7);
+
+
+        searchCat = new Cat("tiger", "");
+        requestBodyJson = objectMapper.writeValueAsString(searchCat);
+        entity = new HttpEntity<>(requestBodyJson, headers);
+        response = template.exchange(
+                base.toString() + "/search",
+                HttpMethod.POST,
+                entity,
+                Collection.class);
+        assertThat(response.getBody().size()).isGreaterThanOrEqualTo(1);
+
     }
 }
