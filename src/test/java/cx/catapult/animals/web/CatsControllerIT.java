@@ -115,7 +115,7 @@ public class CatsControllerIT {
         Cat created = response.getBody();
 
         ResponseEntity<Void> deleted = template.exchange(base.toString() + "/" + created.getId(), HttpMethod.DELETE, null, Void.class);
-        assertThat(deleted.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(deleted.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(deleted.getBody()).isNull();
 
         response = template.getForEntity(base.toString() + "/" + created.getId(), Cat.class);
@@ -124,32 +124,13 @@ public class CatsControllerIT {
 
     @Test
     public void searchShouldWork() throws Exception {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        Cat searchCat = new Cat("", "");
-        String requestBodyJson = objectMapper.writeValueAsString(searchCat);
-        HttpEntity<String> entity = new HttpEntity<>(requestBodyJson, headers);
-
-        ResponseEntity<Collection> response = template.exchange(
-                base.toString() + "/search",
-                HttpMethod.POST,
-                entity,
-                Collection.class);
+        String name = "";
+        String desc = "";
+        ResponseEntity<Collection> response = template.getForEntity(base.toString() + "/search?name="+name +"&desc=" +desc, Collection.class);
         assertThat(response.getBody().size()).isGreaterThanOrEqualTo(7);
 
-
-        searchCat = new Cat("tiger", "");
-        requestBodyJson = objectMapper.writeValueAsString(searchCat);
-        entity = new HttpEntity<>(requestBodyJson, headers);
-        response = template.exchange(
-                base.toString() + "/search",
-                HttpMethod.POST,
-                entity,
-                Collection.class);
+        name = "tiger";
+        response = template.getForEntity(base.toString() + "/search?name="+name +"&desc=" +desc, Collection.class);
         assertThat(response.getBody().size()).isGreaterThanOrEqualTo(1);
-
     }
 }
