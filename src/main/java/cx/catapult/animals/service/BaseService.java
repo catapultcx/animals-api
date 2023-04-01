@@ -35,4 +35,14 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
         }
         return false;
     }
+
+    @Override
+    public boolean update(T animal) {
+        String id = animal.getId();
+        if (id != null && items.containsKey(id)) {
+            T update = items.put(id, animal);
+            return true;
+        }
+        return false;
+    }
 }

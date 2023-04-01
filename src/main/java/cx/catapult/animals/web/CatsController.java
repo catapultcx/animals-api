@@ -50,4 +50,11 @@ public class CatsController {
 //        }
     }
 
+    @PutMapping(value = "/update")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    boolean edit(@RequestBody Cat cat) {
+        return service.update(cat);
+    }
+
 }
