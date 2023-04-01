@@ -1,8 +1,11 @@
 package cx.catapult.animals.service;
 
 import cx.catapult.animals.domain.Animal;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class BaseService<T extends Animal> implements Service<T> {
 
@@ -44,5 +47,14 @@ public abstract class BaseService<T extends Animal> implements Service<T> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Collection<T> search(String name, String description) {
+        Collection<T> animals = all();
+        Predicate<T> namePredicate = item -> StringUtils.containsIgnoreCase(item.getName(), name);
+        Predicate<T> descPredicate = item -> StringUtils.containsIgnoreCase(item.getDescription(), description);
+        Collection<T> filtered = animals.stream().filter(namePredicate).filter(descPredicate).collect(Collectors.toList());
+        return filtered;
     }
 }

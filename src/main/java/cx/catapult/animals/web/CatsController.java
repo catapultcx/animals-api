@@ -57,4 +57,12 @@ public class CatsController {
         return service.update(cat);
     }
 
+
+    @PostMapping(value = "/search")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    Collection<Cat> search(@RequestBody Cat cat) {
+        return service.search(cat.getName(), cat.getDescription());
+    }
+
 }
