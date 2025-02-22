@@ -1,6 +1,7 @@
 package cx.catapult.animals.domain;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class BaseAnimal implements Animal, Serializable {
 
@@ -10,7 +11,7 @@ public class BaseAnimal implements Animal, Serializable {
     private Group group;
 
     public BaseAnimal(String name, String description, Group group) {
-        this(null, name, description, group);
+        this(UUID.randomUUID().toString(), name, description, group);
     }
 
     public BaseAnimal(String id, String name, String description, Group group) {

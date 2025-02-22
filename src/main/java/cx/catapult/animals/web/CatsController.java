@@ -1,38 +1,43 @@
 package cx.catapult.animals.web;
 
 import cx.catapult.animals.domain.Cat;
-import cx.catapult.animals.service.CatsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import cx.catapult.animals.usecase.CreateCatUseCase;
+import cx.catapult.animals.usecase.GetAllCatsUseCase;
+import cx.catapult.animals.usecase.GetCatUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/1/cats", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatsController {
+    private final CreateCatUseCase createCatUseCase;
+    private final GetCatUseCase getCatUseCase;
+    private final GetAllCatsUseCase getAllCatsUseCase;
 
-    @Autowired
-    private CatsService service;
-
-    @GetMapping(value = "", produces = "application/json")
-    public @ResponseBody
-    Collection<Cat> all() {
-        return service.all();
+    public CatsController(CreateCatUseCase createCatUseCase,
+                         GetCatUseCase getCatUseCase,
+                         GetAllCatsUseCase getAllCatsUseCase) {
+        this.createCatUseCase = createCatUseCase;
+        this.getCatUseCase = getCatUseCase;
+        this.getAllCatsUseCase = getAllCatsUseCase;
     }
 
-    @GetMapping(value = "/{id}")
-    public @ResponseBody
-    Cat get(@PathVariable String id) {
-        return service.get(id);
-    }
-
-    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody
-    Cat
-    create(@RequestBody Cat cat) {
-        return service.create(cat);
+    public Cat create(@RequestBody Cat cat) {
+        return createCatUseCase.execute(cat);
+    }
+
+    @GetMapping("/{id}")
+    public Cat get(@PathVariable String id) {
+        return getCatUseCase.execute(id);
+    }
+
+    @GetMapping
+    public List<Cat> all() {
+        return getAllCatsUseCase.execute();
     }
 }
