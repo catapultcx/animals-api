@@ -3,7 +3,7 @@ package cx.catapult.animals.repository;
 import cx.catapult.animals.domain.Cat;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
