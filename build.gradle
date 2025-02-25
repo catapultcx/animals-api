@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'cx.catapult'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 
 java {
     sourceCompatibility = '21'

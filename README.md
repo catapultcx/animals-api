@@ -15,15 +15,15 @@ First install:
 
 Run the service:
 
-    mvn spring-boot:run
+    ./gradlew bootRun
 
 Tests with coverage:
 
-    mvn clean test
+    ./gradlew clean test
 
 Build the `.jar`:
 
-    mvn clean package    
+    ./gradlew build
 
 ### Docker
 
